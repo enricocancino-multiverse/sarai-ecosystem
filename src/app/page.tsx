@@ -109,17 +109,7 @@ export default function Home() {
       <div className="flex flex-1 relative min-h-[calc(100vh-3.5rem)]">
         
         {/* ASIDE SIDEBAR */}
-        <aside className={`hidden md:flex shrink-0 ${isSidebarOpen ? 'w-64' : 'w-14'} bg-[#0d1424]/40 backdrop-blur-md border-r border-white/5 flex-row sticky top-14 h-[calc(100vh-3.5rem)] z-30 transition-all duration-300 overflow-hidden`}>
-          <div className="w-14 bg-slate-950/70 border-r border-white/5 flex flex-col items-center justify-between py-6">
-            <div className="flex flex-col items-center gap-6">
-              <span className="text-[10px] text-emerald-500 tracking-wider">●</span>
-              <div className="vertical-text font-mono text-[9px] font-bold tracking-[0.2em] text-slate-400 whitespace-nowrap uppercase">SARAI / SECURE_LINK_SYS</div>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <span className="text-[9px] text-slate-500 font-mono">V2.10</span>
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
-            </div>
-          </div>
+        <aside className={`hidden md:flex shrink-0 ${isSidebarOpen ? 'w-64 border-r border-white/5 bg-[#0d1424]/40' : 'w-0 border-none bg-transparent pointer-events-none'} backdrop-blur-md flex-row sticky top-14 h-[calc(100vh-3.5rem)] z-30 transition-all duration-300 overflow-hidden`}>
 
           {isSidebarOpen && (
             <div className="flex-1 flex flex-col justify-between p-4 transition-all duration-300">
@@ -137,7 +127,7 @@ export default function Home() {
                     </span>
                     <span className="font-mono text-[9px] text-emerald-500">01</span>
                   </button>
-                    <button onClick={() => setActiveTab('dts')} className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all duration-200 ${activeTab === 'dts' ? 'font-bold text-emerald-400 bg-white/5 border border-emerald-500/10' : 'font-medium text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}>
+                  <button onClick={() => setActiveTab('dts')} className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all duration-200 ${activeTab === 'dts' ? 'font-bold text-emerald-400 bg-white/5 border border-emerald-500/10' : 'font-medium text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}>
                     <span className="flex items-center gap-2.5">
                       <span className={`w-1.5 h-1.5 rounded-full ${activeTab === 'dts' ? 'bg-emerald-400' : 'bg-transparent border border-slate-500'}`}></span>
                       Document DTS
