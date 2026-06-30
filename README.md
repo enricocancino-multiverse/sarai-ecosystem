@@ -2,7 +2,7 @@
 
 Title: Sarai Ilocos | Ecosystem 
 <br>
-Mission & Vision: To digitalize the sarai team through a full fledge workplace - dts, attendance and essential news in all in one portal. <br>
+Mission & Vision: To digitalize the sarai team through a full fledge workplace - file transaction, dts, attendance and essential news in all in one portal. <br>
 Commisioned by: DOST Region 1
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).

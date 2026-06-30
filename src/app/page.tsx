@@ -13,7 +13,7 @@ export interface DocumentData {
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'home' | 'dts' | 'ets'>('home');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [pstTime, setPstTime] = useState('00:00:00 AM');
   const [qrId, setQrId] = useState('DOST1-2026-X11');
   const [qrAuthStatus, setQrAuthStatus] = useState(false);
@@ -109,7 +109,7 @@ export default function Home() {
       <div className="flex flex-1 relative min-h-[calc(100vh-3.5rem)]">
         
         {/* ASIDE SIDEBAR */}
-        <aside className={`hidden md:flex shrink-0 ${isSidebarOpen ? 'w-64 border-r border-white/5 bg-[#0d1424]/40' : 'w-0 border-none bg-transparent pointer-events-none'} backdrop-blur-md flex-row sticky top-14 h-[calc(100vh-3.5rem)] z-30 transition-all duration-300 overflow-hidden`}>
+        <aside className={`hidden md:flex ${isSidebarOpen ? 'absolute left-0 top-[3.5rem] w-64 border-r border-white/5 bg-[#0d1424]/40 shadow-2xl z-[60]' : 'absolute left-0 top-[3.5rem] w-0 border-none bg-transparent pointer-events-none z-[60]'} backdrop-blur-md flex-row h-[calc(100vh-3.5rem)] transition-all duration-300 overflow-hidden`}>
 
           {isSidebarOpen && (
             <div className="flex-1 flex flex-col justify-between p-4 transition-all duration-300">
@@ -162,7 +162,7 @@ export default function Home() {
         </aside>
 
         {/* MAIN SPLIT VIEW */}
-        <main className="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 z-10 transition-all duration-300">
+        <main className="flex-1 w-full px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 z-10 transition-all duration-300">
           <section className="lg:col-span-8 flex flex-col gap-6">
             
             {activeTab === 'home' && (
