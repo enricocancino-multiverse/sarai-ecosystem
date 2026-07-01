@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertCircle,
   ArrowRight,
@@ -1116,10 +1117,12 @@ function TrophiesPage() {
 }
 
 export default function SaraiPortal() {
+  const router = useRouter();
   const [page, setPage] = useState<Page>("home");
   const [role, setRole] = useState<UserRole>(null);
   const [userName, setUserName] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const searchParams = useSearchParams();
 
   const clearUrlHash = useCallback(() => {
     if (typeof window !== "undefined" && window.location.hash) {
@@ -1127,14 +1130,6 @@ export default function SaraiPortal() {
       window.history.replaceState(null, "", pathname + search);
     }
   }, []);
-
-  const handleSetPage = useCallback(
-    (nextPage: Page) => {
-      clearUrlHash();
-      setPage(nextPage);
-    },
-    [clearUrlHash]
-  );
 
   const handleLoginUser = (name: string) => {
     clearUrlHash();
@@ -1158,7 +1153,31 @@ export default function SaraiPortal() {
     setSidebarOpen(false);
   };
 
-  if (page === "home") return <LandingPage onLogin={() => handleSetPage("login")} />;
+  useEffect(() => {
+    if (!searchParams) return;
+    const portal = searchParams.get("portal");
+    const name = decodeURIComponent(searchParams.get("name") ?? "Staff Member");
+
+    if (portal === "user") {
+      setRole("user");
+      setUserName(name);
+      setPage("user-dashboard");
+      return;
+    }
+
+    if (portal === "admin") {
+      setRole("admin");
+      setUserName(name);
+      setPage("admin-dashboard");
+    }
+  }, [searchParams]);
+
+  const navigateToLogin = useCallback(() => {
+    clearUrlHash();
+    router.push("/login");
+  }, [clearUrlHash, router]);
+
+  if (page === "home") return <LandingPage onLogin={navigateToLogin} />;
 
   if (page === "login") return <LoginPage onBack={() => setPage("home")} onLoginUser={handleLoginUser} onLoginAdmin={handleLoginAdmin} />;
 

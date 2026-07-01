@@ -1,50 +1,172 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import SiteShell from "../components/site-shell";
+import { AlertCircle, Eye, EyeOff, RefreshCw, Shield, User } from "lucide-react";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [mode, setMode] = useState<"user" | "admin">("user");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+
+    if (!email || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    setLoading(true);
+    setTimeout(() => {
+      const safeName = email.split("@")[0].replace(".", " ").replace(/\b\w/g, (c) => c.toUpperCase()) || "Staff";
+      const encodedName = encodeURIComponent(safeName);
+
+      if (mode === "admin") {
+        router.push(`/?portal=admin&name=${encodedName}`);
+      } else {
+        router.push(`/?portal=user&name=${encodedName}`);
+      }
+    }, 600);
+  };
+
   return (
-    <SiteShell title="Customer Access" description="Sign in to access your dashboard, request services, and stay connected with the SARAI ecosystem.">
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <section className="rounded-4xl border border-emerald-100 bg-white p-7 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-700">Secure sign in</p>
-          <h2 className="mt-3 text-3xl font-semibold text-slate-900">Welcome back to the SARAI workplace</h2>
-          <p className="mt-3 max-w-xl text-slate-600">
-            Use your customer credentials to view transaction updates, track attendance, and browse announcements in one portal.
-          </p>
-
-          <div className="mt-8 space-y-4">
-            <label className="block text-sm font-medium text-slate-700">
-              Email address
-              <input className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none ring-0 focus:border-emerald-500" placeholder="name@dost1.ph" />
-            </label>
-            <label className="block text-sm font-medium text-slate-700">
-              Password
-              <input type="password" className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none ring-0 focus:border-emerald-500" placeholder="••••••••" />
-            </label>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <label className="flex items-center gap-2 text-sm text-slate-600">
-                <input type="checkbox" className="h-4 w-4 rounded border-slate-300 text-emerald-600" />
-                Remember me
-              </label>
-              <Link href="/admin" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">
-                Sign in as admin
+    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_40%),linear-gradient(180deg,#ffffff_0%,#ecfdf5_100%)]" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-4xl border border-emerald-100 bg-white shadow-[0_20px_60px_-20px_rgba(16,185,129,0.25)] lg:grid lg:grid-cols-[1.2fr_0.8fr]">
+          <section className="p-8 sm:p-10">
+            <div className="flex items-center justify-between gap-4">
+              <Link href="/" className="text-sm font-semibold text-emerald-700 transition hover:text-emerald-900">
+                ← Back to home
               </Link>
+              <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">
+                Secure access
+              </span>
             </div>
-            <Link href="/dts" className="flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-4 py-3 font-semibold text-white transition hover:bg-emerald-700">
-              Continue to portal
-            </Link>
-          </div>
-        </section>
 
-        <aside className="rounded-4xl border border-emerald-100 bg-emerald-50/70 p-7 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-700">What you can access</p>
-          <ul className="mt-5 space-y-3 text-sm text-slate-700">
-            <li className="rounded-2xl border border-white bg-white/60 p-3">File transactions and document status updates</li>
-            <li className="rounded-2xl border border-white bg-white/60 p-3">Attendance and personnel monitoring</li>
-            <li className="rounded-2xl border border-white bg-white/60 p-3">Program achievements and announcements</li>
-          </ul>
-        </aside>
+            <div className="mt-10 sm:mt-12">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-700">Welcome to SARAI</p>
+              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+                {mode === "admin" ? "Admin portal sign in" : "Staff portal sign in"}
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600">
+                {mode === "admin"
+                  ? "Authorized DOST admins only. Enter your credentials to manage documents, attendance, and announcements."
+                  : "Use your DOST account to sign in and access SARAI workflow, tracking, and announcements."}
+              </p>
+            </div>
+
+            <div className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-1">
+              <div className="grid grid-cols-2 gap-1 rounded-3xl bg-white p-1 shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => setMode("user")}
+                  className={`rounded-3xl px-4 py-3 text-sm font-semibold transition ${mode === "user" ? "bg-emerald-600 text-white" : "text-slate-700 hover:text-slate-900"}`}
+                >
+                  Staff
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode("admin")}
+                  className={`rounded-3xl px-4 py-3 text-sm font-semibold transition ${mode === "admin" ? "bg-emerald-600 text-white" : "text-slate-700 hover:text-slate-900"}`}
+                >
+                  Admin
+                </button>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+              {mode === "admin" && (
+                <div className="rounded-3xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
+                  <AlertCircle size={18} className="inline align-text-bottom" /> Authorized DOST admins only.
+                </div>
+              )}
+
+              <label className="block text-sm font-semibold text-slate-700">
+                Email
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="yourname@dost.gov.ph"
+                  className="mt-2 w-full rounded-3xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                />
+              </label>
+
+              <label className="block text-sm font-semibold text-slate-700">
+                Password
+                <div className="relative mt-2">
+                  <input
+                    type={showPw ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full rounded-3xl border border-slate-200 bg-white px-4 py-3 pr-12 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPw((value) => !value)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-900"
+                  >
+                    {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </label>
+
+              {error && (
+                <div className="rounded-3xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-3xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {loading ? (
+                  <>
+                    <RefreshCw size={18} className="animate-spin" /> Signing in...
+                  </>
+                ) : mode === "admin" ? (
+                  <>
+                    <Shield size={18} /> Continue as admin
+                  </>
+                ) : (
+                  <>
+                    <User size={18} /> Continue
+                  </>
+                )}
+              </button>
+            </form>
+          </section>
+
+          <aside className="space-y-6 border-t border-slate-200 bg-emerald-50 p-8 sm:p-10 lg:border-t-0 lg:border-l lg:rounded-r-4xl lg:p-10">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">Why SARAI login</p>
+              <h2 className="mt-4 text-xl font-semibold text-slate-900">Access all SARAI services from one secure portal</h2>
+              <p className="mt-3 text-sm leading-6 text-slate-700">
+                Sign in to manage document workflows, review attendance, and stay updated with the latest announcements across DOST Region 1.
+              </p>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <p className="text-sm font-semibold text-slate-900">What you can do</p>
+              <ul className="mt-5 space-y-4 text-sm text-slate-600">
+                <li className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3">Track DTS records and approvals.</li>
+                <li className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3">Monitor staff attendance and schedules.</li>
+                <li className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3">View public news and achievements.</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
       </div>
-    </SiteShell>
+    </div>
   );
 }
