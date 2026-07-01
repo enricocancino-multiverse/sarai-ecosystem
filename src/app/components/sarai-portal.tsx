@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   AlertCircle,
   ArrowRight,
@@ -1122,7 +1122,6 @@ export default function SaraiPortal() {
   const [role, setRole] = useState<UserRole>(null);
   const [userName, setUserName] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const searchParams = useSearchParams();
 
   const clearUrlHash = useCallback(() => {
     if (typeof window !== "undefined" && window.location.hash) {
@@ -1154,23 +1153,19 @@ export default function SaraiPortal() {
   };
 
   useEffect(() => {
-    if (!searchParams) return;
-    const portal = searchParams.get("portal");
-    const name = decodeURIComponent(searchParams.get("name") ?? "Staff Member");
+    const loadSession = async () => {
+      const response = await fetch("/api/auth/me");
+      if (!response.ok) return;
+      const payload = await response.json();
+      if (!payload.user) return;
 
-    if (portal === "user") {
-      setRole("user");
-      setUserName(name);
-      setPage("user-dashboard");
-      return;
-    }
+      setRole(payload.user.is_admin ? "admin" : "user");
+      setUserName(payload.user.name);
+      setPage(payload.user.is_admin ? "admin-dashboard" : "user-dashboard");
+    };
 
-    if (portal === "admin") {
-      setRole("admin");
-      setUserName(name);
-      setPage("admin-dashboard");
-    }
-  }, [searchParams]);
+    loadSession();
+  }, []);
 
   const navigateToLogin = useCallback(() => {
     clearUrlHash();

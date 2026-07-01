@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
@@ -24,16 +24,32 @@ export default function LoginPage() {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      const safeName = email.split("@")[0].replace(".", " ").replace(/\b\w/g, (c) => c.toUpperCase()) || "Staff";
-      const encodedName = encodeURIComponent(safeName);
 
-      if (mode === "admin") {
-        router.push(`/?portal=admin&name=${encodedName}`);
-      } else {
-        router.push(`/?portal=user&name=${encodedName}`);
-      }
-    }, 600);
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, mode }),
+    });
+
+    let payload: { error?: string } | null = null;
+    try {
+      payload = await response.json();
+    } catch (err) {
+      payload = null;
+    }
+
+    if (!response.ok) {
+      setLoading(false);
+      setError(
+        payload?.error ??
+          `Unable to sign in. ${response.statusText || "Please check your credentials."}`
+      );
+      return;
+    }
+
+    // Both staff and admin redirect to home portal
+    // The portal component detects user role and shows appropriate dashboard
+    router.push("/");
   };
 
   return (
