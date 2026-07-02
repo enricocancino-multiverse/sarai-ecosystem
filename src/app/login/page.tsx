@@ -58,7 +58,7 @@ export default function LoginPage() {
         <div className="overflow-hidden rounded-4xl border border-emerald-100 bg-white shadow-[0_20px_60px_-20px_rgba(16,185,129,0.25)] lg:grid lg:grid-cols-[1.2fr_0.8fr]">
           <section className="p-8 sm:p-10">
             <div className="flex items-center justify-between gap-4">
-              <Link href="/" className="text-sm font-semibold text-emerald-700 transition hover:text-emerald-900">
+              <Link href="/?view=landing" className="text-sm font-semibold text-emerald-700 transition hover:text-emerald-900">
                 ← Back to home
               </Link>
               <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">

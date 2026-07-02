@@ -42,14 +42,14 @@ type NavItem = { label: string; page: Page; icon: ReactNode };
 
 const userNav: NavItem[] = [
   { label: "Dashboard", page: "user-dashboard", icon: <Home size={18} /> },
-  { label: "DTS", page: "dts", icon: <FileText size={18} /> },
+  { label: "Documents", page: "dts", icon: <FileText size={18} /> },
   { label: "Attendance", page: "attendance", icon: <Clock size={18} /> },
   { label: "News & Trophies", page: "trophies", icon: <Trophy size={18} /> },
 ];
 
 const adminNav: NavItem[] = [
   { label: "Dashboard", page: "admin-dashboard", icon: <Home size={18} /> },
-  { label: "DTS", page: "dts", icon: <FileText size={18} /> },
+  { label: "Documents", page: "dts", icon: <FileText size={18} /> },
   { label: "Attendance", page: "attendance", icon: <Clock size={18} /> },
   { label: "News & Trophies", page: "trophies", icon: <Trophy size={18} /> },
 ];
@@ -1144,20 +1144,45 @@ export default function SaraiPortal() {
     setPage("admin-dashboard");
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     clearUrlHash();
+
+    try {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+
     setRole(null);
     setUserName("");
     setPage("home");
     setSidebarOpen(false);
+    router.replace("/?view=landing");
   };
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("view") === "landing") {
+      setPage("home");
+      return;
+    }
+
     const loadSession = async () => {
-      const response = await fetch("/api/auth/me");
-      if (!response.ok) return;
+      const response = await fetch("/api/auth/me", { credentials: "same-origin" });
+      if (!response.ok) {
+        setRole(null);
+        setUserName("");
+        setPage("home");
+        return;
+      }
+
       const payload = await response.json();
-      if (!payload.user) return;
+      if (!payload.user) {
+        setRole(null);
+        setUserName("");
+        setPage("home");
+        return;
+      }
 
       setRole(payload.user.is_admin ? "admin" : "user");
       setUserName(payload.user.name);
