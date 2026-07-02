@@ -198,9 +198,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const featureHighlights = [
-    { title: "Unified workflows", description: "Coordinate documents, attendance, and announcements from one calm, consistent workspace.", icon: <FileText size={18} /> },
-    { title: "Role-aware access", description: "Staff and admins each get a tailored portal experience with secure, focused actions.", icon: <Shield size={18} /> },
-    { title: "Visible impact", description: "Share awards, achievements, and project updates through a built-in public news experience.", icon: <Trophy size={18} /> },
+    { title: "WHO WE ARE", description: "Coordinate documents, attendance, and announcements from one calm, consistent workspace." },
+    { title: "WHERE WE ARE", description: "Staff and admins each get a tailored portal experience with secure, focused actions." },
+    { title: "WHAT WE DO", description: "Share awards, achievements, and project updates through a built-in public news experience." },
   ];
 
   const workflowSteps = [
@@ -218,15 +218,15 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(30,107,60,0.16),transparent_35%),linear-gradient(180deg,#fcfdfc_0%,#f6fbf7_100%)]" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <nav className="sticky top-0 z-50 border-b border-border/70 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <div className="mx-auto flex h-25 max-w-7xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
+            <div className="flex h-15 w-15 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
               <img src="/BagongPilipinas.png" alt="Bagong Pilipinas logo" className="h-full w-full object-cover" />
             </div>
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
+            <div className="flex h-15 w-15 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
               <img src="DOST LOGO GLOBAL.png" alt="DOST Region logo" className="h-full w-full object-cover" />
             </div>
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
+            <div className="flex h-15 w-15 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
               <img src="Sarai-IlocosRegion.png" alt="Sarai Ilocos logo" className="h-full w-full object-cover" />
             </div>
             <div>
@@ -348,12 +348,11 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Why SARAI works</div>
             <h2 className="text-3xl font-bold text-foreground">A calmer way to manage public-facing operations</h2>
           </div>
-          <p className="max-w-xl text-sm leading-6 text-muted-foreground">From document flow to public recognition, the portal is designed to feel simple, clear, and useful for every visitor and team member.</p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {featureHighlights.map((item) => (
             <article key={item.title} className="rounded-[1.35rem] border border-border bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">{item.icon}</div>
+
               <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
               <p className="mt-2 text-sm leading-7 text-muted-foreground">{item.description}</p>
             </article>
