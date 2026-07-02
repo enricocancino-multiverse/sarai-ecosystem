@@ -218,9 +218,17 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(30,107,60,0.16),transparent_35%),linear-gradient(180deg,#fcfdfc_0%,#f6fbf7_100%)]" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <nav className="sticky top-0 z-50 border-b border-border/70 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-sm font-bold text-white">S</div>
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
+              <img src="/BagongPilipinas.png" alt="Bagong Pilipinas logo" className="h-full w-full object-cover" />
+            </div>
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
+              <img src="DOST LOGO GLOBAL.png" alt="DOST Region logo" className="h-full w-full object-cover" />
+            </div>
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
+              <img src="Sarai-IlocosRegion.png" alt="Sarai Ilocos logo" className="h-full w-full object-cover" />
+            </div>
             <div>
               <div className="text-sm font-semibold text-foreground">Sarai Ilocos</div>
               <div className="text-xs text-muted-foreground">Ecosystem Portal</div>
@@ -656,6 +664,17 @@ function DTSPage({ role }: { role: UserRole }) {
   const [documentsList, setDocumentsList] = useState<DocumentItem[]>(documents);
   const [showNewDocModal, setShowNewDocModal] = useState(false);
   const [openActionMenuId, setOpenActionMenuId] = useState<string | null>(null);
+  const [editingDocId, setEditingDocId] = useState<string | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editDocForm, setEditDocForm] = useState({
+    id: "",
+    subject: "",
+    from: "",
+    to: "",
+    date: "",
+    status: "In Transit" as DocumentItem["status"],
+    priority: "Normal" as DocumentItem["priority"],
+  });
   const [newDocForm, setNewDocForm] = useState({
     type: "",
     subject: "",
@@ -703,6 +722,66 @@ function DTSPage({ role }: { role: UserRole }) {
     });
   };
 
+  const handleOpenEdit = (doc: DocumentItem) => {
+    setEditDocForm({ ...doc });
+    setEditingDocId(doc.id);
+    setShowEditModal(true);
+    setOpenActionMenuId(null);
+  };
+
+  const handleSaveEdit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!editingDocId) return;
+    setDocumentsList((prev) => prev.map((d) => (d.id === editingDocId ? ({
+      id: editDocForm.id,
+      subject: editDocForm.subject,
+      from: editDocForm.from,
+      to: editDocForm.to,
+      date: editDocForm.date,
+      status: editDocForm.status,
+      priority: editDocForm.priority,
+    } as DocumentItem) : d)));
+    setShowEditModal(false);
+    setEditingDocId(null);
+    setOpenActionMenuId(null);
+  };
+
+  const handleDelete = (id: string) => {
+    const ok = confirm("Delete this document? This action cannot be undone.");
+    if (!ok) return;
+    setDocumentsList((prev) => prev.filter((d) => d.id !== id));
+    setOpenActionMenuId(null);
+  };
+
+  const handlePrint = (doc: DocumentItem) => {
+    const w = window.open("", "_blank", "noopener,noreferrer");
+    if (!w) return;
+    const html = `
+      <html>
+        <head>
+          <title>Print - ${doc.id}</title>
+          <style>body{font-family:Arial,Helvetica,sans-serif;padding:20px;color:#111} .meta{margin:8px 0;}</style>
+        </head>
+        <body>
+          <h1>${doc.subject}</h1>
+          <div class="meta"><strong>ID:</strong> ${doc.id}</div>
+          <div class="meta"><strong>From:</strong> ${doc.from}</div>
+          <div class="meta"><strong>To:</strong> ${doc.to}</div>
+          <div class="meta"><strong>Date:</strong> ${doc.date}</div>
+          <div class="meta"><strong>Status:</strong> ${doc.status}</div>
+          <div class="meta"><strong>Priority:</strong> ${doc.priority}</div>
+          <hr />
+          <p>Printed from Sarai Portal</p>
+          <script>window.onload = function(){ setTimeout(() => { window.print(); }, 100); };</script>
+        </body>
+      </html>
+    `;
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    setOpenActionMenuId(null);
+  };
+
   return (
     <div className="space-y-6 p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -747,10 +826,10 @@ function DTSPage({ role }: { role: UserRole }) {
                     <span className="translate-y-[-1px]">⋯</span>
                   </button>
                   {openActionMenuId === doc.id && (
-                    <div className="absolute right-0 z-10 mt-2 w-32 rounded-lg border border-border bg-white p-1 shadow-lg">
-                      <button className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-muted">Edit</button>
-                      <button className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-muted">Delete</button>
-                      <button className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-muted">Print</button>
+                    <div className="absolute right-0 z-10 mt-2 w-40 rounded-lg border border-border bg-white p-1 shadow-lg">
+                      <button onClick={() => handleOpenEdit(doc)} className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-muted">Edit</button>
+                      <button onClick={() => handleDelete(doc.id)} className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-muted">Delete</button>
+                      <button onClick={() => handlePrint(doc)} className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-muted">Print</button>
                     </div>
                   )}
                 </div>
@@ -761,6 +840,7 @@ function DTSPage({ role }: { role: UserRole }) {
       </div>
 
       {showNewDocModal && (
+        
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-xl rounded-2xl border border-border bg-white p-6 shadow-2xl">
             <div className="mb-4 flex items-start justify-between gap-3">
@@ -825,6 +905,76 @@ function DTSPage({ role }: { role: UserRole }) {
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowNewDocModal(false)} className="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-muted-foreground">Cancel</button>
                 <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white">Save Document</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {showEditModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-xl rounded-2xl border border-border bg-white p-6 shadow-2xl">
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-lg font-semibold text-foreground">Edit Document</h3>
+                <p className="mt-1 text-sm text-muted-foreground">Update the document fields then save.</p>
+              </div>
+              <button onClick={() => setShowEditModal(false)} className="rounded-md p-1.5 text-muted-foreground hover:bg-muted">
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEdit} className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Type / ID</label>
+                  <input value={editDocForm.id} onChange={(e) => setEditDocForm((p) => ({ ...p, id: e.target.value }))} required className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Date</label>
+                  <input type="date" value={editDocForm.date} onChange={(e) => setEditDocForm((p) => ({ ...p, date: e.target.value }))} required className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Description</label>
+                <input value={editDocForm.subject} onChange={(e) => setEditDocForm((p) => ({ ...p, subject: e.target.value }))} required className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">From</label>
+                  <input value={editDocForm.from} onChange={(e) => setEditDocForm((p) => ({ ...p, from: e.target.value }))} required className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">To</label>
+                  <input value={editDocForm.to} onChange={(e) => setEditDocForm((p) => ({ ...p, to: e.target.value }))} required className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</label>
+                  <select value={editDocForm.status} onChange={(e) => setEditDocForm((p) => ({ ...p, status: e.target.value as DocumentItem["status"] }))} className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="In Transit">In Transit</option>
+                    <option value="Received">Received</option>
+                    <option value="Approved">Approved</option>
+                    <option value="For Signature">For Signature</option>
+                    <option value="Delivered">Delivered</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Priority</label>
+                  <select value={editDocForm.priority} onChange={(e) => setEditDocForm((p) => ({ ...p, priority: e.target.value as DocumentItem["priority"] }))} className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="High">High</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" onClick={() => setShowEditModal(false)} className="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-muted-foreground">Cancel</button>
+                <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white">Save Changes</button>
               </div>
             </form>
           </div>
