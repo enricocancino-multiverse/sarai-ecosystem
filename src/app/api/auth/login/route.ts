@@ -17,17 +17,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
+    if (!user.is_active) {
+      return NextResponse.json({ error: "Account inactive. Contact regional IT support." }, { status: 403 });
+    }
+
     const passwordMatches = await verifyPassword(password, user.password_hash);
     if (!passwordMatches) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
-    if (mode === "admin" && !user.is_admin) {
+    if (mode === "admin" && !user.is_admin && !user.is_superadmin) {
       return NextResponse.json({ error: "Admin access denied." }, { status: 403 });
     }
 
+    if (mode === "superadmin") {
+      if (!user.is_superadmin) {
+        return NextResponse.json({ error: "Superadmin access denied." }, { status: 403 });
+      }
+    }
+
     await recordLogin(user.id);
-    return createSessionResponse({ id: user.id, name: user.name, email: user.email, is_admin: user.is_admin });
+    return createSessionResponse({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      is_admin: Boolean(user.is_admin),
+      is_superadmin: Boolean(user.is_superadmin),
+    });
   } catch (error) {
     console.error("Login route error:", error);
     return NextResponse.json({ error: "Server error during login." }, { status: 500 });

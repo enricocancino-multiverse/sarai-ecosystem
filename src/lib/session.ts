@@ -1,8 +1,16 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET ?? "";
+const JWT_SECRET = process.env.JWT_SECRET ?? "sarai-dev-secret";
 
-export function createSessionCookie(user: { id: number; name: string; email: string; is_admin: boolean }) {
+type SessionUser = {
+  id: number;
+  name: string;
+  email: string;
+  is_admin: boolean;
+  is_superadmin: boolean;
+};
+
+export function createSessionCookie(user: SessionUser) {
   return jwt.sign(user, JWT_SECRET, { expiresIn: "7d" });
 }
 
@@ -13,13 +21,13 @@ export function getUserFromRequest(request: Request) {
 
   const token = match[1];
   try {
-    return jwt.verify(token, JWT_SECRET) as { id: number; name: string; email: string; is_admin: boolean };
+    return jwt.verify(token, JWT_SECRET) as SessionUser;
   } catch (error) {
     return null;
   }
 }
 
-export function createSessionResponse(user: { id: number; name: string; email: string; is_admin: boolean }) {
+export function createSessionResponse(user: SessionUser) {
   const token = createSessionCookie(user);
   const response = new Response(JSON.stringify({ success: true, user }), {
     headers: { "Content-Type": "application/json" },

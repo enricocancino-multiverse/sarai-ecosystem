@@ -4,7 +4,7 @@ import { getUserFromRequest } from "../../../../lib/session";
 
 export async function GET(request: Request) {
   const currentUser = getUserFromRequest(request);
-  if (!currentUser || !currentUser.is_admin) {
+  if (!currentUser || (!currentUser.is_admin && !currentUser.is_superadmin)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

@@ -1,18 +1,33 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AlertCircle, Eye, EyeOff, RefreshCw, Shield, User } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [mode, setMode] = useState<"user" | "admin">("user");
+  const [mode, setMode] = useState<"user" | "admin" | "superadmin">("user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Superadmin gateway is intentionally hidden from the main layout.
+    // Fail-safe Manual Database Override: if root credentials are lost, update the password hash directly in PostgreSQL
+    // or rely on an emergency root environment variable workflow outside the public app.
+    const handleShortcut = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.code === "KeyS") {
+        setMode("superadmin");
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener("keydown", handleShortcut);
+    return () => window.removeEventListener("keydown", handleShortcut);
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,9 +73,14 @@ export default function LoginPage() {
         <div className="overflow-hidden rounded-4xl border border-emerald-100 bg-white shadow-[0_20px_60px_-20px_rgba(16,185,129,0.25)] lg:grid lg:grid-cols-[1.2fr_0.8fr]">
           <section className="p-8 sm:p-10">
             <div className="flex items-center justify-between gap-4">
-              <Link href="/?view=landing" className="text-sm font-semibold text-emerald-700 transition hover:text-emerald-900">
-                ← Back to home
-              </Link>
+              <div className="flex items-center gap-3">
+                <Link href="/?view=landing" className="text-sm font-semibold text-emerald-700 transition hover:text-emerald-900">
+                  ← Back to home
+                </Link>
+                <Link href="/support" className="text-sm font-semibold text-slate-600 transition hover:text-emerald-900">
+                  IT support
+                </Link>
+              </div>
               <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">
                 Secure access
               </span>
@@ -69,12 +89,14 @@ export default function LoginPage() {
             <div className="mt-10 sm:mt-12">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-700">Welcome to SARAI</p>
               <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                {mode === "admin" ? "Admin portal sign in" : "Staff portal sign in"}
+                {mode === "superadmin" ? "Superadmin portal sign in" : mode === "admin" ? "Admin portal sign in" : "Staff portal sign in"}
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600">
-                {mode === "admin"
-                  ? "Authorized DOST admins only. Enter your credentials to manage documents, attendance, and announcements."
-                  : "Use your DOST account to sign in and access SARAI workflow, tracking, and announcements."}
+                {mode === "superadmin"
+                  ? "Use your designated superadmin account to reach the highest-privilege operational controls."
+                  : mode === "admin"
+                    ? "Authorized DOST admins only. Enter your credentials to manage documents, attendance, and announcements."
+                    : "Use your DOST account to sign in and access SARAI workflow, tracking, and announcements."}
               </p>
             </div>
 
@@ -101,6 +123,11 @@ export default function LoginPage() {
               {mode === "admin" && (
                 <div className="rounded-3xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
                   <AlertCircle size={18} className="inline align-text-bottom" /> Authorized DOST admins only.
+                </div>
+              )}
+              {mode === "superadmin" && (
+                <div className="rounded-3xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                  <AlertCircle size={18} className="inline align-text-bottom" /> Root access is restricted to designated super administrators.
                 </div>
               )}
 
@@ -150,6 +177,10 @@ export default function LoginPage() {
                   <>
                     <RefreshCw size={18} className="animate-spin" /> Signing in...
                   </>
+                ) : mode === "superadmin" ? (
+                  <>
+                    <Shield size={18} /> Continue as superadmin
+                  </>
                 ) : mode === "admin" ? (
                   <>
                     <Shield size={18} /> Continue as admin
@@ -160,6 +191,9 @@ export default function LoginPage() {
                   </>
                 )}
               </button>
+              <div className="mt-4 rounded-3xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm leading-6 text-slate-700">
+                Authorized Personnel Only. All activities logged. | <Link href="/support" className="font-semibold text-emerald-700 hover:text-emerald-900">Contact regional IT management.</Link>
+              </div>
             </form>
           </section>
 

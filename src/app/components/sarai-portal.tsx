@@ -36,7 +36,7 @@ import {
 } from "lucide-react";
 
 type Page = "home" | "login" | "user-dashboard" | "admin-dashboard" | "dts" | "attendance" | "trophies";
-type UserRole = "user" | "admin" | null;
+type UserRole = "user" | "admin" | "superadmin" | null;
 
 type NavItem = { label: string; page: Page; icon: ReactNode };
 
@@ -116,7 +116,7 @@ const priorityDot: Record<string, string> = {
 };
 
 function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: UserRole; current: Page; onNav: (page: Page) => void; onLogout: () => void; open: boolean; onClose: () => void }) {
-  const nav = role === "admin" ? adminNav : userNav;
+  const nav = role === "admin" || role === "superadmin" ? adminNav : userNav;
 
   return (
     <>
@@ -133,7 +133,7 @@ function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: User
         </div>
 
         <div className="border-b border-white/10 px-6 py-3 text-xs text-white/70">
-          {role === "admin" ? <div className="flex items-center gap-2"><Shield size={14} className="text-amber-400" /> Admin Access</div> : <div className="flex items-center gap-2"><User size={14} /> Staff Portal</div>}
+          {role === "superadmin" ? <div className="flex items-center gap-2"><Shield size={14} className="text-red-400" /> Superadmin Access</div> : role === "admin" ? <div className="flex items-center gap-2"><Shield size={14} className="text-amber-400" /> Admin Access</div> : <div className="flex items-center gap-2"><User size={14} /> Staff Portal</div>}
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
@@ -580,6 +580,144 @@ function UserDashboard({ userName }: { userName: string }) {
 }
 
 function AdminDashboard({ userName }: { userName: string }) {
+  type Account = {
+    id: number;
+    name: string;
+    email: string;
+    is_active: boolean;
+    is_admin: boolean;
+    is_superadmin: boolean;
+  };
+
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [accountError, setAccountError] = useState("");
+  const [accountMessage, setAccountMessage] = useState("");
+  const [isLoadingAccounts, setIsLoadingAccounts] = useState(false);
+  const [isSubmittingAccount, setIsSubmittingAccount] = useState(false);
+  const [newAccountName, setNewAccountName] = useState("");
+  const [newAccountEmail, setNewAccountEmail] = useState("");
+  const [newAccountPassword, setNewAccountPassword] = useState("");
+
+  const loadAccounts = useCallback(async () => {
+    setIsLoadingAccounts(true);
+    setAccountError("");
+
+    try {
+      const response = await fetch("/api/admin/users", { credentials: "same-origin" });
+      if (!response.ok) {
+        throw new Error("Unable to load accounts.");
+      }
+      const payload = await response.json();
+      setAccounts(payload.users ?? []);
+    } catch (error) {
+      setAccountError((error as Error).message || "Unable to load accounts.");
+    } finally {
+      setIsLoadingAccounts(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadAccounts();
+  }, [loadAccounts]);
+
+  const getAccountRole = (account: Account) => {
+    if (account.is_superadmin) return "Superadmin";
+    if (account.is_admin) return "Admin";
+    return "Staff";
+  };
+
+  const refreshAccounts = async () => {
+    await loadAccounts();
+  };
+
+  const handleCreateAccount = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setAccountMessage("");
+    setAccountError("");
+
+    if (!newAccountName || !newAccountEmail || !newAccountPassword) {
+      setAccountError("Name, email, and password are required.");
+      return;
+    }
+
+    setIsSubmittingAccount(true);
+    try {
+      const response = await fetch("/api/admin/users", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newAccountName,
+          email: newAccountEmail,
+          password: newAccountPassword,
+          isAdmin: false,
+          isSuperadmin: false,
+        }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "Unable to create account.");
+      }
+
+      setNewAccountName("");
+      setNewAccountEmail("");
+      setNewAccountPassword("");
+      setAccountMessage("Staff credentials created successfully.");
+      await refreshAccounts();
+    } catch (error) {
+      setAccountError((error as Error).message || "Unable to create account.");
+    } finally {
+      setIsSubmittingAccount(false);
+    }
+  };
+
+  const handleSuspendAccount = async (id: number) => {
+    setAccountError("");
+    setAccountMessage("");
+
+    try {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: "PATCH",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: false }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "Unable to suspend user.");
+      }
+
+      setAccountMessage("Account suspended successfully.");
+      await refreshAccounts();
+    } catch (error) {
+      setAccountError((error as Error).message || "Unable to suspend user.");
+    }
+  };
+
+  const handleDeleteAccount = async (id: number) => {
+    setAccountError("");
+    setAccountMessage("");
+
+    try {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: "DELETE",
+        credentials: "same-origin",
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "Unable to delete user.");
+      }
+
+      setAccountMessage("Account deleted successfully.");
+      await refreshAccounts();
+    } catch (error) {
+      setAccountError((error as Error).message || "Unable to delete user.");
+    }
+  };
+
   return (
     <div className="space-y-6 p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -590,6 +728,110 @@ function AdminDashboard({ userName }: { userName: string }) {
         </div>
         <div className="rounded-lg bg-muted px-3 py-1.5 text-right font-mono text-xs text-muted-foreground">June 30, 2025 · 08:41 AM</div>
       </div>
+
+      <div className="rounded-4xl border border-border bg-white p-6 shadow-sm">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">Account Provisioning Engine</h3>
+            <p className="text-sm text-muted-foreground">Give Account or Take Account access for staff-level credentials.</p>
+          </div>
+          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">Admin-only</span>
+        </div>
+
+        <form onSubmit={handleCreateAccount} className="grid gap-4 lg:grid-cols-[1fr_auto]">
+          <div className="grid gap-4 md:grid-cols-3">
+            <label className="space-y-2 text-sm text-slate-800">
+              Full name
+              <input
+                value={newAccountName}
+                onChange={(event) => setNewAccountName(event.target.value)}
+                className="h-12 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                placeholder="e.g. Maria Santos"
+              />
+            </label>
+            <label className="space-y-2 text-sm text-slate-800">
+              Email
+              <input
+                type="email"
+                value={newAccountEmail}
+                onChange={(event) => setNewAccountEmail(event.target.value)}
+                className="h-12 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                placeholder="staff@dost.gov.ph"
+              />
+            </label>
+            <label className="space-y-2 text-sm text-slate-800">
+              Password
+              <input
+                type="password"
+                value={newAccountPassword}
+                onChange={(event) => setNewAccountPassword(event.target.value)}
+                className="h-12 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                placeholder="Secure password"
+              />
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmittingAccount}
+            className="h-12 rounded-3xl bg-emerald-600 px-6 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {isSubmittingAccount ? "Giving Account…" : "Give Account"}
+          </button>
+        </form>
+
+        {(accountError || accountMessage) && (
+          <div className={`mt-4 rounded-3xl border px-4 py-3 text-sm ${accountError ? "border-red-200 bg-red-50 text-red-700" : "border-emerald-200 bg-emerald-50 text-emerald-700"}`}>
+            {accountError || accountMessage}
+          </div>
+        )}
+
+        <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-foreground">Staff records</p>
+              <p className="text-xs text-muted-foreground">Suspend or delete staff accounts from this console.</p>
+            </div>
+            <button onClick={refreshAccounts} className="rounded-full border border-emerald-200 bg-white px-3 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-50">
+              Refresh
+            </button>
+          </div>
+
+          {isLoadingAccounts ? (
+            <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-4 py-6 text-center text-sm text-slate-600">Loading accounts…</div>
+          ) : accounts.length === 0 ? (
+            <div className="rounded-3xl border border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-600">No managed staff accounts found.</div>
+          ) : (
+            <div className="space-y-3">
+              {accounts.map((account) => (
+                <div key={account.id} className="grid grid-cols-1 gap-4 rounded-3xl border border-slate-200 bg-white p-4 md:grid-cols-[1fr_auto] md:items-center">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-sm font-semibold text-slate-900">{account.name}</span>
+                      <span className="rounded-full border px-2 py-1 text-[11px] uppercase tracking-[0.22em] text-slate-500">{getAccountRole(account)}</span>
+                      {!account.is_active && <span className="rounded-full bg-amber-100 px-2 py-1 text-[11px] uppercase tracking-[0.22em] text-amber-700">Suspended</span>}
+                    </div>
+                    <p className="mt-1 text-sm text-slate-600">{account.email}</p>
+                  </div>
+                  <div className="flex flex-wrap justify-end gap-2">
+                    {!account.is_superadmin && account.is_active && (
+                      <button onClick={() => void handleSuspendAccount(account.id)} className="rounded-3xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 transition hover:bg-amber-100">
+                        Take Account
+                      </button>
+                    )}
+                    {!account.is_superadmin && (
+                      <button onClick={() => void handleDeleteAccount(account.id)} className="rounded-3xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-100">
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {[
           { label: "Total Staff", value: "120", change: "+3 this month", positive: true, icon: <Users size={18} /> },
@@ -1184,9 +1426,10 @@ export default function SaraiPortal() {
         return;
       }
 
-      setRole(payload.user.is_admin ? "admin" : "user");
+      const resolvedRole = payload.user.is_superadmin ? "superadmin" : payload.user.is_admin ? "admin" : "user";
+      setRole(resolvedRole);
       setUserName(payload.user.name);
-      setPage(payload.user.is_admin ? "admin-dashboard" : "user-dashboard");
+      setPage(resolvedRole === "user" ? "user-dashboard" : "admin-dashboard");
     };
 
     loadSession();
