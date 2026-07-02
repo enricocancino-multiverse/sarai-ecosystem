@@ -235,8 +235,8 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             </div>
           </div>
           <div className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
-            {['About', 'Modules', 'News', 'Contact'].map((item) => (
-              <a key={item} href={item === 'Modules' ? '#modules' : item === 'About' ? '#about' : item === 'News' ? '#news' : '#contact'} className="transition-colors hover:text-primary">{item}</a>
+            {['Home','About', 'Modules', 'News', 'Contact'].map((item) => (
+              <a key={item} href={ item === 'Home' ? '#home' : item === 'Modules' ? '#modules' : item === 'About' ? '#about' : item === 'News' ? '#news' : '#contact'} className="transition-colors hover:text-primary">{item}</a>
             ))}
           </div>
           <div className="flex items-center gap-3">
@@ -248,7 +248,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         </div>
         {menuOpen && (
           <div className="border-t border-border bg-white px-4 pb-4 pt-2 md:hidden">
-            {['About', 'Modules', 'News', 'Contact'].map((item) => (
+            {['Home','About', 'Modules', 'News', 'Contact'].map((item) => (
               <a key={item} href={item === 'Modules' ? '#modules' : item === 'About' ? '#about' : item === 'News' ? '#news' : '#contact'} className="block py-2 text-sm text-muted-foreground hover:text-primary">{item}</a>
             ))}
           </div>
