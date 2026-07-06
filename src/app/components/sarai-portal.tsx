@@ -118,6 +118,7 @@ const priorityDot: Record<string, string> = {
   Low: "bg-gray-300",
 };
 
+// Sidebar Component
 function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: UserRole; current: Page; onNav: (page: Page) => void; onLogout: () => void; open: boolean; onClose: () => void }) {
   const nav = role === "admin" || role === "superadmin" ? adminNav : userNav;
 
@@ -211,9 +212,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   ];
 
   const moduleCards = [
-    { title: "Document Tracker", description: "Route records, approvals, and secure updates with a clean DTS experience.", href: "#", icon: <FileText size={18} /> },
-    { title: "Attendance Hub", description: "Log time entries and review daily summaries in a simple, intuitive flow.", href: "#", icon: <Clock size={18} /> },
-    { title: "News & Rewards", description: "Keep the community informed with latest announcements, recognitions, and highlights.", href: "#", icon: <Trophy size={18} /> },
+    { title: "Sarai Personnel", description: "Collection of Sarai personnel information and records.", href: "#", icon: <FileText size={18} /> },
+    { title: "Projects and Missions", description: "Entries of projects and missions.", href: "#", icon: <Clock size={18} /> },
+    { title: "Accomplishment Report", description: "Achievement summaries and performance metrics.", href: "#", icon: <Trophy size={18} /> },
   ];
 
   return (
@@ -248,7 +249,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         )}
       </nav>
 
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden border-t border-white/90">
         <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-primary/10 via-white to-emerald-50/80" />
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
           <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
@@ -258,7 +259,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
                 DOST Region 1 — Portal
               </div>    
               <h1 className="mb-6 text-4xl font-extrabold leading-[1.1] text-foreground sm:text-5xl lg:text-6xl">
-                Sarai Ilocos<br />
+                Sarai Ilocos<br/>
                 <span className="text-primary">Ecosystem</span>
               </h1>
               <p className="mb-8 max-w-xl text-lg leading-relaxed text-muted-foreground">
@@ -316,7 +317,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         </div>
       </section>
 
-      <section className="bg-primary">
+      <section className="bg-primary border-t border-emerald-200/40">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-8 sm:px-6 lg:grid-cols-4">
           {[
             { label: "Active Staff", value: "120+", icon: <Users size={20} /> },
@@ -335,7 +336,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         </div>
       </section>
 
-      <section id="about" className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+      <section id="about" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-white/90">
         <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
           </div>
@@ -353,28 +354,92 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         </div>
       </section>
 
-      <section id="modules" className="bg-muted/40 py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="mb-10 flex items-end justify-between">
+          {/* Modules Section */}
+
+      <section id="modules" className="bg-muted/40 py-20 border-t border-emerald-200/40">
+  <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    
+    {/* Section Header */}
+    <div className="mb-12 flex items-end justify-between">
+      <div>
+        <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600 align-middle">
+          Sarai Modules
+        </div>
+        <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white align-">
+          Everything you need to know in one place
+        </h2>
+      </div>
+    </div>
+
+    {/* Master Grid Wrapper */}
+    <div className="grid gap-8 lg:grid-cols-12 items-start">
+      
+      {/* Left Column: The 3 Core Navigation Cards (Spans 5 of 12 columns) */}
+      <div className="flex flex-col gap-5 lg:col-span-5">
+        {moduleCards.map((card) => (
+          <article 
+            key={card.title} 
+            className="group relative rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800"
+          >
+            <div className="flex gap-4">
+              {/* Icon Frame */}
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
+                {card.icon}
+              </div>
+              
+              {/* Text Information */}
+              <div className="flex-1">
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+                  {card.title}
+                </h3>
+                <p className="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+                  {card.description}
+                </p>
+                <a 
+                  href={card.href} 
+                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+                >
+                  Access Module <ChevronRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Right Column: The Safe Offline Video Container (Spans 7 of 12 columns) */}
+
+      <div className="lg:col-span-7 h-full">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-sm group dark:border-slate-800 h-full min-h-85 flex flex-col justify-between">
+          
+          {/* YouTube Embed Layer */}
+          <div className="absolute inset-0 z-0 w-full h-full opacity-100 transition-opacity">
+            <iframe
+              className="h-full w-full"
+              src="https://www.youtube.com/embed/tRBuJxEDZJ0?rel=0&modestbranding=1"
+              title="Project SARAI Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+
+          {/* Institutional Accent Overlay Details */}
+
+          <div className="pointer-events-none relative z-10 p-5 bg-linear-to-b from-black/60 via-transparent to-black/80 flex flex-col justify-between h-full min-h-85">
             <div>
-              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Sarai Modules</div>
-              <h2 className="text-3xl font-bold text-foreground">Everything you need to know in one place</h2>
+              <p className="text-xs font-medium uppercase tracking-wider text-slate-300">Project SARAI Overview</p>
+              <p className="text-xs text-slate-400">Smarter Approaches to Rejuvenate Agriculture as an Industry</p>
             </div>
           </div>
-          <div className="grid gap-6 lg:grid-cols-3">
-            {moduleCards.map((card) => (
-              <article key={card.title} className="rounded-[1.4rem] border border-border bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">{card.icon}</div>
-                <h3 className="text-lg font-semibold text-foreground">{card.title}</h3>
-                <p className="mt-2 text-sm leading-7 text-muted-foreground">{card.description}</p>
-                <a href="#contact" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">Learn more <ChevronRight size={14} /></a>
-              </article>
-            ))}
           </div>
-        </div>
-      </section>
+       </div>
+      </div>
+    </div>
+  </section>
 
-      <section id="news" className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+     {/* News Section */}
+      <section id="news" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-white/90">
         <div className="mb-10 flex items-end justify-between">
           <div>
             <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Latest updates</div>
@@ -400,8 +465,10 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
           ))}
         </div>
       </section>
+          
+          {/* Footer Section */}
 
-      <section id="contact" className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+      <section id="contact" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-emerald-200/40">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
             <div className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Get in touch</div>
@@ -417,9 +484,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             <h3 className="mb-2 text-xl font-bold">Looking for public updates?</h3>
             <p className="mb-6 text-sm text-white/80">Explore the latest SARAI news, achievements, and office contact details from this public landing page.</p>
             <a href="#news" className="inline-flex w-full items-center justify-center rounded-lg bg-white px-4 py-3 font-semibold text-primary transition-all hover:bg-gray-50">View latest updates</a>
-          </div>
         </div>
-      </section>
+    </div>
+</section>
 
       <footer className="bg-foreground py-8 text-white/60">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 text-xs sm:flex-row sm:px-6">
@@ -433,6 +500,8 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
     </div>
   );
 }
+
+// Login Page Component
 
 function LoginPage({ onBack, onLoginUser, onLoginAdmin }: { onBack: () => void; onLoginUser: (name: string) => void; onLoginAdmin: (name: string) => void }) {
   const [mode, setMode] = useState<"user" | "admin">("user");
@@ -650,6 +719,7 @@ function AdminDashboard({ userName }: { userName: string }) {
   );
 }
 
+//Dashboard Pages
 function DTSPage({ role }: { role: UserRole }) {
   return <DocumentsPage role={role} />;
 }
