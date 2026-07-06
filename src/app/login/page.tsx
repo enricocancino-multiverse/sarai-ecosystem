@@ -77,7 +77,7 @@ export default function LoginPage() {
                 <Link href="/?view=landing" className="text-sm font-semibold text-emerald-700 transition hover:text-emerald-900">
                   ← Back to home
                 </Link>
-                <Link href="/support" className="text-sm font-semibold text-slate-600 transition hover:text-emerald-900">
+                <Link href="/IT-support" className="text-sm font-semibold text-slate-600 transition hover:text-emerald-900">
                   IT support
                 </Link>
               </div>
@@ -192,7 +192,7 @@ export default function LoginPage() {
                 )}
               </button>
               <div className="mt-4 rounded-3xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm leading-6 text-slate-700">
-                Authorized Personnel Only. All activities logged. | <Link href="/support" className="font-semibold text-emerald-700 hover:text-emerald-900">Contact regional IT management.</Link>
+                Authorized Personnel Only. All activities logged. | <Link href="/IT-support" className="font-semibold text-emerald-700 hover:text-emerald-900">Contact regional IT management.</Link>
               </div>
             </form>
           </section>

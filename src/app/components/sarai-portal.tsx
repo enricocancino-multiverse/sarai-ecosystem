@@ -43,15 +43,15 @@ type NavItem = { label: string; page: Page; icon: ReactNode };
 const userNav: NavItem[] = [
   { label: "Dashboard", page: "user-dashboard", icon: <Home size={18} /> },
   { label: "Documents", page: "dts", icon: <FileText size={18} /> },
-  { label: "Attendance", page: "attendance", icon: <Clock size={18} /> },
-  { label: "News & Trophies", page: "trophies", icon: <Trophy size={18} /> },
+  { label: "Check-in", page: "attendance", icon: <Clock size={18} /> },
+  { label: "News & Achievements", page: "trophies", icon: <Trophy size={18} /> },
 ];
 
 const adminNav: NavItem[] = [
   { label: "Dashboard", page: "admin-dashboard", icon: <Home size={18} /> },
   { label: "Documents", page: "dts", icon: <FileText size={18} /> },
-  { label: "Attendance", page: "attendance", icon: <Clock size={18} /> },
-  { label: "News & Trophies", page: "trophies", icon: <Trophy size={18} /> },
+  { label: "Check-in", page: "attendance", icon: <Clock size={18} /> },
+  { label: "News & Achievements", page: "trophies", icon: <Trophy size={18} /> },
 ];
 
 const documents = [
@@ -580,144 +580,6 @@ function UserDashboard({ userName }: { userName: string }) {
 }
 
 function AdminDashboard({ userName }: { userName: string }) {
-  type Account = {
-    id: number;
-    name: string;
-    email: string;
-    is_active: boolean;
-    is_admin: boolean;
-    is_superadmin: boolean;
-  };
-
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [accountError, setAccountError] = useState("");
-  const [accountMessage, setAccountMessage] = useState("");
-  const [isLoadingAccounts, setIsLoadingAccounts] = useState(false);
-  const [isSubmittingAccount, setIsSubmittingAccount] = useState(false);
-  const [newAccountName, setNewAccountName] = useState("");
-  const [newAccountEmail, setNewAccountEmail] = useState("");
-  const [newAccountPassword, setNewAccountPassword] = useState("");
-
-  const loadAccounts = useCallback(async () => {
-    setIsLoadingAccounts(true);
-    setAccountError("");
-
-    try {
-      const response = await fetch("/api/admin/users", { credentials: "same-origin" });
-      if (!response.ok) {
-        throw new Error("Unable to load accounts.");
-      }
-      const payload = await response.json();
-      setAccounts(payload.users ?? []);
-    } catch (error) {
-      setAccountError((error as Error).message || "Unable to load accounts.");
-    } finally {
-      setIsLoadingAccounts(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void loadAccounts();
-  }, [loadAccounts]);
-
-  const getAccountRole = (account: Account) => {
-    if (account.is_superadmin) return "Superadmin";
-    if (account.is_admin) return "Admin";
-    return "Staff";
-  };
-
-  const refreshAccounts = async () => {
-    await loadAccounts();
-  };
-
-  const handleCreateAccount = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setAccountMessage("");
-    setAccountError("");
-
-    if (!newAccountName || !newAccountEmail || !newAccountPassword) {
-      setAccountError("Name, email, and password are required.");
-      return;
-    }
-
-    setIsSubmittingAccount(true);
-    try {
-      const response = await fetch("/api/admin/users", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: newAccountName,
-          email: newAccountEmail,
-          password: newAccountPassword,
-          isAdmin: false,
-          isSuperadmin: false,
-        }),
-      });
-
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.error || "Unable to create account.");
-      }
-
-      setNewAccountName("");
-      setNewAccountEmail("");
-      setNewAccountPassword("");
-      setAccountMessage("Staff credentials created successfully.");
-      await refreshAccounts();
-    } catch (error) {
-      setAccountError((error as Error).message || "Unable to create account.");
-    } finally {
-      setIsSubmittingAccount(false);
-    }
-  };
-
-  const handleSuspendAccount = async (id: number) => {
-    setAccountError("");
-    setAccountMessage("");
-
-    try {
-      const response = await fetch(`/api/admin/users/${id}`, {
-        method: "PATCH",
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ active: false }),
-      });
-
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.error || "Unable to suspend user.");
-      }
-
-      setAccountMessage("Account suspended successfully.");
-      await refreshAccounts();
-    } catch (error) {
-      setAccountError((error as Error).message || "Unable to suspend user.");
-    }
-  };
-
-  const handleDeleteAccount = async (id: number) => {
-    setAccountError("");
-    setAccountMessage("");
-
-    try {
-      const response = await fetch(`/api/admin/users/${id}`, {
-        method: "DELETE",
-        credentials: "same-origin",
-      });
-
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.error || "Unable to delete user.");
-      }
-
-      setAccountMessage("Account deleted successfully.");
-      await refreshAccounts();
-    } catch (error) {
-      setAccountError((error as Error).message || "Unable to delete user.");
-    }
-  };
-
   return (
     <div className="space-y-6 p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -728,110 +590,6 @@ function AdminDashboard({ userName }: { userName: string }) {
         </div>
         <div className="rounded-lg bg-muted px-3 py-1.5 text-right font-mono text-xs text-muted-foreground">June 30, 2025 · 08:41 AM</div>
       </div>
-
-      <div className="rounded-4xl border border-border bg-white p-6 shadow-sm">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="text-lg font-semibold text-foreground">Account Provisioning Engine</h3>
-            <p className="text-sm text-muted-foreground">Give Account or Take Account access for staff-level credentials.</p>
-          </div>
-          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">Admin-only</span>
-        </div>
-
-        <form onSubmit={handleCreateAccount} className="grid gap-4 lg:grid-cols-[1fr_auto]">
-          <div className="grid gap-4 md:grid-cols-3">
-            <label className="space-y-2 text-sm text-slate-800">
-              Full name
-              <input
-                value={newAccountName}
-                onChange={(event) => setNewAccountName(event.target.value)}
-                className="h-12 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                placeholder="e.g. Maria Santos"
-              />
-            </label>
-            <label className="space-y-2 text-sm text-slate-800">
-              Email
-              <input
-                type="email"
-                value={newAccountEmail}
-                onChange={(event) => setNewAccountEmail(event.target.value)}
-                className="h-12 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                placeholder="staff@dost.gov.ph"
-              />
-            </label>
-            <label className="space-y-2 text-sm text-slate-800">
-              Password
-              <input
-                type="password"
-                value={newAccountPassword}
-                onChange={(event) => setNewAccountPassword(event.target.value)}
-                className="h-12 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                placeholder="Secure password"
-              />
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmittingAccount}
-            className="h-12 rounded-3xl bg-emerald-600 px-6 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isSubmittingAccount ? "Giving Account…" : "Give Account"}
-          </button>
-        </form>
-
-        {(accountError || accountMessage) && (
-          <div className={`mt-4 rounded-3xl border px-4 py-3 text-sm ${accountError ? "border-red-200 bg-red-50 text-red-700" : "border-emerald-200 bg-emerald-50 text-emerald-700"}`}>
-            {accountError || accountMessage}
-          </div>
-        )}
-
-        <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-semibold text-foreground">Staff records</p>
-              <p className="text-xs text-muted-foreground">Suspend or delete staff accounts from this console.</p>
-            </div>
-            <button onClick={refreshAccounts} className="rounded-full border border-emerald-200 bg-white px-3 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-50">
-              Refresh
-            </button>
-          </div>
-
-          {isLoadingAccounts ? (
-            <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-4 py-6 text-center text-sm text-slate-600">Loading accounts…</div>
-          ) : accounts.length === 0 ? (
-            <div className="rounded-3xl border border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-600">No managed staff accounts found.</div>
-          ) : (
-            <div className="space-y-3">
-              {accounts.map((account) => (
-                <div key={account.id} className="grid grid-cols-1 gap-4 rounded-3xl border border-slate-200 bg-white p-4 md:grid-cols-[1fr_auto] md:items-center">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-semibold text-slate-900">{account.name}</span>
-                      <span className="rounded-full border px-2 py-1 text-[11px] uppercase tracking-[0.22em] text-slate-500">{getAccountRole(account)}</span>
-                      {!account.is_active && <span className="rounded-full bg-amber-100 px-2 py-1 text-[11px] uppercase tracking-[0.22em] text-amber-700">Suspended</span>}
-                    </div>
-                    <p className="mt-1 text-sm text-slate-600">{account.email}</p>
-                  </div>
-                  <div className="flex flex-wrap justify-end gap-2">
-                    {!account.is_superadmin && account.is_active && (
-                      <button onClick={() => void handleSuspendAccount(account.id)} className="rounded-3xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 transition hover:bg-amber-100">
-                        Take Account
-                      </button>
-                    )}
-                    {!account.is_superadmin && (
-                      <button onClick={() => void handleDeleteAccount(account.id)} className="rounded-3xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-100">
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {[
           { label: "Total Staff", value: "120", change: "+3 this month", positive: true, icon: <Users size={18} /> },
@@ -1350,7 +1108,7 @@ function TrophiesPage() {
       </div>
       <div className="flex w-fit gap-1 rounded-xl bg-muted/60 p-1">
         {(['news', 'achievements'] as const).map((item) => (
-          <button key={item} onClick={() => setTab(item)} className={`rounded-lg px-5 py-2 text-sm font-semibold capitalize transition-all ${tab === item ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>{item === "achievements" ? "🏆 Trophies" : "📰 " + item.charAt(0).toUpperCase() + item.slice(1)}</button>
+          <button key={item} onClick={() => setTab(item)} className={`rounded-lg px-5 py-2 text-sm font-semibold capitalize transition-all ${tab === item ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>{item === "achievements" ? "🏆 Achievements" : "📰 " + item.charAt(0).toUpperCase() + item.slice(1)}</button>
         ))}
       </div>
       {tab === "news" ? <div className="grid gap-6 sm:grid-cols-2">{news.map((item) => (<article key={item.id} className="overflow-hidden rounded-xl border border-border bg-white transition-shadow hover:shadow-md"><div className="h-52 overflow-hidden bg-muted"><img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" /></div><div className="p-5"><div className="mb-3 flex items-center gap-2"><span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{item.tag}</span><span className="text-xs text-muted-foreground">{item.date}</span></div><h3 className="mb-3 font-bold leading-snug text-foreground">{item.title}</h3><p className="text-sm leading-relaxed text-muted-foreground">{item.excerpt}</p><button className="mt-4 flex items-center gap-1 text-xs font-semibold text-primary hover:underline">Read full story <ChevronRight size={12} /></button></div></article>))}</div> : <div><div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{trophies.map((item) => (<div key={item.id} className="flex items-start gap-4 rounded-xl border border-border bg-white p-5 transition-shadow hover:shadow-md"><div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl" style={{ backgroundColor: `${item.color}22` }}>{item.icon}</div><div><h3 className="mb-1 text-sm font-bold text-foreground">{item.title}</h3><p className="text-xs text-muted-foreground">{item.org}</p><p className="mt-1 font-mono text-xs text-primary">{item.date}</p></div></div>))}</div><div className="rounded-2xl bg-linear-to-r from-primary to-emerald-600 p-8 text-center text-white"><div className="mb-4 text-5xl">🏆</div><h3 className="mb-2 text-2xl font-extrabold">Best Regional Office 2025</h3><p className="mx-auto max-w-md text-sm text-white/80">DOST Region 1 recognized as the Best Regional Office for outstanding performance in technology transfer, community engagement, and innovation in public service.</p><div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-semibold"><Trophy size={14} /> Awarded by DOST Central Office · June 2025</div></div></div>}
