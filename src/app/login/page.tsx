@@ -77,9 +77,6 @@ export default function LoginPage() {
                 <Link href="/?view=landing" className="text-sm font-semibold text-emerald-700 transition hover:text-emerald-900">
                   ← Back to home
                 </Link>
-                <Link href="/IT-support" className="text-sm font-semibold text-slate-600 transition hover:text-emerald-900">
-                  IT support
-                </Link>
               </div>
               <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">
                 Secure access
@@ -87,7 +84,6 @@ export default function LoginPage() {
             </div>
 
             <div className="mt-10 sm:mt-12">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-700">Welcome to SARAI</p>
               <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
                 {mode === "superadmin" ? "Superadmin portal sign in" : mode === "admin" ? "Admin portal sign in" : "Staff portal sign in"}
               </h1>
@@ -192,14 +188,14 @@ export default function LoginPage() {
                 )}
               </button>
               <div className="mt-4 rounded-3xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm leading-6 text-slate-700">
-                Authorized Personnel Only. All activities logged. | <Link href="/IT-support" className="font-semibold text-emerald-700 hover:text-emerald-900">Contact regional IT management.</Link>
+                Authorized Personnel Only. All activities logged. | <Link href="/IT-support" className="font-semibold text-emerald-700 hover:text-emerald-900">Need Help? Contact IT support.</Link>
               </div>
             </form>
           </section>
 
           <aside className="space-y-6 border-t border-slate-200 bg-emerald-50 p-8 sm:p-10 lg:border-t-0 lg:border-l lg:rounded-r-4xl lg:p-10">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">Why SARAI login</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">SARAI login</p>
               <h2 className="mt-4 text-xl font-semibold text-slate-900">Access all SARAI services from one secure portal</h2>
               <p className="mt-3 text-sm leading-6 text-slate-700">
                 Sign in to manage document workflows, review attendance, and stay updated with the latest announcements across DOST Region 1.
@@ -211,7 +207,7 @@ export default function LoginPage() {
               <ul className="mt-5 space-y-4 text-sm text-slate-600">
                 <li className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3">Track DTS records and approvals.</li>
                 <li className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3">Monitor staff attendance and schedules.</li>
-                <li className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3">View public news and achievements.</li>
+                <li className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3">Update public news and achievements.</li>
               </ul>
             </div>
           </aside>
