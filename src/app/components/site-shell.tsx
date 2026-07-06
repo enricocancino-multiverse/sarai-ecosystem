@@ -39,7 +39,7 @@ export default function SiteShell({
 
           <div className="flex items-center gap-2">
             <Link
-              href="/login"
+              href="/global-login"
               className="rounded-full border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:border-emerald-400 hover:bg-emerald-50"
             >
               Sign In
@@ -72,7 +72,7 @@ export default function SiteShell({
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">Commissioned by</p>
               <p className="mt-2 text-lg font-semibold text-slate-900">DOST Region 1</p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Link href="/login" className="rounded-full bg-emerald-600 px-4 py-2 font-semibold text-white transition hover:bg-emerald-700">
+                <Link href="/global-login" className="rounded-full bg-emerald-600 px-4 py-2 font-semibold text-white transition hover:bg-emerald-700">
                   Open Portal
                 </Link>
                 <Link href="/dts" className="rounded-full border border-emerald-200 px-4 py-2 font-semibold text-emerald-700 transition hover:bg-white">

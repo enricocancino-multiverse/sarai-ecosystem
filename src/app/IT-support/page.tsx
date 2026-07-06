@@ -54,7 +54,7 @@ export default function SupportPage() {
         </form>
 
         <div className="mt-8 flex items-center justify-between border-t border-emerald-700/30 pt-6 text-sm text-emerald-200">
-          <Link href="/login" className="font-semibold text-emerald-200 hover:text-white">
+          <Link href="/global-login" className="font-semibold text-emerald-200 hover:text-white">
             ← Return to login
           </Link>
           <span className="text-emerald-300/90">Secure IT escalation channel</span>

@@ -743,7 +743,7 @@ export default function SaraiPortal() {
 
   const navigateToLogin = useCallback(() => {
     clearUrlHash();
-    router.push("/login");
+    router.push("/global-login");
   }, [clearUrlHash, router]);
 
   if (page === "home") return <LandingPage onLogin={navigateToLogin} />;
