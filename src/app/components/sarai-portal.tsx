@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { AttendancePageContent } from "../sarai-attendance/page";
 import AchievementsRoutePage from "../sarai-achievements/page";
 import DocumentsPage from "../sarai-documents/page";
+import GlobalLoginPage from "../global-login/page";
 import {
   AlertCircle,
   ArrowRight,
@@ -501,80 +502,6 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   );
 }
 
-// Login Page Component
-
-function LoginPage({ onBack, onLoginUser, onLoginAdmin }: { onBack: () => void; onLoginUser: (name: string) => void; onLoginAdmin: (name: string) => void }) {
-  const [mode, setMode] = useState<"user" | "admin">("user");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-    if (!email || !password) {
-      setError("Please fill in all fields.");
-      return;
-    }
-
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      const name = email.split("@")[0].replace(".", " ").replace(/\b\w/g, (c) => c.toUpperCase());
-      if (mode === "admin") onLoginAdmin(name);
-      else onLoginUser(name);
-    }, 1000);
-  };
-
-  return (
-    <div className="flex min-h-screen flex-col bg-muted/30" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-      <div className="bg-primary px-6 py-4">
-        <button onClick={onBack} className="flex items-center gap-1 text-sm text-white/80 transition-colors hover:text-white">← Back to Home</button>
-      </div>
-      <div className="flex flex-1 items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md">
-          <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-lg">
-            <div className="border-b border-border p-8 pb-6">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-lg font-extrabold text-white">S</div>
-                <div>
-                  <div className="font-bold text-foreground">Sarai Ecosystem</div>
-                  <div className="text-xs text-muted-foreground">DOST Region 1 Portal</div>
-                </div>
-              </div>
-              <div className="flex gap-1 rounded-lg bg-muted p-1">
-                <button onClick={() => setMode("user")} className={`flex flex-1 items-center justify-center gap-2 rounded-md py-2 text-sm font-semibold transition-all ${mode === "user" ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}><User size={15} /> Staff Login</button>
-                <button onClick={() => setMode("admin")} className={`flex flex-1 items-center justify-center gap-2 rounded-md py-2 text-sm font-semibold transition-all ${mode === "admin" ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}><Shield size={15} /> Admin Login</button>
-              </div>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-4 p-8">
-              {mode === "admin" && <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-700"><AlertCircle size={14} /> Admin access is restricted to authorized DOST personnel.</div>}
-              <div>
-                <label className="mb-1.5 block text-xs font-semibold text-foreground">{mode === "admin" ? "Admin Email" : "DOST Email Address"}</label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={mode === "admin" ? "admin@dost.gov.ph" : "yourname@dost.gov.ph"} className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
-              </div>
-              <div>
-                <label className="mb-1.5 block text-xs font-semibold text-foreground">Password</label>
-                <div className="relative">
-                  <input type={showPw ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                  <button type="button" onClick={() => setShowPw((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground">{showPw ? <EyeOff size={16} /> : <Eye size={16} />}</button>
-                </div>
-              </div>
-              {error && <div className="flex items-center gap-2 text-xs text-red-600"><AlertCircle size={13} /> {error}</div>}
-              <button type="submit" disabled={loading} className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-semibold text-white transition-all hover:bg-primary/90 disabled:opacity-60">
-                {loading ? <><RefreshCw size={16} className="animate-spin" /> Signing in...</> : mode === "admin" ? <><Shield size={16} /> Sign in as Admin</> : <><User size={16} /> Sign In</>}
-              </button>
-            </form>
-          </div>
-          <p className="mt-6 text-center text-xs text-muted-foreground">Protected by DOST Region 1 Security Policy · 2025</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function UserDashboard({ userName }: { userName: string }) {
   const now = new Date();
   const greeting = now.getHours() < 12 ? "Good morning" : now.getHours() < 17 ? "Good afternoon" : "Good evening";
@@ -811,12 +738,12 @@ export default function SaraiPortal() {
 
   const navigateToLogin = useCallback(() => {
     clearUrlHash();
-    router.push("/login");
+    router.push("/global-login");
   }, [clearUrlHash, router]);
 
   if (page === "home") return <LandingPage onLogin={navigateToLogin} />;
 
-  if (page === "login") return <LoginPage onBack={() => setPage("home")} onLoginUser={handleLoginUser} onLoginAdmin={handleLoginAdmin} />;
+
 
   return (
     <div className="flex h-screen overflow-hidden bg-background" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
