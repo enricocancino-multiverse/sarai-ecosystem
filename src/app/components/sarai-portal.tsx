@@ -40,6 +40,17 @@ type UserRole = "user" | "admin" | null;
 
 type NavItem = { label: string; page: Page; icon: ReactNode };
 
+type NewsItem = {
+  id: number;
+  title: string;
+  excerpt: string;
+  tag: string;
+  date: string;
+  image: string;
+  isLive: boolean;
+  isLatest: boolean;
+};
+
 const userNav: NavItem[] = [
   { label: "Dashboard", page: "user-dashboard", icon: <Home size={18} /> },
   { label: "DTS", page: "dts", icon: <FileText size={18} /> },
@@ -61,7 +72,7 @@ const documents = [
   { id: "DTS-2025-004", subject: "Livelihood Technology Vouchers", from: "CEST", to: "Finance", date: "2025-06-25", status: "For Signature", priority: "Normal" },
 ];
 
-const news = [
+const initialNews: NewsItem[] = [
   {
     id: 1,
     title: "SARAI Launches AI-Powered Crop Monitoring",
@@ -69,6 +80,8 @@ const news = [
     tag: "Technology",
     date: "June 28, 2025",
     image: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&h=500&fit=crop&auto=format",
+    isLive: true,
+    isLatest: true,
   },
   {
     id: 2,
@@ -77,6 +90,8 @@ const news = [
     tag: "Award",
     date: "June 24, 2025",
     image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=500&fit=crop&auto=format",
+    isLive: true,
+    isLatest: false,
   },
   {
     id: 3,
@@ -85,6 +100,8 @@ const news = [
     tag: "Training",
     date: "June 18, 2025",
     image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&h=500&fit=crop&auto=format",
+    isLive: false,
+    isLatest: false,
   },
 ];
 
@@ -194,8 +211,9 @@ function TopBar({ onMenuToggle, userName, role }: { onMenuToggle: () => void; us
   );
 }
 
-function LandingPage({ onLogin }: { onLogin: () => void }) {
+function LandingPage({ onLogin, newsItems }: { onLogin: () => void; newsItems: NewsItem[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const featuredNews = [...newsItems].filter((item) => item.isLive).sort((a, b) => Number(b.isLatest) - Number(a.isLatest) || b.id - a.id).slice(0, 3);
 
   const featureHighlights = [
     { title: "WHO WE ARE", description: "Coordinate documents, attendance, and announcements from one calm, consistent workspace." },
@@ -391,14 +409,15 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
           <button onClick={onLogin} className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:flex">View all <ArrowRight size={14} /></button>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {news.map((item) => (
+          {featuredNews.map((item) => (
             <article key={item.id} className="overflow-hidden rounded-[1.25rem] border border-border bg-white transition-shadow hover:shadow-md">
               <div className="h-44 overflow-hidden bg-muted">
                 <img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
               </div>
               <div className="p-5">
-                <div className="mb-3 flex items-center gap-2">
+                <div className="mb-3 flex flex-wrap items-center gap-2">
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{item.tag}</span>
+                  {item.isLatest && <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Latest</span>}
                   <span className="text-xs text-muted-foreground">{item.date}</span>
                 </div>
                 <h3 className="mb-2 text-sm font-bold leading-snug text-foreground">{item.title}</h3>
@@ -514,9 +533,18 @@ function LoginPage({ onBack, onLoginUser, onLoginAdmin }: { onBack: () => void; 
   );
 }
 
-function UserDashboard({ userName }: { userName: string }) {
+function UserDashboard({ userName, newsItems, onNewsItemsChange }: { userName: string; newsItems: NewsItem[]; onNewsItemsChange: (items: NewsItem[]) => void }) {
   const now = new Date();
   const greeting = now.getHours() < 12 ? "Good morning" : now.getHours() < 17 ? "Good afternoon" : "Good evening";
+  const liveNews = [...newsItems].filter((item) => item.isLive).sort((a, b) => Number(b.isLatest) - Number(a.isLatest) || b.id - a.id).slice(0, 3);
+
+  const toggleLive = (id: number) => {
+    onNewsItemsChange(newsItems.map((entry) => entry.id === id ? { ...entry, isLive: !entry.isLive } : entry));
+  };
+
+  const toggleLatest = (id: number) => {
+    onNewsItemsChange(newsItems.map((entry) => ({ ...entry, isLatest: entry.id === id })));
+  };
 
   return (
     <div className="space-y-6 p-6">
@@ -560,6 +588,35 @@ function UserDashboard({ userName }: { userName: string }) {
         </div>
         <div className="space-y-4">
           <div className="rounded-xl border border-border bg-white p-5">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">Live News Controls</h3>
+                <p className="text-xs text-muted-foreground">Keep the latest updates visible to staff.</p>
+              </div>
+              <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Live</span>
+            </div>
+            <div className="space-y-2">
+              {liveNews.map((item) => (
+                <div key={item.id} className="rounded-lg border border-border bg-muted/40 p-2.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                      <p className="text-[11px] text-muted-foreground">{item.date}</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <button onClick={() => toggleLive(item.id)} className={`rounded-full px-2 py-1 text-[10px] font-semibold ${item.isLive ? "bg-emerald-600 text-white" : "bg-white text-muted-foreground"}`}>
+                        {item.isLive ? "Live" : "Draft"}
+                      </button>
+                      <button onClick={() => toggleLatest(item.id)} className={`rounded-full px-2 py-1 text-[10px] font-semibold ${item.isLatest ? "bg-primary text-white" : "bg-white text-muted-foreground"}`}>
+                        {item.isLatest ? "Latest" : "Pin"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-xl border border-border bg-white p-5">
             <h3 className="mb-4 text-sm font-semibold text-foreground">Quick Actions</h3>
             <div className="space-y-2">
               {[
@@ -588,7 +645,17 @@ function UserDashboard({ userName }: { userName: string }) {
   );
 }
 
-function AdminDashboard({ userName }: { userName: string }) {
+function AdminDashboard({ userName, newsItems, onNewsItemsChange }: { userName: string; newsItems: NewsItem[]; onNewsItemsChange: (items: NewsItem[]) => void }) {
+  const liveNews = [...newsItems].filter((item) => item.isLive).sort((a, b) => Number(b.isLatest) - Number(a.isLatest) || b.id - a.id).slice(0, 4);
+
+  const toggleLive = (id: number) => {
+    onNewsItemsChange(newsItems.map((entry) => entry.id === id ? { ...entry, isLive: !entry.isLive } : entry));
+  };
+
+  const toggleLatest = (id: number) => {
+    onNewsItemsChange(newsItems.map((entry) => ({ ...entry, isLatest: entry.id === id })));
+  };
+
   return (
     <div className="space-y-6 p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -616,6 +683,37 @@ function AdminDashboard({ userName }: { userName: string }) {
         ))}
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
+        <div className="overflow-hidden rounded-xl border border-border bg-white">
+          <div className="border-b border-border px-5 py-4">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">Latest News Manager</h3>
+                <p className="text-xs text-muted-foreground">Publish the newest updates and keep them live.</p>
+              </div>
+              <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-700">Admin</span>
+            </div>
+          </div>
+          <div className="space-y-3 p-5">
+            {liveNews.map((item) => (
+              <div key={item.id} className="rounded-lg border border-border bg-muted/40 p-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">{item.excerpt}</p>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <button onClick={() => toggleLive(item.id)} className={`rounded-full px-2 py-1 text-[10px] font-semibold ${item.isLive ? "bg-emerald-600 text-white" : "bg-white text-muted-foreground"}`}>
+                      {item.isLive ? "Live" : "Draft"}
+                    </button>
+                    <button onClick={() => toggleLatest(item.id)} className={`rounded-full px-2 py-1 text-[10px] font-semibold ${item.isLatest ? "bg-primary text-white" : "bg-white text-muted-foreground"}`}>
+                      {item.isLatest ? "Latest" : "Pin"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="overflow-hidden rounded-xl border border-border bg-white">
           <div className="border-b border-border px-5 py-4"><h3 className="text-sm font-semibold text-foreground">Today&apos;s Attendance Summary</h3></div>
           <div className="divide-y divide-border">
@@ -1376,8 +1474,45 @@ function AttendancePage({ userName }: { userName: string }) {
   );
 }
 
-function TrophiesPage() {
+function TrophiesPage({ newsItems, onNewsItemsChange, role }: { newsItems: NewsItem[]; onNewsItemsChange: (items: NewsItem[]) => void; role: UserRole }) {
   const [tab, setTab] = useState<"news" | "achievements">("news");
+  const [showComposer, setShowComposer] = useState(false);
+  const [draft, setDraft] = useState({
+    title: "",
+    excerpt: "",
+    tag: "Announcement",
+    image: "",
+    date: new Date().toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" }),
+  });
+  const orderedNews = [...newsItems].sort((a, b) => Number(b.isLatest) - Number(a.isLatest) || Number(b.isLive) - Number(a.isLive) || b.id - a.id);
+
+  const toggleLive = (id: number) => {
+    onNewsItemsChange(newsItems.map((entry) => entry.id === id ? { ...entry, isLive: !entry.isLive } : entry));
+  };
+
+  const toggleLatest = (id: number) => {
+    onNewsItemsChange(newsItems.map((entry) => ({ ...entry, isLatest: entry.id === id })));
+  };
+
+  const handleCreateNews = (event: FormEvent) => {
+    event.preventDefault();
+    if (!draft.title.trim() || !draft.excerpt.trim()) return;
+
+    const created: NewsItem = {
+      id: Date.now(),
+      title: draft.title.trim(),
+      excerpt: draft.excerpt.trim(),
+      tag: draft.tag.trim() || "Announcement",
+      date: draft.date || new Date().toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" }),
+      image: draft.image.trim() || "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800&h=500&fit=crop&auto=format",
+      isLive: true,
+      isLatest: true,
+    };
+
+    onNewsItemsChange([created, ...newsItems.map((item) => ({ ...item, isLatest: false }))]);
+    setDraft({ title: "", excerpt: "", tag: "Announcement", image: "", date: new Date().toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" }) });
+    setShowComposer(false);
+  };
 
   return (
     <div className="space-y-6 p-6">
@@ -1385,12 +1520,106 @@ function TrophiesPage() {
         <h2 className="text-xl font-bold text-foreground">News & Achievements</h2>
         <p className="text-sm text-muted-foreground">Latest updates, announcements, and recognition for the SARAI ecosystem.</p>
       </div>
-      <div className="flex w-fit gap-1 rounded-xl bg-muted/60 p-1">
-        {(['news', 'achievements'] as const).map((item) => (
-          <button key={item} onClick={() => setTab(item)} className={`rounded-lg px-5 py-2 text-sm font-semibold capitalize transition-all ${tab === item ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>{item === "achievements" ? "🏆 Trophies" : "📰 " + item.charAt(0).toUpperCase() + item.slice(1)}</button>
-        ))}
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex w-fit gap-1 rounded-xl bg-muted/60 p-1">
+          {(["news", "achievements"] as const).map((item) => (
+            <button
+              key={item}
+              onClick={() => setTab(item)}
+              className={`rounded-lg px-5 py-2 text-sm font-semibold capitalize transition-all ${tab === item ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              {item === "achievements" ? "🏆 Trophies" : "📰 News"}
+            </button>
+          ))}
+        </div>
+        {tab === "news" && (
+          <button onClick={() => setShowComposer((value) => !value)} className="rounded-lg border border-primary/20 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary">
+            {showComposer ? "Close controls" : role === "admin" ? "Manage news" : "View news"}
+          </button>
+        )}
       </div>
-      {tab === "news" ? <div className="grid gap-6 sm:grid-cols-2">{news.map((item) => (<article key={item.id} className="overflow-hidden rounded-xl border border-border bg-white transition-shadow hover:shadow-md"><div className="h-52 overflow-hidden bg-muted"><img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" /></div><div className="p-5"><div className="mb-3 flex items-center gap-2"><span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{item.tag}</span><span className="text-xs text-muted-foreground">{item.date}</span></div><h3 className="mb-3 font-bold leading-snug text-foreground">{item.title}</h3><p className="text-sm leading-relaxed text-muted-foreground">{item.excerpt}</p><button className="mt-4 flex items-center gap-1 text-xs font-semibold text-primary hover:underline">Read full story <ChevronRight size={12} /></button></div></article>))}</div> : <div><div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{trophies.map((item) => (<div key={item.id} className="flex items-start gap-4 rounded-xl border border-border bg-white p-5 transition-shadow hover:shadow-md"><div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl" style={{ backgroundColor: `${item.color}22` }}>{item.icon}</div><div><h3 className="mb-1 text-sm font-bold text-foreground">{item.title}</h3><p className="text-xs text-muted-foreground">{item.org}</p><p className="mt-1 font-mono text-xs text-primary">{item.date}</p></div></div>))}</div><div className="rounded-2xl bg-linear-to-r from-primary to-emerald-600 p-8 text-center text-white"><div className="mb-4 text-5xl">🏆</div><h3 className="mb-2 text-2xl font-extrabold">Best Regional Office 2025</h3><p className="mx-auto max-w-md text-sm text-white/80">DOST Region 1 recognized as the Best Regional Office for outstanding performance in technology transfer, community engagement, and innovation in public service.</p><div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-semibold"><Trophy size={14} /> Awarded by DOST Central Office · June 2025</div></div></div>}
+
+      {tab === "news" ? (
+        <div className="space-y-4">
+          {showComposer && (
+            <form onSubmit={handleCreateNews} className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+              <div className="mb-3 flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">Publish a latest update</h3>
+                  <p className="text-xs text-muted-foreground">New stories appear instantly as latest and live.</p>
+                </div>
+                <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Live feed</span>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <input value={draft.title} onChange={(e) => setDraft((prev) => ({ ...prev, title: e.target.value }))} placeholder="Headline" className="rounded-lg border border-border bg-input-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                <input value={draft.tag} onChange={(e) => setDraft((prev) => ({ ...prev, tag: e.target.value }))} placeholder="Tag" className="rounded-lg border border-border bg-input-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                <input value={draft.date} onChange={(e) => setDraft((prev) => ({ ...prev, date: e.target.value }))} placeholder="Date" className="rounded-lg border border-border bg-input-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                <input value={draft.image} onChange={(e) => setDraft((prev) => ({ ...prev, image: e.target.value }))} placeholder="Image URL" className="rounded-lg border border-border bg-input-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <textarea value={draft.excerpt} onChange={(e) => setDraft((prev) => ({ ...prev, excerpt: e.target.value }))} placeholder="Short summary" className="mt-3 min-h-24 w-full rounded-lg border border-border bg-input-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white">Publish</button>
+                <button type="button" onClick={() => setShowComposer(false)} className="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground">Cancel</button>
+              </div>
+            </form>
+          )}
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            {orderedNews.map((item) => (
+              <article key={item.id} className="overflow-hidden rounded-xl border border-border bg-white transition-shadow hover:shadow-md">
+                <div className="h-52 overflow-hidden bg-muted">
+                  <img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
+                </div>
+                <div className="p-5">
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{item.tag}</span>
+                    {item.isLatest && <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Latest</span>}
+                    {!item.isLive && <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Draft</span>}
+                    <span className="text-xs text-muted-foreground">{item.date}</span>
+                  </div>
+                  <h3 className="mb-3 font-bold leading-snug text-foreground">{item.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{item.excerpt}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <button onClick={() => toggleLive(item.id)} className={`rounded-full px-3 py-1 text-xs font-semibold ${item.isLive ? "bg-emerald-600 text-white" : "bg-muted text-muted-foreground"}`}>
+                      {item.isLive ? "Set draft" : "Go live"}
+                    </button>
+                    <button onClick={() => toggleLatest(item.id)} className={`rounded-full px-3 py-1 text-xs font-semibold ${item.isLatest ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}>
+                      {item.isLatest ? "Currently latest" : "Make latest"}
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {trophies.map((item) => (
+              <div key={item.id} className="flex items-start gap-4 rounded-xl border border-border bg-white p-5 transition-shadow hover:shadow-md">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl" style={{ backgroundColor: `${item.color}22` }}>
+                  {item.icon}
+                </div>
+                <div>
+                  <h3 className="mb-1 text-sm font-bold text-foreground">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground">{item.org}</p>
+                  <p className="mt-1 font-mono text-xs text-primary">{item.date}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-2xl bg-linear-to-r from-primary to-emerald-600 p-8 text-center text-white">
+            <div className="mb-4 text-5xl">🏆</div>
+            <h3 className="mb-2 text-2xl font-extrabold">Best Regional Office 2025</h3>
+            <p className="mx-auto max-w-md text-sm text-white/80">DOST Region 1 recognized as the Best Regional Office for outstanding performance in technology transfer, community engagement, and innovation in public service.</p>
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-semibold">
+              <Trophy size={14} /> Awarded by DOST Central Office · June 2025
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1414,6 +1643,7 @@ export default function SaraiPortal() {
   const [role, setRole] = useState<UserRole>(null);
   const [userName, setUserName] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [newsItems, setNewsItems] = useState<NewsItem[]>(initialNews);
 
   const clearUrlHash = useCallback(() => {
     if (typeof window !== "undefined" && window.location.hash) {
@@ -1472,7 +1702,7 @@ export default function SaraiPortal() {
       </Suspense>
 
       {page === "home" ? (
-        <LandingPage onLogin={navigateToLogin} />
+        <LandingPage onLogin={navigateToLogin} newsItems={newsItems} />
       ) : page === "login" ? (
         <LoginPage onBack={() => setPage("home")} onLoginUser={handleLoginUser} onLoginAdmin={handleLoginAdmin} />
       ) : (
@@ -1481,11 +1711,11 @@ export default function SaraiPortal() {
           <div className="flex flex-1 flex-col overflow-hidden">
             <TopBar onMenuToggle={() => setSidebarOpen((value) => !value)} userName={userName} role={role} />
             <main className="flex-1 overflow-y-auto">
-              {page === "user-dashboard" && <UserDashboard userName={userName} />}
-              {page === "admin-dashboard" && <AdminDashboard userName={userName} />}
+              {page === "user-dashboard" && <UserDashboard userName={userName} newsItems={newsItems} onNewsItemsChange={setNewsItems} />}
+              {page === "admin-dashboard" && <AdminDashboard userName={userName} newsItems={newsItems} onNewsItemsChange={setNewsItems} />}
               {page === "dts" && <DTSPage role={role} />}
               {page === "attendance" && <AttendancePage userName={userName} />}
-              {page === "trophies" && <TrophiesPage />}
+              {page === "trophies" && <TrophiesPage newsItems={newsItems} onNewsItemsChange={setNewsItems} role={role} />}
             </main>
           </div>
         </div>
