@@ -380,7 +380,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Latest updates</div>
             <h2 className="text-3xl font-bold text-foreground">Announcements</h2>
           </div>
-          <a href="#contact" className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:flex">Contact us <ArrowRight size={14} /></a>
+          <a href="#contact" className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:flex">See more <ArrowRight size={14} /></a>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {news.map((item) => (
@@ -407,10 +407,10 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             <div className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Get in touch</div>
             <h2 className="mb-6 text-3xl font-bold text-foreground">DOST Region 1 offices</h2>
             <div className="space-y-4 text-sm text-muted-foreground">
-              <div className="flex items-start gap-3"><MapPin size={16} className="mt-0.5 text-primary" /> DOST Complex, Sevilla, City of San Fernando, La Union</div>
-              <div className="flex items-start gap-3"><Phone size={16} className="mt-0.5 text-primary" /> (072) 700-0014 / (072) 607-7834</div>
-              <div className="flex items-start gap-3"><Mail size={16} className="mt-0.5 text-primary" /> ro1@dost.gov.ph</div>
-              <div className="flex items-start gap-3"><Globe size={16} className="mt-0.5 text-primary" /> region1.dost.gov.ph</div>
+              <div className="flex items-start gap-3"><MapPin size={16} className="mt-0.5 text-primary" /> DMMMSU-MLUC, DOST Ilocos Region Sevilla, City of San Fernando, La Union</div>
+              <div className="flex items-start gap-3"><Phone size={16} className="mt-0.5 text-primary" /> 0945 644 9161</div>
+              <div className="flex items-start gap-3"><Mail size={16} className="mt-0.5 text-primary" /> sarai@region1.dost.gov.ph</div>
+              <div className="flex items-start gap-3"><Globe size={16} className="mt-0.5 text-primary" /> https://sarai.ph/</div>
             </div>
           </div>
           <div className="rounded-3xl bg-primary p-8 text-white">
@@ -423,7 +423,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
 
       <footer className="bg-foreground py-8 text-white/60">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 text-xs sm:flex-row sm:px-6">
-          <div className="flex items-center gap-2">Sarai Ecosystem © 2025 · DOST Region 1 · Republic of the Philippines</div>
+          <div className="flex items-center gap-2">Sarai Ecosystem © 2026 · DOST Region 1 · Republic of the Philippines</div>
           <div className="flex gap-6">
             <a href="#" className="transition-colors hover:text-white">Privacy Policy</a>
             <a href="#" className="transition-colors hover:text-white">Terms of Use</a>
