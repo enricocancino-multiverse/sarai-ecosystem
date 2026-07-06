@@ -357,10 +357,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="mb-10 flex items-end justify-between">
             <div>
-              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Portal modules</div>
-              <h2 className="text-3xl font-bold text-foreground">Everything visitors and staff need in one place</h2>
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Sarai Modules</div>
+              <h2 className="text-3xl font-bold text-foreground">Everything you need to know in one place</h2>
             </div>
-            <button onClick={onLogin} className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:flex">Open portal <ArrowRight size={14} /></button>
           </div>
           <div className="grid gap-6 lg:grid-cols-3">
             {moduleCards.map((card) => (
@@ -379,7 +378,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         <div className="mb-10 flex items-end justify-between">
           <div>
             <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Latest updates</div>
-            <h2 className="text-3xl font-bold text-foreground">News & announcements</h2>
+            <h2 className="text-3xl font-bold text-foreground">Announcements</h2>
           </div>
           <a href="#contact" className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:flex">Contact us <ArrowRight size={14} /></a>
         </div>
