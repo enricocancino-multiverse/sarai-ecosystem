@@ -459,7 +459,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Latest updates</div>
             <h2 className="text-3xl font-bold text-foreground">Announcements</h2>
           </div>
-          <a href="#contact" className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:flex">See more <ArrowRight size={14} /></a>
+          <Link href="/announcements" className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:flex">See more <ArrowRight size={14} /></Link>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {news.map((item) => (
