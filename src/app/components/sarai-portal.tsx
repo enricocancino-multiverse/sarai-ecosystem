@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { AttendancePageContent } from "../sarai-attendance/page";
+import AchievementsRoutePage from "../sarai-achievements/page";
+import DocumentsPage from "../sarai-documents/page";
 import {
   AlertCircle,
   ArrowRight,
@@ -36,7 +38,7 @@ import {
   X,
 } from "lucide-react";
 
-type Page = "home" | "login" | "user-dashboard" | "admin-dashboard" | "dts" | "attendance" | "trophies";
+type Page = "home" | "login" | "user-dashboard" | "admin-dashboard" | "dts" | "attendance" | "achievements";
 type UserRole = "user" | "admin" | "superadmin" | null;
 
 type NavItem = { label: string; page: Page; icon: ReactNode };
@@ -45,14 +47,14 @@ const userNav: NavItem[] = [
   { label: "Dashboard", page: "user-dashboard", icon: <Home size={18} /> },
   { label: "Documents", page: "dts", icon: <FileText size={18} /> },
   { label: "Check-in", page: "attendance", icon: <Clock size={18} /> },
-  { label: "News & Achievements", page: "trophies", icon: <Trophy size={18} /> },
+  { label: "Achievements", page: "achievements", icon: <Trophy size={18} /> },
 ];
 
 const adminNav: NavItem[] = [
   { label: "Dashboard", page: "admin-dashboard", icon: <Home size={18} /> },
   { label: "Documents", page: "dts", icon: <FileText size={18} /> },
   { label: "Check-in", page: "attendance", icon: <Clock size={18} /> },
-  { label: "News & Achievements", page: "trophies", icon: <Trophy size={18} /> },
+  { label: "Achievements", page: "achievements", icon: <Trophy size={18} /> },
 ];
 
 const documents = [
@@ -89,7 +91,7 @@ const news = [
   },
 ];
 
-const trophies = [
+const achievements = [
   { id: 1, title: "Best Regional Office 2025", org: "DOST Central Office", date: "June 2025", icon: "🏆", color: "#f6ad55" },
   { id: 2, title: "SARAI Champion Implementer", org: "PhilRice", date: "May 2025", icon: "🌾", color: "#68d391" },
   { id: 3, title: "Top Technology Commercializer", org: "DOST Region 1", date: "April 2025", icon: "💡", color: "#63b3ed" },
@@ -651,81 +653,15 @@ function AdminDashboard({ userName }: { userName: string }) {
 }
 
 function DTSPage({ role }: { role: UserRole }) {
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("All");
-  const statuses = ["All", "In Transit", "Received", "Approved", "For Signature", "Delivered"];
-
-  const filtered = documents.filter((doc) => {
-    const matchSearch = doc.subject.toLowerCase().includes(search.toLowerCase()) || doc.id.includes(search);
-    const matchFilter = filter === "All" || doc.status === filter;
-    return matchSearch && matchFilter;
-  });
-
-  return (
-    <div className="space-y-6 p-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold text-foreground">Document Tracking System</h2>
-          <p className="text-sm text-muted-foreground">Monitor and trace all official documents across divisions.</p>
-        </div>
-        {role === "admin" && <button className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-primary/90"><Plus size={15} /> New Document</button>}
-      </div>
-      <div className="rounded-xl border border-border bg-white p-4">
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-input-background px-3 py-2">
-          <Search size={15} className="shrink-0 text-muted-foreground" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by document title or ID..." className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none" />
-        </div>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {statuses.map((status) => (
-            <button key={status} onClick={() => setFilter(status)} className={`rounded-full border px-3 py-1 text-xs font-semibold transition-all ${filter === status ? "border-primary bg-primary text-white" : "border-transparent bg-muted text-muted-foreground hover:border-border"}`}>{status}</button>
-          ))}
-        </div>
-      </div>
-      <div className="overflow-hidden rounded-xl border border-border bg-white">
-        <div className="grid grid-cols-12 gap-4 border-b border-border bg-muted/30 px-5 py-3 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-          <div className="col-span-2">Doc ID</div>
-          <div className="col-span-4">Subject</div>
-          <div className="col-span-2 hidden lg:block">From → To</div>
-          <div className="col-span-2 hidden md:block">Date</div>
-          <div className="col-span-2">Status</div>
-        </div>
-        <div className="divide-y divide-border">
-          {filtered.map((doc) => (
-            <div key={doc.id} className="grid grid-cols-12 items-center gap-4 px-5 py-3.5 transition-colors hover:bg-muted/20">
-              <div className="col-span-2"><div className="flex items-center gap-2"><div className={`h-1.5 w-1.5 shrink-0 rounded-full ${priorityDot[doc.priority]}`} /><span className="font-mono text-xs font-semibold text-primary">{doc.id}</span></div></div>
-              <div className="col-span-4 min-w-0"><p className="truncate text-sm font-semibold text-foreground">{doc.subject}</p></div>
-              <div className="col-span-2 hidden lg:block text-xs text-muted-foreground"><p className="truncate">{doc.from}</p><p className="truncate text-primary/70">→ {doc.to}</p></div>
-              <div className="col-span-2 hidden md:block text-xs font-mono text-muted-foreground">{doc.date}</div>
-              <div className="col-span-2"><span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${statusColor[doc.status]}`}>{doc.status}</span></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  return <DocumentsPage role={role} />;
 }
 
 function AttendancePage({ userName }: { userName: string }) {
   return <AttendancePageContent userName={userName} />;
 }
 
-function TrophiesPage() {
-  const [tab, setTab] = useState<"news" | "achievements">("news");
-
-  return (
-    <div className="space-y-6 p-6">
-      <div>
-        <h2 className="text-xl font-bold text-foreground">News & Achievements</h2>
-        <p className="text-sm text-muted-foreground">Latest updates, announcements, and recognition for the SARAI ecosystem.</p>
-      </div>
-      <div className="flex w-fit gap-1 rounded-xl bg-muted/60 p-1">
-        {(['news', 'achievements'] as const).map((item) => (
-          <button key={item} onClick={() => setTab(item)} className={`rounded-lg px-5 py-2 text-sm font-semibold capitalize transition-all ${tab === item ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>{item === "achievements" ? "🏆 Achievements" : "📰 " + item.charAt(0).toUpperCase() + item.slice(1)}</button>
-        ))}
-      </div>
-      {tab === "news" ? <div className="grid gap-6 sm:grid-cols-2">{news.map((item) => (<article key={item.id} className="overflow-hidden rounded-xl border border-border bg-white transition-shadow hover:shadow-md"><div className="h-52 overflow-hidden bg-muted"><img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" /></div><div className="p-5"><div className="mb-3 flex items-center gap-2"><span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{item.tag}</span><span className="text-xs text-muted-foreground">{item.date}</span></div><h3 className="mb-3 font-bold leading-snug text-foreground">{item.title}</h3><p className="text-sm leading-relaxed text-muted-foreground">{item.excerpt}</p><button className="mt-4 flex items-center gap-1 text-xs font-semibold text-primary hover:underline">Read full story <ChevronRight size={12} /></button></div></article>))}</div> : <div><div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{trophies.map((item) => (<div key={item.id} className="flex items-start gap-4 rounded-xl border border-border bg-white p-5 transition-shadow hover:shadow-md"><div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl" style={{ backgroundColor: `${item.color}22` }}>{item.icon}</div><div><h3 className="mb-1 text-sm font-bold text-foreground">{item.title}</h3><p className="text-xs text-muted-foreground">{item.org}</p><p className="mt-1 font-mono text-xs text-primary">{item.date}</p></div></div>))}</div><div className="rounded-2xl bg-linear-to-r from-primary to-emerald-600 p-8 text-center text-white"><div className="mb-4 text-5xl">🏆</div><h3 className="mb-2 text-2xl font-extrabold">Best Regional Office 2025</h3><p className="mx-auto max-w-md text-sm text-white/80">DOST Region 1 recognized as the Best Regional Office for outstanding performance in technology transfer, community engagement, and innovation in public service.</p><div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-semibold"><Trophy size={14} /> Awarded by DOST Central Office · June 2025</div></div></div>}
-    </div>
-  );
+function AchievementsView() {
+  return <AchievementsRoutePage />;
 }
 
 export default function SaraiPortal() {
@@ -824,7 +760,7 @@ export default function SaraiPortal() {
           {page === "admin-dashboard" && <AdminDashboard userName={userName} />}
           {page === "dts" && <DTSPage role={role} />}
           {page === "attendance" && <AttendancePage userName={userName} />}
-          {page === "trophies" && <TrophiesPage />}
+          {page === "achievements" && <AchievementsView />}
         </main>
       </div>
     </div>

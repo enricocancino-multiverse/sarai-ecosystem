@@ -32,8 +32,8 @@ export default function SiteShell({
             <Link href="/attendance" className="transition hover:text-emerald-700">
               Attendance
             </Link>
-            <Link href="/trophies" className="transition hover:text-emerald-700">
-              Trophies & News
+            <Link href="/sarai-achievements" className="transition hover:text-emerald-700">
+              Achievements & News
             </Link>
           </nav>
 

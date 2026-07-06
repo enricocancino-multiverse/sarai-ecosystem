@@ -7,7 +7,7 @@ import SiteShell from "../components/site-shell";
 const adminCards = [
   { title: "Document Workflow", note: "Review incoming DTS records and approve requests." },
   { title: "Attendance Oversight", note: "Monitor staff presence and attendance summaries." },
-  { title: "News & Trophies", note: "Publish achievements, announcements, and updates." },
+  { title: "News & Achievements", note: "Publish achievements, announcements, and updates." },
 ];
 
 type ActiveUser = { id: number; name: string; email: string; is_admin: boolean; last_login_at: string | null };
