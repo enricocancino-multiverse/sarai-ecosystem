@@ -199,9 +199,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const featureHighlights = [
-    { title: "Unified workflows", description: "Coordinate documents, attendance, and announcements from one calm, consistent workspace.", icon: <FileText size={18} /> },
-    { title: "Role-aware access", description: "Staff and admins each get a tailored portal experience with secure, focused actions.", icon: <Shield size={18} /> },
-    { title: "Visible impact", description: "Share awards, achievements, and project updates through a built-in public news experience.", icon: <Trophy size={18} /> },
+    { title: "WHO WE ARE", description: "We are a forward-thinking, tech-driven initiative funded by the Department of Science and Technology (DOST) dedicated to empowering Philippine agriculture. By bridging modern technology with local farming needs, we aim to build a more resilient, sustainable, and productive agricultural sector across the regions." },
+    { title: "WHERE WE ARE", content: <img src="/Location-map.png" alt="Location Map" className="w-full h-auto" /> },
+    { title: "WHAT WE DO", description: "We integrate modern data analytics, smart farming solutions, and proactive agronomic systems into agricultural practices. Project SARAI provides smarter approaches to rejuvenate agriculture as an industry in the Philippines by delivering actionable insights and tech-driven tools to support decision-making for a more sustainable farming future." },
   ];
 
   const workflowSteps = [
@@ -338,17 +338,16 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
       <section id="about" className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Why SARAI works</div>
-            <h2 className="text-3xl font-bold text-foreground">A calmer way to manage public-facing operations</h2>
           </div>
-          <p className="max-w-xl text-sm leading-6 text-muted-foreground">From document flow to public recognition, the portal is designed to feel simple, clear, and useful for every visitor and team member.</p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {featureHighlights.map((item) => (
             <article key={item.title} className="rounded-[1.35rem] border border-border bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">{item.icon}</div>
               <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
-              <p className="mt-2 text-sm leading-7 text-muted-foreground">{item.description}</p>
+              {item.description ? (
+                <p className="mt-2 text-sm leading-7 text-muted-foreground">{item.description}</p>
+              ) : null}
+              {item.content ? <div className="mt-4">{item.content}</div> : null}
             </article>
           ))}
         </div>
@@ -743,7 +742,7 @@ export default function SaraiPortal() {
 
   const navigateToLogin = useCallback(() => {
     clearUrlHash();
-    router.push("/global-login");
+    router.push("/login");
   }, [clearUrlHash, router]);
 
   if (page === "home") return <LandingPage onLogin={navigateToLogin} />;
