@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AttendancePageContent } from "../sarai-attendance/page";
 import AchievementsRoutePage from "../sarai-achievements/page";
@@ -213,9 +214,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   ];
 
   const moduleCards = [
-    { title: "Sarai Personnel", description: "Collection of Sarai personnel information and records.", href: "#", icon: <FileText size={18} /> },
-    { title: "Projects and Missions", description: "Entries of projects and missions.", href: "#", icon: <Clock size={18} /> },
-    { title: "Accomplishment Report", description: "Achievement summaries and performance metrics.", href: "#", icon: <Trophy size={18} /> },
+    { title: "Sarai Personnel", description: "Collection of Sarai personnel information and records.", href: "/modules#personnel", icon: <FileText size={18} /> },
+    { title: "Projects and Missions", description: "Entries of projects and missions.", href: "/modules#projects", icon: <Clock size={18} /> },
+    { title: "Accomplishment Report", description: "Achievement summaries and performance metrics.", href: "/modules#reports", icon: <Trophy size={18} /> },
   ];
 
   return (
@@ -396,12 +397,24 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
                 <p className="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
                   {card.description}
                 </p>
-                <a 
-                  href={card.href} 
+                <Link
+                  href={card.href}
                   className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+                  onClick={(e) => {
+                    // Defensive fallback: if Link/client router misbehaves, force full navigation.
+                    try {
+                      // prefer normal Link behavior first; then ensure navigation
+                      // by setting location as a fallback (prevents silent failures).
+                      // Prevent default to avoid double navigation in some browsers.
+                      e.preventDefault();
+                      window.location.href = card.href;
+                    } catch (err) {
+                      // swallow errors — Link will still attempt navigation
+                    }
+                  }}
                 >
                   Access Module <ChevronRight size={14} className="transition-transform group-hover:translate-x-0.5" />
-                </a>
+                </Link>
               </div>
             </div>
           </article>
