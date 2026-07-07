@@ -200,6 +200,21 @@ function TopBar({ onMenuToggle, staffName, role }: { onMenuToggle: () => void; s
 
 function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeBanner, setActiveBanner] = useState(0);
+
+  const heroBanners = [
+    { src: "/banners/DOST-banner.jpg", alt: "DOST banner" },
+    { src: "/banners/SARAI-banner.jpg", alt: "SARAI banner" },
+    { src: "/banners/Sarai-canva-banner.png", alt: "SARAI Canva banner" },
+  ];
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveBanner((current) => (current + 1) % heroBanners.length);
+    }, 5000);
+
+    return () => window.clearInterval(interval);
+  }, [heroBanners.length]);
 
   const featureHighlights = [
     { title: "WHO WE ARE", description: "A Government Organization, We are a forward-thinking, tech-driven initiative funded by the Department of Science and Technology (DOST) dedicated to empowering Philippine agriculture. By bridging modern technology with local farming needs, we aim to build a more resilient, sustainable, and productive agricultural sector across the regions." },
@@ -255,33 +270,54 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
       </nav>
 
       <section className="relative overflow-hidden border-t border-white/90">
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-primary/10 via-white to-emerald-50/80" />
+        <div className="absolute inset-0">
+          {heroBanners.map((banner, index) => (
+            <img
+              key={banner.src}
+              src={banner.src}
+              alt={banner.alt}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${index === activeBanner ? "opacity-100" : "opacity-0"}`}
+            />
+          ))}
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-primary/80 via-primary/20 to-emerald-950/60" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_35%)]" />
+        </div>
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
           <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="max-w-2xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/80 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-white/90 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm backdrop-blur">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
                 DOST Region 1 — Portal
-              </div>    
-              <h1 className="mb-6 text-4xl font-extrabold leading-[1.1] text-foreground sm:text-5xl lg:text-6xl">
+              </div>
+              <h1 className="mb-6 text-4xl font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-6xl">
                 Sarai Ilocos<br/>
-                <span className="text-primary">Ecosystem</span>
+                <span className="text-emerald-200">Ecosystem</span>
               </h1>
-              <p className="mb-8 max-w-xl text-lg leading-relaxed text-muted-foreground">
-                A modern workplace for SARAI Region 1 that brings documents, attendance, and public updates into one polished digital home.
+              <p className="mb-8 max-w-xl text-lg leading-relaxed text-emerald-50/95 font-bold">
+                Smarter Approaches to Reinvigorate Agriculture as an Industry in the Philippines.
               </p>
               <div className="flex flex-wrap gap-3">
                 <a href="#modules" className="flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-all hover:bg-primary/90">
                   Explore Features <ArrowRight size={16} />
                 </a>
-                <a href="#about" className="flex items-center gap-2 rounded-lg border border-border bg-white/80 px-6 py-3 font-semibold text-foreground transition-all hover:bg-muted">Learn More</a>
+                <a href="#about" className="flex items-center gap-2 rounded-lg border border-white/30 bg-white/15 px-6 py-3 font-semibold text-white transition-all hover:bg-white/25">Learn More</a>
+              </div>
+              <div className="mt-6 flex items-center gap-2">
+                {heroBanners.map((banner, index) => (
+                  <button
+                    key={banner.src}
+                    type="button"
+                    aria-label={`Show ${banner.alt}`}
+                    onClick={() => setActiveBanner(index)}
+                    className={`h-2.5 rounded-full transition-all ${index === activeBanner ? "w-8 bg-white" : "w-2.5 bg-white/50"}`}
+                  />
+                ))}
               </div>
             </div>
 
             <div className="rounded-[1.75rem] border border-emerald-100 bg-white/80 p-5 shadow-[0_20px_60px_-20px_rgba(30,107,60,0.25)] backdrop-blur">
               <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Portal snapshot</p>
                   <h2 className="mt-1 text-lg font-semibold text-foreground">Today at SARAI</h2>
                 </div>
                 <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Live</span>
@@ -302,7 +338,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
 
               <div className="mt-4 rounded-2xl border border-border bg-white p-4">
                 <div className="mb-3 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-foreground">Workflow preview</p>
+                  <p className="text-sm font-semibold text-foreground">What to do?</p>
                   <span className="text-xs text-muted-foreground">3 simple steps</span>
                 </div>
                 <div className="space-y-2">
