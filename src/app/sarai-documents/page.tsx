@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Plus, Search } from "lucide-react";
 
-type UserRole = "user" | "admin" | "superadmin" | null;
+type UserRole = "staff" | "admin" | "superadmin" | null;
 
 const documents = [
   { id: "DTS-2025-001", subject: "Budget Proposal FY2025", from: "Finance", to: "Director", date: "2025-06-28", status: "In Transit", priority: "High" },

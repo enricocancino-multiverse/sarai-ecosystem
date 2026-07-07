@@ -40,13 +40,13 @@ import {
   X,
 } from "lucide-react";
 
-type Page = "home" | "login" | "user-dashboard" | "admin-dashboard" | "dts" | "attendance" | "achievements";
-type UserRole = "user" | "admin" | "superadmin" | null;
+type Page = "home" | "login" | "staff-dashboard" | "admin-dashboard" | "dts" | "attendance" | "achievements";
+type UserRole = "staff" | "admin" | "superadmin" | null;
 
 type NavItem = { label: string; page: Page; icon: ReactNode };
 
-const userNav: NavItem[] = [
-  { label: "Dashboard", page: "user-dashboard", icon: <Home size={18} /> },
+const staffNav: NavItem[] = [
+  { label: "Dashboard", page: "staff-dashboard", icon: <Home size={18} /> },
   { label: "Documents", page: "dts", icon: <FileText size={18} /> },
   { label: "Check-in", page: "attendance", icon: <Clock size={18} /> },
   { label: "Achievements", page: "achievements", icon: <Trophy size={18} /> },
@@ -122,7 +122,7 @@ const priorityDot: Record<string, string> = {
 
 // Sidebar Component
 function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: UserRole; current: Page; onNav: (page: Page) => void; onLogout: () => void; open: boolean; onClose: () => void }) {
-  const nav = role === "admin" || role === "superadmin" ? adminNav : userNav;
+  const nav = role === "admin" || role === "superadmin" ? adminNav : staffNav;
 
   return (
     <>
@@ -169,7 +169,7 @@ function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: User
   );
 }
 
-function TopBar({ onMenuToggle, userName, role }: { onMenuToggle: () => void; userName: string; role: UserRole }) {
+function TopBar({ onMenuToggle, staffName, role }: { onMenuToggle: () => void; staffName: string; role: UserRole }) {
   const now = new Date();
   const dateStr = now.toLocaleDateString("en-PH", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
@@ -187,9 +187,9 @@ function TopBar({ onMenuToggle, userName, role }: { onMenuToggle: () => void; us
           <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-primary" />
         </button>
         <div className="flex items-center gap-2 border-l border-border pl-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">{userName[0]}</div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">{staffName[0]}</div>
           <div className="hidden sm:block">
-            <p className="text-xs font-semibold text-foreground">{userName}</p>
+            <p className="text-xs font-semibold text-foreground">{staffName}</p>
             <p className="text-xs capitalize text-muted-foreground">{role}</p>
           </div>
         </div>
@@ -515,7 +515,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   );
 }
 
-function UserDashboard({ userName }: { userName: string }) {
+function StaffDashboard({ staffName }: { staffName: string }) {
   const now = new Date();
   const greeting = now.getHours() < 12 ? "Good morning" : now.getHours() < 17 ? "Good afternoon" : "Good evening";
 
@@ -523,7 +523,7 @@ function UserDashboard({ userName }: { userName: string }) {
     <div className="space-y-6 p-6">
       <div className="rounded-xl bg-linear-to-r from-primary to-emerald-600 p-6 text-white">
         <p className="text-sm text-white/80">{greeting},</p>
-        <h2 className="mb-1 text-2xl font-bold">{userName} 👋</h2>
+        <h2 className="mb-1 text-2xl font-bold">{staffName} 👋</h2>
         <p className="text-xs text-white/70">You have 3 pending documents and your attendance is complete for today.</p>
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -589,14 +589,14 @@ function UserDashboard({ userName }: { userName: string }) {
   );
 }
 
-function AdminDashboard({ userName }: { userName: string }) {
+function AdminDashboard({ staffName }: { staffName: string }) {
   return (
     <div className="space-y-6 p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="mb-1 flex items-center gap-2"><Shield size={18} className="text-amber-500" /><span className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">Admin Console</span></div>
           <h2 className="text-xl font-bold text-foreground">System Overview</h2>
-          <p className="text-sm text-muted-foreground">Welcome back, {userName}. Here&apos;s the status of the Sarai Ecosystem today.</p>
+          <p className="text-sm text-muted-foreground">Welcome back, {staffName}. Here&apos;s the status of the Sarai Ecosystem today.</p>
         </div>
         <div className="rounded-lg bg-muted px-3 py-1.5 text-right font-mono text-xs text-muted-foreground">June 30, 2025 · 08:41 AM</div>
       </div>
@@ -664,8 +664,8 @@ function DTSPage({ role }: { role: UserRole }) {
   return <DocumentsPage role={role} />;
 }
 
-function AttendancePage({ userName }: { userName: string }) {
-  return <AttendancePageContent userName={userName} />;
+function AttendancePage({ staffName }: { staffName: string }) {
+  return <AttendancePageContent userName={staffName} />;
 }
 
 function AchievementsView() {
@@ -676,7 +676,7 @@ export default function SaraiPortal() {
   const router = useRouter();
   const [page, setPage] = useState<Page>("home");
   const [role, setRole] = useState<UserRole>(null);
-  const [userName, setUserName] = useState("");
+  const [staffName, setStaffName] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const clearUrlHash = useCallback(() => {
@@ -686,17 +686,17 @@ export default function SaraiPortal() {
     }
   }, []);
 
-  const handleLoginUser = (name: string) => {
+  const handleLoginStaff = (name: string) => {
     clearUrlHash();
-    setRole("user");
-    setUserName(name);
-    setPage("user-dashboard");
+    setRole("staff");
+    setStaffName(name);
+    setPage("staff-dashboard");
   };
 
   const handleLoginAdmin = (name: string) => {
     clearUrlHash();
     setRole("admin");
-    setUserName(name);
+    setStaffName(name);
     setPage("admin-dashboard");
   };
 
@@ -710,7 +710,7 @@ export default function SaraiPortal() {
     }
 
     setRole(null);
-    setUserName("");
+    setStaffName("");
     setPage("home");
     setSidebarOpen(false);
     router.replace("/?view=landing");
@@ -727,7 +727,7 @@ export default function SaraiPortal() {
       const response = await fetch("/api/auth/me", { credentials: "same-origin" });
       if (!response.ok) {
         setRole(null);
-        setUserName("");
+        setStaffName("");
         setPage("home");
         return;
       }
@@ -735,15 +735,15 @@ export default function SaraiPortal() {
       const payload = await response.json();
       if (!payload.user) {
         setRole(null);
-        setUserName("");
+        setStaffName("");
         setPage("home");
         return;
       }
 
-      const resolvedRole = payload.user.is_superadmin ? "superadmin" : payload.user.is_admin ? "admin" : "user";
+      const resolvedRole = payload.user.is_superadmin ? "superadmin" : payload.user.is_admin ? "admin" : "staff";
       setRole(resolvedRole);
-      setUserName(payload.user.name);
-      setPage(resolvedRole === "user" ? "user-dashboard" : "admin-dashboard");
+      setStaffName(payload.user.name);
+      setPage(resolvedRole === "staff" ? "staff-dashboard" : "admin-dashboard");
     };
 
     loadSession();
@@ -762,12 +762,12 @@ export default function SaraiPortal() {
     <div className="flex h-screen overflow-hidden bg-background" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <Sidebar role={role} current={page} onNav={setPage} onLogout={handleLogout} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex flex-1 flex-col overflow-hidden">
-        <TopBar onMenuToggle={() => setSidebarOpen((value) => !value)} userName={userName} role={role} />
+        <TopBar onMenuToggle={() => setSidebarOpen((value) => !value)} staffName={staffName} role={role} />
         <main className="flex-1 overflow-y-auto">
-          {page === "user-dashboard" && <UserDashboard userName={userName} />}
-          {page === "admin-dashboard" && <AdminDashboard userName={userName} />}
+          {page === "staff-dashboard" && <StaffDashboard staffName={staffName} />}
+          {page === "admin-dashboard" && <AdminDashboard staffName={staffName} />}
           {page === "dts" && <DTSPage role={role} />}
-          {page === "attendance" && <AttendancePage userName={userName} />}
+          {page === "attendance" && <AttendancePage staffName={staffName} />}
           {page === "achievements" && <AchievementsView />}
         </main>
       </div>
