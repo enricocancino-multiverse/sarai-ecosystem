@@ -224,10 +224,13 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
       <nav className="sticky top-0 z-50 border-b border-border/70 bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-sm font-bold text-white">S</div>
+            <div className="flex items-center gap-2">
+              <img src="/DOST LOGO GLOBAL.png" alt="DOST Logo" className="h-8 w-auto shrink-0" />
+              <img src="/BagongPilipinas.png" alt="Bagong Pilipinas Logo" className="h-8 w-auto shrink-0" />
+              <img src="/Sarai-IlocosRegion.png" alt="Sarai Ilocos Region Logo" className="h-8 w-auto shrink-0" />
+            </div>
             <div>
-              <div className="text-sm font-semibold text-foreground">Sarai Ilocos</div>
-              <div className="text-xs text-muted-foreground">Ecosystem Portal</div>
+              <div className="text-sm font-semibold text-foreground">SARAI ILOCOS</div>
             </div>
           </div>
           <div className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
