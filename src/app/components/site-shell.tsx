@@ -44,12 +44,6 @@ export default function SiteShell({
             >
               Sign In
             </Link>
-            <Link
-              href="/admin"
-              className="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
-            >
-              Admin
-            </Link>
           </div>
         </div>
       </header>
