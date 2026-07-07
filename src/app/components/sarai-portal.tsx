@@ -230,7 +230,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
 
   const moduleCards = [
     { title: "Sarai Personnel", description: "Collection of Sarai personnel information and records.", href: "/modules#personnel", icon: <FileText size={18} /> },
-    { title: "Projects and Missions", description: "Entries of projects and missions.", href: "/modules#projects", icon: <Clock size={18} /> },
+    { title: "Mission & Vision", description: "Privacy Policy, Terms of Service, and Code of Conduct", href: "/modules#projects", icon: <Clock size={18} /> },
     { title: "Accomplishment Report", description: "Achievement summaries and performance metrics.", href: "/modules#reports", icon: <Trophy size={18} /> },
   ];
 

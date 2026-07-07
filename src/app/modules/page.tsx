@@ -72,8 +72,8 @@ export default function ModulesPage() {
 
 					{active === "projects" && (
 						<div id="projects" className="space-y-4">
-							<h2 className="text-lg font-bold text-foreground">Projects & Missions</h2>
-							<p className="text-sm text-muted-foreground">Active initiatives, milestones, and assigned teams.</p>
+							<h2 className="text-lg font-bold text-foreground">Mission & Vision</h2>
+							<p className="text-sm text-muted-foreground">Privacy Policy, Terms of Service, and Code of Conduct</p>
 
 							<div className="mt-4 space-y-3">
 								{[{
@@ -89,6 +89,7 @@ export default function ModulesPage() {
 									status: "Completed",
 									progress: 100,
 								}].map((p, idx) => (
+									
 									<div key={idx} className="rounded-lg border border-border bg-white p-4">
 										<div className="flex items-center justify-between">
 											<div>
