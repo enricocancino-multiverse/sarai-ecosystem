@@ -2,6 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 
+type AttendanceLog = {
+  id: string;
+  name: string;
+  dept: string;
+  time: string;
+  date: string;
+  type: string;
+  status: "On Desk" | "Left Desk";
+  photo: string;
+};
+
+const STORAGE_KEY = "sarai-attendance-logs";
+const demoAttendanceLogs: AttendanceLog[] = [
+  { id: "SARAI-001", name: "Dr. Maria Santos", dept: "SARAI", time: "08:15 AM", date: "June 17, 2026", type: "Sign In", status: "On Desk", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150" },
+  { id: "SARAI-002", name: "Engr. Juan Dela Cruz", dept: "CEST", time: "08:30 AM", date: "June 17, 2026", type: "Sign In", status: "On Desk", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150" },
+  { id: "SARAI-003", name: "Clarissa Ramirez", dept: "OJT", time: "09:02 AM", date: "June 17, 2026", type: "Sign In", status: "On Desk", photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150" },
+  { id: "SARAI-004", name: "Arnel Bautista", dept: "OTHERS", time: "05:00 PM", date: "June 16, 2026", type: "Sign Out", status: "Left Desk", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" },
+];
+
 export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?: string }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [employeeId, setEmployeeId] = useState("");
@@ -13,19 +32,32 @@ export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?:
   const [filterDept, setFilterDept] = useState("All");
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [cameraError, setCameraError] = useState(false);
-  const [attendanceLogs, setAttendanceLogs] = useState([
-    { id: "SARAI-001", name: "Dr. Maria Santos", dept: "SARAI", time: "08:15 AM", date: "June 17, 2026", type: "Sign In", status: "On Desk", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150" },
-    { id: "SARAI-002", name: "Engr. Juan Dela Cruz", dept: "CEST", time: "08:30 AM", date: "June 17, 2026", type: "Sign In", status: "On Desk", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150" },
-    { id: "SARAI-003", name: "Clarissa Ramirez", dept: "OJT", time: "09:02 AM", date: "June 17, 2026", type: "Sign In", status: "On Desk", photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150" },
-    { id: "SARAI-004", name: "Arnel Bautista", dept: "OTHERS", time: "05:00 PM", date: "June 16, 2026", type: "Sign Out", status: "Left Desk", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" },
-  ]);
+  const [attendanceLogs, setAttendanceLogs] = useState<AttendanceLog[]>(() => {
+    if (typeof window === "undefined") {
+      return demoAttendanceLogs;
+    }
+
+    try {
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved) as AttendanceLog[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // Fall back to the seeded demo entries when storage is unavailable.
+    }
+
+    return demoAttendanceLogs;
+  });
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const resetForm = () => {
     setEmployeeId("");
-    setEmployeeName(userName || "");
+    setEmployeeName(userName || "SARAI Staff");
     setCapturedPhoto(null);
     setCurrentStep(1);
     setCameraError(false);
@@ -94,15 +126,16 @@ export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?:
     const time = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     const date = now.toLocaleDateString([], { year: "numeric", month: "long", day: "numeric" });
     const isCheckIn = ["Sign In", "AM IN", "PM IN"].includes(actionType);
+    const status: AttendanceLog["status"] = isCheckIn ? "On Desk" : "Left Desk";
 
-    const newLog = {
+    const newLog: AttendanceLog = {
       id: employeeId || `SARAI-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
       name: employeeName || "Unknown",
       dept: department,
       time,
       date,
       type: actionType,
-      status: isCheckIn ? "On Desk" : "Left Desk",
+      status,
       photo: capturedPhoto || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150",
     };
 
@@ -112,12 +145,23 @@ export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?:
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(attendanceLogs));
+    }
+  }, [attendanceLogs]);
+
+  useEffect(() => {
     return () => {
       if (cameraStream) {
         cameraStream.getTracks().forEach((track) => track.stop());
       }
     };
   }, [cameraStream]);
+
+  const todayLabel = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" }).format(new Date());
+  const todayEntries = attendanceLogs.filter((log) => log.date === todayLabel).length;
+  const checkedInCount = attendanceLogs.filter((log) => log.status === "On Desk").length;
+  const latestAction = attendanceLogs[0];
 
   const filteredLogs = attendanceLogs.filter((log) => {
     const matchesSearch = log.name.toLowerCase().includes(searchQuery.toLowerCase()) || log.id.toLowerCase().includes(searchQuery.toLowerCase());
@@ -137,7 +181,22 @@ export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?:
           <div className="rounded-3xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">Active workflow step {currentStep} of 4</div>
         </div>
 
-        <div className="rounded-4xl border border-slate-200 bg-slate-50 p-6">
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="rounded-3xl border border-emerald-100 bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">Today&apos;s Entries</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900">{todayEntries}</p>
+          </div>
+          <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Currently On Desk</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900">{checkedInCount}</p>
+          </div>
+          <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Latest Action</p>
+            <p className="mt-2 text-sm font-semibold text-slate-900">{latestAction ? `${latestAction.type} • ${latestAction.name}` : "Waiting for first submission"}</p>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-4xl border border-slate-200 bg-slate-50 p-6">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Step {currentStep}
@@ -298,7 +357,7 @@ export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?:
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-700">Success</p>
                   <h3 className="mt-4 text-2xl font-semibold text-slate-900">{actionType} Recorded Successfully!</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">Thank you, {employeeName || "team member"}. Your attendance has been logged into the SARAI system.</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">Thank you, {employeeName || "team member"}. Your attendance has been saved to the live SARAI station feed.</p>
                 </div>
                 <div className="rounded-3xl bg-white p-5 text-left text-sm text-slate-700">
                   <p className="font-semibold">Desk health reminder</p>
