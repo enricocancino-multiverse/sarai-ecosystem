@@ -462,7 +462,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
                   />
                 </div>
 
-                <div className="pointer-events-none relative z-10 flex h-full min-h-85 flex-col justify-between bg-gradient-to-b from-black/60 via-transparent to-black/80 p-5">
+                <div className="pointer-events-none relative z-10 flex h-full min-h-85 flex-col justify-between bg-linear-to-b from-black/60 via-transparent to-black/80 p-5">
                   <div>
                     <p className="text-xs font-medium uppercase tracking-wider text-slate-300">Project SARAI Overview</p>
                     <p className="text-xs text-slate-400">Smarter Approaches to Rejuvenate Agriculture as an Industry</p>
