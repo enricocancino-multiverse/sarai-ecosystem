@@ -395,7 +395,6 @@ export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?:
       filteredLogs.map((log, index) => (
         <div key={index} className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:shadow-md flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            {/* UPDATED: Displays the captured thumbnail layout */}
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-100 overflow-hidden text-sm font-semibold text-slate-600">
               {log.photo ? (
                 <img src={log.photo} alt="Verification" className="w-full h-full object-cover" />
@@ -403,7 +402,7 @@ export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?:
                 <span>{log.status === "On Desk" ? "●" : "◌"}</span>
               )}
             </div>
-            
+
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-slate-900">{log.id}</p>
               <div className="mt-0.5 flex items-center gap-2 text-xs text-slate-400">
@@ -413,7 +412,7 @@ export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?:
               </div>
             </div>
           </div>
-          
+
           <div className="text-right shrink-0">
             <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold ${log.type.includes("IN") ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-700"}`}>
               {log.type}
@@ -425,37 +424,7 @@ export function AttendancePageContent({ userName = "SARAI Staff" }: { userName?:
     )}
   </div>
 </div>
-
-        <div className="flex-1 overflow-y-auto pr-1 space-y-2">
-          {filteredLogs.length === 0 ? null : (
-            filteredLogs.map((log, index) => (
-              <div key={index} className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:shadow-md flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-100 bg-slate-50 text-sm font-semibold text-slate-600">
-                    {log.status === "On Desk" ? "●" : "◌"}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-900">{log.id}</p>
-                    <div className="mt-0.5 flex items-center gap-2 text-xs text-slate-400">
-                      <span>{log.dept}</span>
-                      <span>•</span>
-                      <span className={`font-medium ${log.status === "On Desk" ? "text-emerald-600" : "text-slate-500"}`}>{log.status}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="text-right shrink-0">
-                  <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold ${log.type.includes("IN") ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-700"}`}>
-                    {log.type}
-                  </span>
-                  <p className="text-[11px] text-slate-400 mt-1">{log.time}</p>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-   
+</div>
   );
 }
 

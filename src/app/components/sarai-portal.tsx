@@ -397,99 +397,82 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
 
           {/* Modules Section */}
 
-      <section id="modules" className="bg-muted/40 py-20 border-t border-emerald-200/40">
-  <div className="mx-auto max-w-7xl px-4 sm:px-6">
-    
-    {/* Section Header */}
-    <div className="mb-12 flex items-end justify-between">
-      <div>
-        <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600 align-middle">
-          Sarai Modules
-        </div>
-        <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white align-">
-          Everything you need to know in one place
-        </h2>
-      </div>
-    </div>
-
-    {/* Master Grid Wrapper */}
-    <div className="grid gap-8 lg:grid-cols-12 items-start">
-      
-      {/* Left Column: The 3 Core Navigation Cards (Spans 5 of 12 columns) */}
-      <div className="flex flex-col gap-5 lg:col-span-5">
-        {moduleCards.map((card) => (
-          <article 
-            key={card.title} 
-            className="group relative rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800"
-          >
-            <div className="flex gap-4">
-              {/* Icon Frame */}
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
-                {card.icon}
-              </div>
-              
-              {/* Text Information */}
-              <div className="flex-1">
-                <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-                  {card.title}
-                </h3>
-                <p className="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-                  {card.description}
-                </p>
-                <Link
-                  href={card.href}
-                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
-                  onClick={(e) => {
-                    // Defensive fallback: if Link/client router misbehaves, force full navigation.
-                    try {
-                      // prefer normal Link behavior first; then ensure navigation
-                      // by setting location as a fallback (prevents silent failures).
-                      // Prevent default to avoid double navigation in some browsers.
-                      e.preventDefault();
-                      window.location.href = card.href;
-                    } catch (err) {
-                      // swallow errors — Link will still attempt navigation
-                    }
-                  }}
-                >
-                  Access Module <ChevronRight size={14} className="transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {/* Right Column: The Safe Offline Video Container (Spans 7 of 12 columns) */}
-
-      <div className="lg:col-span-7 h-full">
-        <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-sm group dark:border-slate-800 h-full min-h-85 flex flex-col justify-between">
-          
-          {/* YouTube Embed Layer */}
-          <div className="absolute inset-0 z-0 w-full h-full opacity-100 transition-opacity">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/tRBuJxEDZJ0?rel=0&modestbranding=1"
-              title="Project SARAI Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-
-          {/* Institutional Accent Overlay Details */}
-
-          <div className="pointer-events-none relative z-10 p-5 bg-linear-to-b from-black/60 via-transparent to-black/80 flex flex-col justify-between h-full min-h-85">
+      <section id="modules" className="border-t border-emerald-200/40 bg-muted/40 py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-12 flex items-end justify-between">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-slate-300">Project SARAI Overview</p>
-              <p className="text-xs text-slate-400">Smarter Approaches to Rejuvenate Agriculture as an Industry</p>
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600 align-middle">
+                Sarai Modules
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white align-">
+                Everything you need to know in one place
+              </h2>
             </div>
           </div>
+
+          <div className="grid gap-8 lg:grid-cols-12 items-start">
+            <div className="flex flex-col gap-5 lg:col-span-5">
+              {moduleCards.map((card) => (
+                <article
+                  key={card.title}
+                  className="group relative rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950"
+                >
+                  <div className="flex gap-4">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
+                      {card.icon}
+                    </div>
+
+                    <div className="flex-1">
+                      <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+                        {card.title}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+                        {card.description}
+                      </p>
+                      <Link
+                        href={card.href}
+                        className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 transition-colors hover:text-emerald-700"
+                        onClick={(e) => {
+                          try {
+                            e.preventDefault();
+                            window.location.href = card.href;
+                          } catch {
+                            // ignore and let the link handle navigation
+                          }
+                        }}
+                      >
+                        Access Module <ChevronRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="h-full lg:col-span-7">
+              <div className="relative flex h-full min-h-85 flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-sm group dark:border-slate-800">
+                <div className="absolute inset-0 z-0 h-full w-full opacity-100 transition-opacity">
+                  <iframe
+                    className="h-full w-full"
+                    src="https://www.youtube.com/embed/tRBuJxEDZJ0?rel=0&modestbranding=1"
+                    title="Project SARAI Video"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+
+                <div className="pointer-events-none relative z-10 flex h-full min-h-85 flex-col justify-between bg-gradient-to-b from-black/60 via-transparent to-black/80 p-5">
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-slate-300">Project SARAI Overview</p>
+                    <p className="text-xs text-slate-400">Smarter Approaches to Rejuvenate Agriculture as an Industry</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-       </div>
-      </div>
-    </div>
-  </section>
+        </div>
+      </section>
 
      {/* News Section */}
       <section id="news" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-white/90">
@@ -519,8 +502,86 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         </div>
       </section>
           
+      {/* Mobile Applications Section */}
+      <section id="apps" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-emerald-200/40">
+        <div className="mb-12 text-center">
+          <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Digital Tools</div>
+          <h2 className="text-3xl font-bold text-foreground">SARAI Mobile Applications</h2>
+        </div>
+
+        <div className="grid gap-12 md:grid-cols-2 max-w-4xl mx-auto">
+          {/* BANATECH */}
+          <div className="flex flex-col items-center text-center p-6 rounded-[1.25rem] border border-border bg-white shadow-sm hover:shadow-md transition-shadow">
+            <div className="relative w-48 h-48 flex items-center justify-center mb-6">
+              {/* Background decorative circles mimicking the live site screenshot */}
+              <div className="absolute top-2 left-6 w-36 h-36 rounded-full bg-emerald-500 -z-10 opacity-90" />
+              <div className="absolute bottom-4 right-8 w-12 h-12 rounded-full bg-amber-400 -z-10" />
+              {/* Fallback structural layout mirroring image mockup */}
+              <div className="w-28 h-44 bg-zinc-800 rounded-xl p-1.5 shadow-xl border border-zinc-700">
+                <div className="w-full h-full bg-[#1e2d24] rounded-lg p-2 flex flex-col justify-between text-left text-[8px] text-white/90">
+                  <div className="font-bold border-b border-white/20 pb-0.5">BANATECH</div>
+                  <div className="bg-white/10 rounded p-1 my-1 flex-1 flex flex-col items-center justify-center">
+                    <span className="text-base">🍌</span>
+                    <span className="text-[6px] text-center mt-1">Harvest Calculator</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p className="mb-6 text-sm text-muted-foreground leading-relaxed max-w-sm grow">
+              Want to access <span className="font-bold text-foreground">BANATECH</span> firsthand? You can try the features of the mobile application through this link!
+            </p>
+            <a 
+              href="https://sarai.ph/" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white transition-all hover:bg-emerald-700"
+            >
+              Access Here
+            </a>
+          </div>
+
+          {/* SPIDTECH */}
+          <div className="flex flex-col items-center text-center p-6 rounded-[1.25rem] border border-border bg-white shadow-sm hover:shadow-md transition-shadow">
+            <div className="relative w-48 h-48 flex items-center justify-center mb-6">
+              {/* Background decorative elements */}
+              <div className="absolute top-8 left-2 w-4 h-4 rounded-full bg-amber-400 -z-10" />
+              <div className="absolute top-16 right-4 w-3 h-3 rounded-full bg-amber-400 -z-10" />
+              <div className="absolute bottom-2 right-6 w-12 h-12 rounded-full bg-amber-400 -z-10" />
+              
+              {/* Google Play Store Badge Mockup */}
+              <div className="absolute top-14 -right-2.5 bg-amber-100 text-[9px] font-medium text-amber-800 px-2 py-1 rounded-lg border border-amber-200 max-w-25 shadow-sm leading-tight">
+                Available for download on the Google Play Store!
+              </div>
+
+              {/* Structural app preview container */}
+              <div className="w-28 h-44 bg-zinc-800 rounded-xl p-1.5 shadow-xl border border-zinc-700">
+                <div className="w-full h-full bg-[#112415] rounded-lg p-2 flex flex-col justify-between text-left text-[8px] text-white/90">
+                  <div className="font-bold border-b border-white/20 pb-0.5 text-center text-emerald-400">🔍 SPIDTECH</div>
+                  <div className="bg-emerald-950/40 border border-emerald-800/30 rounded p-1 mt-1 flex-1 text-[5px] space-y-1">
+                    <div className="bg-white/10 p-0.5 rounded">📱 Pest Scanner</div>
+                    <div className="bg-white/10 p-0.5 rounded">📚 Image Library</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p className="mb-6 text-sm text-muted-foreground leading-relaxed max-w-sm grow">
+              In need of assistance during pest season? Download <span className="font-bold text-foreground">SPIDTECH</span> now!
+            </p>
+            <a 
+              href="https://play.google.com/store/apps/details?id=ph.sarai.ipdas.spidtech" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white transition-all hover:bg-emerald-700"
+            >
+              Download Here
+            </a>
+          </div>
+        </div>
+      </section>
+
           {/* Footer Section */}
 
+      {/* Contact Section */}
       <section id="contact" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-emerald-200/40">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
@@ -537,13 +598,74 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             <h3 className="mb-2 text-xl font-bold">Looking for public updates?</h3>
             <p className="mb-6 text-sm text-white/80">Explore the latest SARAI news, achievements, and office contact details from this public landing page.</p>
             <a href="#news" className="inline-flex w-full items-center justify-center rounded-lg bg-white px-4 py-3 font-semibold text-primary transition-all hover:bg-gray-50">View latest updates</a>
+          </div>
         </div>
-    </div>
-</section>
+      </section>
 
-      <footer className="bg-foreground py-8 text-white/60">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 text-xs sm:flex-row sm:px-6">
-          <div className="flex items-center gap-2">Sarai Ecosystem © 2026 · DOST Region 1 · Republic of the Philippines</div>
+      {/* Main Rich Footer Section */}
+      <footer className="bg-[#42423e] py-16 text-white/80 border-t border-zinc-700">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 grid gap-10 sm:grid-cols-2 md:grid-cols-4 text-sm">
+          
+          {/* Column 1: About */}
+          <div className="space-y-4">
+            <h4 className="font-bold tracking-widest uppercase text-white text-xs">About SARAI</h4>
+            <p className="text-white/70 leading-relaxed text-xs">
+              Project SARAI aims to develop a national crop forecasting and monitoring system for nine priority crops: rice, corn, banana, coconut, coffee, cacao, sugarcane, tomato, and soybean. This project is funded by DOST-PCAARRD.
+            </p>
+          </div>
+
+          {/* Column 2: Connect */}
+          <div className="space-y-4">
+            <h4 className="font-bold tracking-widest uppercase text-white text-xs">Connect With Us</h4>
+            <div className="space-y-3 text-xs text-white/70">
+              <div className="flex items-center gap-2.5">
+                <Phone size={14} className="shrink-0" />
+                <span>+63 (049) 536 2251</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Mail size={14} className="shrink-0" />
+                <a href="mailto:sarai.centro.uplb@up.edu.ph" className="hover:text-white transition-colors">sarai.centro.uplb@up.edu.ph</a>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <MapPin size={14} className="shrink-0 mt-0.5" />
+                <span>SESAM UPLB, College, Laguna Philippines 4031</span>
+              </div>
+            </div>
+            
+            {/* Social Icons matching the dark circular design */}
+            <div className="flex gap-2 pt-2">
+              <a href="#" className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white text-xs font-semibold">f</a>
+              <a href="#" className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white text-xs font-semibold">𝕏</a>
+              <a href="#" className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white text-[10px] font-semibold">YT</a>
+            </div>
+          </div>
+
+          {/* Column 3: Links Left */}
+          <div className="space-y-4">
+            <h4 className="font-bold tracking-widest uppercase text-white text-xs">Links</h4>
+            <ul className="space-y-2.5 text-xs text-white/70">
+              <li><a href="#" className="hover:text-white transition-colors block">About Us</a></li>
+              <li><a href="#" className="hover:text-white transition-colors block">Monitoring</a></li>
+              <li><a href="#" className="hover:text-white transition-colors block">Rainfall Outlook</a></li>
+              <li><a href="#" className="hover:text-white transition-colors block">DCAF</a></li>
+            </ul>
+          </div>
+
+          {/* Column 4: Links Right */}
+          <div className="space-y-4 pt-4 md:pt-8">
+            <ul className="space-y-2.5 text-xs text-white/70">
+              <li><a href="#" className="hover:text-white transition-colors block">SARAI Eskwela</a></li>
+              <li><a href="#" className="hover:text-white transition-colors block">SARAI Conference</a></li>
+              <li><a href="#" className="hover:text-white transition-colors block">SARAI Community</a></li>
+              <li><a href="#" className="hover:text-white transition-colors block">SARAI Open Data</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Sub-footer metadata bottom bar */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-white/40">
+          <div>Sarai Ecosystem © 2026 · DOST Region 1 · Republic of the Philippines</div>
           <div className="flex gap-6">
             <a href="#" className="transition-colors hover:text-white">Privacy Policy</a>
             <a href="#" className="transition-colors hover:text-white">Terms of Use</a>
