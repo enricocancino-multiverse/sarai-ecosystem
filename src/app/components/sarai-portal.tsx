@@ -241,11 +241,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <img src="/mainlogos/DOST%20LOGO%20GLOBAL.png" alt="DOST Logo" className="h-8 w-auto shrink-0" />
-              <img src="/mainlogos/BagongPilipinas.png" alt="Bagong Pilipinas Logo" className="h-8 w-auto shrink-0" />
-              <img src="/mainlogos/Sarai-IlocosRegion.png" alt="Sarai Ilocos Region Logo" className="h-8 w-auto shrink-0" />
-            </div>
-            <div>
-              <div className="text-sm font-semibold text-foreground">SARAI ILOCOS</div>
+              <img src="/mainlogos/BagongPilipinas.png" alt="Bagong Pilipinas Logo" className="h-10 w-auto shrink-0" />
+              <img src="/mainlogos/Sarai-IlocosRegion.png" alt="Sarai Ilocos Region Logo" className="h-11 w-auto shrink-0" />
+              <img src="/mainlogos/Sarai-Header.png" alt="Sarai Ilocos Region Logo" className="h-8 w-auto shrink-0" />
             </div>
           </div>
           <div className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
@@ -579,8 +577,105 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         </div>
       </section>
 
-          {/* Footer Section */}
+      {/* Logos and Stakeholders section | in here gemini! */}
+      {/* Logos and Stakeholders section */}
+      <section id="partners" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-emerald-200/40">
+        <div className="mb-12 text-center">
+          <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Institutional Network</div>
+          <h2 className="text-3xl font-bold text-foreground">Program Partners & Stakeholders</h2>
+          <p className="mt-3 text-xs text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Collaborating agencies and institutional partners working together under Project SARAI to develop robust agricultural forecasting and monitoring systems across the region.
+          </p>
+        </div>
 
+        <div className="space-y-12">
+          {/* Group 1: Funding & Lead Implementers */}
+          {/* Group 1: Funding & Lead Implementers */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 w-full">
+              <span className="bg-emerald-600 text-[10px] font-bold text-white px-2 py-0.5 rounded-full shrink-0">Core Agencies</span>
+              <h3 className="text-xs font-bold text-emerald-950 tracking-wide uppercase shrink-0">Funding & Lead Implementing Bodies</h3>
+              <div className="h-px bg-emerald-200/60 grow ml-2" />
+            </div>
+            
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+              {[
+                { name: "DOST - PCAARRD", role: "Main Funding Agency", loc: "Los Baños, Laguna", img: "mainlogos/Pccard.png" },
+                { name: "UPLB - SESAM", role: "Lead Program Implementer", loc: "College, Laguna", img: "mainlogos/SESAM.png" },
+                { name: "DOST Ilocos Region", role: "Regional Partner Office", loc: "San Fernando City, La Union", img: "mainlogos/DOST LOGO GLOBAL.png" }
+              ].map((agency, idx) => (
+                <div key={idx} className="flex gap-4 items-center p-4 rounded-xl border border-emerald-100 bg-white shadow-sm hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer">
+                  {/* Clean image wrapper that dynamically loads the logo */}
+                  <div className="w-12 h-12 rounded-xl border border-slate-100 p-1 shrink-0 flex items-center justify-center bg-slate-50/50">
+                    <img 
+                      src={agency.img} 
+                      alt={`${agency.name} Logo`} 
+                      className="w-full h-full object-contain" 
+                    />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-800 leading-tight mb-0.5">{agency.name}</div>
+                    <div className="text-[10px] font-medium text-emerald-600 mb-0.5">{agency.role}</div>
+                    <div className="text-[9px] text-muted-foreground">{agency.loc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Group 2: Regional HEI Cooperators */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 w-full">
+              <span className="bg-amber-500 text-[10px] font-bold text-white px-2 py-0.5 rounded-full shrink-0">HEI Cooperators</span>
+              <h3 className="text-xs font-bold text-emerald-950 tracking-wide uppercase shrink-0">State Universities & Colleges</h3>
+              <div className="h-px bg-emerald-200/60 grow ml-2" />
+            </div>
+            <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+              {[
+                { n: "DMMMSU", d: "Don Mariano Marcos Memorial State University", img: "sidelogos/DMMMSU-logos.png" },
+                { n: "MMSU", d: "Mariano Marcos State University", img: "sidelogos/MMSU.png" },
+                { n: "UNP", d: "University of Northern Philippines", img: "sidelogos/UNP.png" },
+                { n: "PSU", d: "Pangasinan State University", img: "sidelogos/PSU.png" },
+                { n: "ISPSC", d: "Ilocos Sur Polytechnic State College", img: "sidelogos/ISPSC.png" }
+              ].map((m, idx) => (
+                <div key={idx} className="flex flex-col items-center text-center justify-center p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer min-h-32.5">
+                  {/* Container for the logo matching the LGU card style */}
+                  <div className="w-12 h-12 rounded-xl border border-slate-100 p-1 mb-3 flex items-center justify-center bg-slate-50/50">
+                    <img 
+                      src={m.img} 
+                      alt={`${m.n} Logo`} 
+                      className="w-full h-full object-contain" 
+                    />
+                  </div>
+                  <div className="text-[11px] font-bold text-slate-800 leading-tight mb-1">{m.n}</div>
+                  <div className="text-[9px] text-muted-foreground leading-snug px-1">{m.d}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Group 3: Local Government Units */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 w-full">
+              <span className="bg-purple-600 text-[10px] font-bold text-white px-2 py-0.5 rounded-full shrink-0">1 member</span>
+              <h3 className="text-xs font-bold text-emerald-950 tracking-wide uppercase shrink-0">Local Government Units</h3>
+              <div className="h-px bg-emerald-200/60 grow ml-2" />
+            </div>
+            <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+              <div className="flex flex-col items-center text-center justify-center p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer min-h-32.5">
+                {/* Image beautifully placed inside the card instead of the "LGU" circle text */}
+                <div className="w-12 h-12 rounded-xl border border-slate-100 p-1 mb-3 flex items-center justify-center bg-slate-50/50">
+                  <img src="sidelogos/SanfernandoSeal.png" alt="City of San Fernando Seal" className="w-full h-full object-contain" />
+                </div>
+                <div className="text-[11px] font-bold text-slate-800 leading-tight mb-1">City of San Fernando, La Union</div>
+                <div className="text-[9px] text-muted-foreground leading-snug px-1">Hon. Hermenegildo A. Gualberto</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+     {/* Footer Section */}
       {/* Contact Section */}
       <section id="contact" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-emerald-200/40">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr]">
@@ -694,7 +789,7 @@ function StaffDashboard({ staffName }: { staffName: string }) {
           { label: "My Filed Docs", value: "12", icon: <FolderOpen size={18} />, color: "text-blue-600 bg-blue-50" },
           { label: "Announcements", value: "4", icon: <Bell size={18} />, color: "text-purple-600 bg-purple-50" },
         ].map((item) => (
-          <div key={item.label} className="rounded-xl border border-border bg-white p-4">
+          <div key={item.label} className="rounde d-xl border border-border bg-white p-4">
             <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-lg ${item.color}`}>{item.icon}</div>
             <div className="text-xl font-bold text-foreground">{item.value}</div>
             <div className="mt-0.5 text-xs text-muted-foreground">{item.label}</div>
