@@ -126,6 +126,28 @@ export default function ModulesPage() {
                                     </p>
                                 </div>
                             </div>
+
+                            {/* Section 3: Privacy Policy */}
+                            <div className="space-y-4">
+                                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border pb-1">Privacy Policy</h3>
+                                <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
+                                    <h4 className="text-sm font-bold uppercase tracking-wider text-emerald-600">How information is handled</h4>
+                                    <p className="text-sm text-foreground leading-relaxed">
+                                        SARAI uses this portal to manage personnel records, project coordination, and accomplishment reporting. Personal information is collected only when needed for authorized access and administrative workflows, and it is protected through role-based permissions and secure system practices.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Section 4: Terms of Use */}
+                            <div className="space-y-4">
+                                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border pb-1">Terms of Use</h3>
+                                <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
+                                    <h4 className="text-sm font-bold uppercase tracking-wider text-emerald-600">Portal usage expectations</h4>
+                                    <p className="text-sm text-foreground leading-relaxed">
+                                        Access to the SARAI portal is intended for authorized staff, partners, and approved stakeholders. Users are expected to keep their credentials confidential, use information responsibly, and avoid sharing sensitive records outside approved project channels.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     )}
 

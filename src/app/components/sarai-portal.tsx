@@ -216,145 +216,169 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
     return () => window.clearInterval(interval);
   }, [heroBanners.length]);
 
-  const featureHighlights = [
-    { title: "WHO WE ARE", description: "A Government Organization, We are a forward-thinking, tech-driven initiative funded by the Department of Science and Technology (DOST) dedicated to empowering Philippine agriculture. By bridging modern technology with local farming needs, we aim to build a more resilient, sustainable, and productive agricultural sector across the regions." },
-    { title: "WHERE WE ARE", content: <img src="/Location-map.png" alt="Location Map" className="w-full h-auto" /> },
-    { title: "WHAT WE DO", description: "We integrate modern data analytics, smart farming solutions, and proactive agronomic systems into agricultural practices. Project SARAI provides smarter approaches to rejuvenate agriculture as an industry in the Philippines by delivering actionable insights and tech-driven tools to support decision-making for a more sustainable farming future." },
-  ];
+    const featureHighlights = [
+      { title: "WHO WE ARE", description: "A Government Organization, We are a forward-thinking, tech-driven initiative funded by the Department of Science and Technology (DOST) dedicated to empowering Philippine agriculture. By bridging modern technology with local farming needs, we aim to build a more resilient, sustainable, and productive agricultural sector across the regions." },
+      { title: "WHERE WE ARE", content: <img src="/Location-map.png" alt="Location Map" className="w-full h-auto" /> },
+      { title: "WHAT WE DO", description: "We integrate modern data analytics, smart farming solutions, and proactive agronomic systems into agricultural practices. Project SARAI provides smarter approaches to rejuvenate agriculture as an industry in the Philippines by delivering actionable insights and tech-driven tools to support decision-making for a more sustainable farming future." },
+    ];
 
-  const workflowSteps = [
-    { title: "Explore the portal", detail: "Browse the public landing experience and see what SARAI offers." },
-    { title: "Sign in securely", detail: "Choose staff or admin access and move into your personalized workspace." },
-    { title: "Track and report", detail: "Monitor documents, attendance, and updates without switching tools." },
-  ];
+    const workflowSteps = [
+      { title: "Explore the portal", detail: "Browse the public landing experience and see what SARAI offers." },
+      { title: "Sign in securely", detail: "Choose staff or admin access and move into your personalized workspace." },
+      { title: "Track and report", detail: "Monitor documents, attendance, and updates without switching tools." },
+    ];
 
-  const moduleCards = [
-    { title: "Sarai Personnel", description: "Collection of Sarai personnel information and records.", href: "/modules#personnel", icon: <FileText size={18} /> },
-    { title: "Mission & Vision", description: "Privacy Policy, Terms of Service, and Code of Conduct", href: "/modules#projects", icon: <Clock size={18} /> },
-    { title: "Accomplishment Report", description: "Achievement summaries and performance metrics.", href: "/modules#reports", icon: <Trophy size={18} /> },
-  ];
+    const moduleCards = [
+      { title: "Sarai Personnel", description: "Collection of Sarai personnel information and records.", href: "/modules#personnel", icon: <FileText size={18} /> },
+      { title: "Mission & Vision", description: "Privacy Policy, Terms of Service, and Code of Conduct", href: "/modules#projects", icon: <Clock size={18} /> },
+      { title: "Accomplishment Report", description: "Achievement summaries and performance metrics.", href: "/modules#reports", icon: <Trophy size={18} /> },
+    ];
 
-  return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(30,107,60,0.16),transparent_35%),linear-gradient(180deg,#fcfdfc_0%,#f6fbf7_100%)]" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-      <nav className="sticky top-0 z-50 border-b border-border/70 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <img src="/mainlogos/DOST%20LOGO%20GLOBAL.png" alt="DOST Logo" className="h-8 w-auto shrink-0" />
-              <img src="/mainlogos/BagongPilipinas.png" alt="Bagong Pilipinas Logo" className="h-10 w-auto shrink-0" />
-              <img src="/mainlogos/Sarai-IlocosRegion.png" alt="Sarai Ilocos Region Logo" className="h-11 w-auto shrink-0" />
-              <img src="/mainlogos/Sarai-Header.png" alt="Sarai Ilocos Region Logo" className="h-8 w-auto shrink-0" />
-            </div>
-          </div>
-          <div className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
-            {['About', 'Modules', 'News', 'Contact'].map((item) => (
-              <a key={item} href={item === 'Modules' ? '#modules' : item === 'About' ? '#about' : item === 'News' ? '#news' : '#contact'} className="transition-colors hover:text-primary">{item}</a>
-            ))}
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={onLogin} className="rounded-md border border-primary px-4 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-white">Sign In</button>
-            <button onClick={() => setMenuOpen((v) => !v)} className="rounded-md p-1.5 md:hidden">
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-        {menuOpen && (
-          <div className="border-t border-border bg-white px-4 pb-4 pt-2 md:hidden">
-            {['About', 'Modules', 'News', 'Contact'].map((item) => (
-              <a key={item} href={item === 'Modules' ? '#modules' : item === 'About' ? '#about' : item === 'News' ? '#news' : '#contact'} className="block py-2 text-sm text-muted-foreground hover:text-primary">{item}</a>
-            ))}
-          </div>
-        )}
-      </nav>
-
-      <section className="relative overflow-hidden border-t border-white/90">
-        <div className="absolute inset-0">
-          {heroBanners.map((banner, index) => (
-            <img
-              key={banner.src}
-              src={banner.src}
-              alt={banner.alt}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${index === activeBanner ? "opacity-100" : "opacity-0"}`}
-            />
-          ))}
-          <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-primary/80 via-primary/20 to-emerald-950/60" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_35%)]" />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
-          <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="max-w-2xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-white/90 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm backdrop-blur">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-                DOST Region 1 — Portal
-              </div>
-              <h1 className="mb-6 text-4xl font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-6xl">
-                Sarai Ilocos<br/>
-                <span className="text-emerald-200">Ecosystem</span>
-              </h1>
-              <p className="mb-8 max-w-xl text-lg leading-relaxed text-emerald-50/95 font-bold">
-                Smarter Approaches to Reinvigorate Agriculture as an Industry in the Philippines.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <a href="#modules" className="flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-all hover:bg-primary/90">
-                  Explore Features <ArrowRight size={16} />
-                </a>
-                <a href="#about" className="flex items-center gap-2 rounded-lg border border-white/30 bg-white/15 px-6 py-3 font-semibold text-white transition-all hover:bg-white/25">Learn More</a>
-              </div>
-              <div className="mt-6 flex items-center gap-2">
-                {heroBanners.map((banner, index) => (
-                  <button
-                    key={banner.src}
-                    type="button"
-                    aria-label={`Show ${banner.alt}`}
-                    onClick={() => setActiveBanner(index)}
-                    className={`h-2.5 rounded-full transition-all ${index === activeBanner ? "w-8 bg-white" : "w-2.5 bg-white/50"}`}
-                  />
-                ))}
+    return (
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(30,107,60,0.16),transparent_35%),linear-gradient(180deg,#fcfdfc_0%,#f6fbf7_100%)]" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+        <nav className="sticky top-0 z-50 border-b border-border/70 bg-white/90 backdrop-blur">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <img src="/mainlogos/DOST%20LOGO%20GLOBAL.png" alt="DOST Logo" className="h-8 w-auto shrink-0" />
+                <img src="/mainlogos/BagongPilipinas.png" alt="Bagong Pilipinas Logo" className="h-10 w-auto shrink-0" />
+                <img src="/mainlogos/Sarai-IlocosRegion.png" alt="Sarai Ilocos Region Logo" className="h-11 w-auto shrink-0" />
+                <img src="/mainlogos/Sarai-Header.png" alt="Sarai Ilocos Region Logo" className="h-8 w-auto shrink-0" />
               </div>
             </div>
+            <div className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
+              {['About', 'Modules', 'News', 'Contact'].map((item) => (
+                <a key={item} href={item === 'Modules' ? '#modules' : item === 'About' ? '#about' : item === 'News' ? '#news' : '#contact'} className="transition-colors hover:text-primary">{item}</a>
+              ))}
+            </div>
+            <div className="flex items-center gap-3">
+              <button onClick={onLogin} className="rounded-md border border-primary px-4 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-white">Sign In</button>
+              <button onClick={() => setMenuOpen((v) => !v)} className="rounded-md p-1.5 md:hidden">
+                {menuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
+          </div>
+          {menuOpen && (
+            <div className="border-t border-border bg-white px-4 pb-4 pt-2 md:hidden">
+              {['About', 'Modules', 'News', 'Contact'].map((item) => (
+                <a key={item} href={item === 'Modules' ? '#modules' : item === 'About' ? '#about' : item === 'News' ? '#news' : '#contact'} className="block py-2 text-sm text-muted-foreground hover:text-primary">{item}</a>
+              ))}
+            </div>
+          )}
+        </nav>
 
-            <div className="rounded-[1.75rem] border border-emerald-100 bg-white/80 p-5 shadow-[0_20px_60px_-20px_rgba(30,107,60,0.25)] backdrop-blur">
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <h2 className="mt-1 text-lg font-semibold text-foreground">Today at SARAI</h2>
+        <section className="relative overflow-hidden border-t border-white/90">
+          <div className="absolute inset-0">
+            {heroBanners.map((banner, index) => (
+              <img
+                key={banner.src}
+                src={banner.src}
+                alt={banner.alt}
+                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${index === activeBanner ? "opacity-100" : "opacity-0"}`}
+              />
+            ))}
+            <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-primary/80 via-primary/20 to-emerald-950/60" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_35%)]" />
+          </div>
+          <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+            <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+              <div className="max-w-2xl">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-white/90 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm backdrop-blur">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+                  DOST Region 1 — Portal
                 </div>
-                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Live</span>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl bg-primary/10 p-4">
-                  <div className="flex items-center gap-2 text-sm font-semibold text-primary"><Calendar size={16} /> Active activities</div>
-                  <div className="mt-3 text-3xl font-bold text-foreground">24</div>
-                  <p className="text-xs text-muted-foreground">Projects and initiatives in motion</p>
+                <h1 className="mb-6 text-4xl font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-6xl">
+                  Sarai Ilocos<br/>
+                  <span className="text-emerald-200">Ecosystem</span>
+                </h1>
+                <p className="mb-8 max-w-xl text-lg leading-relaxed text-emerald-50/95 font-bold">
+                  Smarter Approaches to Reinvigorate Agriculture as an Industry in the Philippines.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <a href="#modules" className="flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-all hover:bg-primary/90">
+                    Explore Features <ArrowRight size={16} />
+                  </a>
+                  <a href="#about" className="flex items-center gap-2 rounded-lg border border-white/30 bg-white/15 px-6 py-3 font-semibold text-white transition-all hover:bg-white/25">Learn More</a>
                 </div>
-                <div className="rounded-2xl border border-border bg-muted/60 p-4">
-                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground"><TrendingUp size={16} /> Engagement</div>
-                  <div className="mt-3 text-3xl font-bold text-foreground">98%</div>
-                  <p className="text-xs text-muted-foreground">Staff adoption across the ecosystem</p>
-                </div>
-              </div>
-
-              <div className="mt-4 rounded-2xl border border-border bg-white p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-foreground">What to do?</p>
-                  <span className="text-xs text-muted-foreground">3 simple steps</span>
-                </div>
-                <div className="space-y-2">
-                  {workflowSteps.map((step, index) => (
-                    <div key={step.title} className="flex items-start gap-3 rounded-xl bg-muted/50 px-3 py-2.5">
-                      <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">{index + 1}</div>
-                      <div>
-                        <div className="text-sm font-semibold text-foreground">{step.title}</div>
-                        <div className="text-xs leading-5 text-muted-foreground">{step.detail}</div>
-                      </div>
-                    </div>
+                <div className="mt-6 flex items-center gap-2">
+                  {heroBanners.map((banner, index) => (
+                    <button
+                      key={banner.src}
+                      type="button"
+                      aria-label={`Show ${banner.alt}`}
+                      onClick={() => setActiveBanner(index)}
+                      className={`h-2.5 rounded-full transition-all ${index === activeBanner ? "w-8 bg-white" : "w-2.5 bg-white/50"}`}
+                    />
                   ))}
                 </div>
               </div>
+
+              <div className="rounded-[1.75rem] border border-emerald-100 bg-white/80 p-5 shadow-[0_20px_60px_-20px_rgba(30,107,60,0.25)] backdrop-blur">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <h2 className="mt-1 text-lg font-semibold text-foreground">Today at SARAI</h2>
+                  </div>
+                  <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Live</span>
+                </div>
+
+                <div className="rounded-2xl border border-emerald-100 bg-emerald-50/20 p-4">
+  <div className="mb-3 flex items-center justify-between">
+    <div className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
+      🌾 Priority Crops Focus
+    </div>
+    <span className="text-[10px] bg-emerald-100 font-bold text-emerald-800 px-2 py-0.5 rounded-full">
+      9 Crops
+    </span>
+  </div>
+  
+  <div className="grid grid-cols-3 gap-2">
+    {[
+      { name: "Rice", icon: "🌾" },
+      { name: "Corn", icon: "🌽" },
+      { name: "Banana", icon: "🍌" },
+      { name: "Coconut", icon: "🥥" },
+      { name: "Coffee", icon: "☕" },
+      { name: "Cacao", icon: "🍫" },
+      { name: "Sugarcane", icon: "🌱" },
+      { name: "Tomato", icon: "🍅" },
+      { name: "Soybean", icon: "🫛" }
+    ].map((crop) => (
+      <div 
+        key={crop.name} 
+        className="flex flex-col items-center justify-center rounded-xl bg-white border border-slate-100 p-2.5 shadow-sm hover:border-emerald-400 hover:shadow-sm transition-all cursor-pointer group"
+      >
+        <span className="text-xl mb-1 group-hover:scale-110 transition-transform">
+          {crop.icon}
+        </span>
+        <span className="text-[11px] font-bold text-slate-700 group-hover:text-emerald-900">
+          {crop.name}
+        </span>
+      </div>
+    ))}
+  </div>
+</div>
+
+                <div className="mt-4 rounded-2xl border border-border bg-white p-4">
+                  <div className="mb-3 flex items-center justify-between">
+                    <p className="text-sm font-semibold text-foreground">What to do?</p>
+                    <span className="text-xs text-muted-foreground">3 simple steps</span>
+                  </div>
+                  <div className="space-y-2">
+                    {workflowSteps.map((step, index) => (
+                      <div key={step.title} className="flex items-start gap-3 rounded-xl bg-muted/50 px-3 py-2.5">
+                        <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">{index + 1}</div>
+                        <div>
+                          <div className="text-sm font-semibold text-foreground">{step.title}</div>
+                          <div className="text-xs leading-5 text-muted-foreground">{step.detail}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       <section className="bg-primary border-t border-emerald-200/40">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-8 sm:px-6 lg:grid-cols-4">
@@ -729,9 +753,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             
             {/* Social Icons matching the dark circular design */}
             <div className="flex gap-2 pt-2">
-              <a href="#" className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white text-xs font-semibold">f</a>
-              <a href="#" className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white text-xs font-semibold">𝕏</a>
-              <a href="#" className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white text-[10px] font-semibold">YT</a>
+              <a href="https://www.facebook.com/profile.php?id=61582297319415" className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white text-xs font-semibold">f</a>
+              <a href="https://x.com/projectsarai_ph" className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white text-xs font-semibold">𝕏</a>
+              <a href="https://www.youtube.com/@projectsarai" className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white text-[10px] font-semibold">YT</a>
             </div>
           </div>
 
@@ -740,19 +764,18 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             <h4 className="font-bold tracking-widest uppercase text-white text-xs">Links</h4>
             <ul className="space-y-2.5 text-xs text-white/70">
               <li><a href="#" className="hover:text-white transition-colors block">About Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors block">Monitoring</a></li>
-              <li><a href="#" className="hover:text-white transition-colors block">Rainfall Outlook</a></li>
-              <li><a href="#" className="hover:text-white transition-colors block">DCAF</a></li>
+              <li><a href="https://sarai.ph/weather-monitoring" className="hover:text-white transition-colors block">Monitoring</a></li>
+              <li><a href="https://sarai.ph/rainfall-outlook" className="hover:text-white transition-colors block">Rainfall Outlook</a></li>
+              <li><a href="https://sarai.ph/drought-forecast" className="hover:text-white transition-colors block">DCAF</a></li>
             </ul>
           </div>
 
           {/* Column 4: Links Right */}
           <div className="space-y-4 pt-4 md:pt-8">
             <ul className="space-y-2.5 text-xs text-white/70">
-              <li><a href="#" className="hover:text-white transition-colors block">SARAI Eskwela</a></li>
-              <li><a href="#" className="hover:text-white transition-colors block">SARAI Conference</a></li>
-              <li><a href="#" className="hover:text-white transition-colors block">SARAI Community</a></li>
-              <li><a href="#" className="hover:text-white transition-colors block">SARAI Open Data</a></li>
+              <li><a href="https://www.youtube.com/watch?v=vIL7g0CLMps&list=PLZOwkbT51Td3b35GKTJts_-YG8V9MatdW" className="hover:text-white transition-colors block">SARAI Eskwela</a></li>
+              <li><a href="https://sarai.ph/" className="hover:text-white transition-colors block">SARAI Main Website</a></li>
+              <li><a href="https://maps.sarai.ph/" className="hover:text-white transition-colors block">SARAI Maps</a></li>
             </ul>
           </div>
 
@@ -762,8 +785,8 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-white/40">
           <div>Sarai Ecosystem © 2026 · DOST Region 1 · Republic of the Philippines</div>
           <div className="flex gap-6">
-            <a href="#" className="transition-colors hover:text-white">Privacy Policy</a>
-            <a href="#" className="transition-colors hover:text-white">Terms of Use</a>
+            <a href="/modules#projects" className="transition-colors hover:text-white">Privacy Policy</a>
+            <a href="/modules#projects" className="transition-colors hover:text-white">Terms of Use</a>
           </div>
         </div>
       </footer>
