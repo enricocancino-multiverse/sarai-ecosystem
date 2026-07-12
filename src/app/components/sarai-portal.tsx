@@ -7,6 +7,9 @@ import { AttendancePageContent } from "../sarai-attendance/page";
 import AchievementsRoutePage from "../sarai-achievements/page";
 import DocumentsPage from "../sarai-documents/page";
 import GlobalLoginPage from "../global-login/page";
+import { AdminDashboard as AdminDashboardPanel } from "./admin-dashboard/AdminDashboard";
+import { StaffDashboard as StaffDashboardPanel } from "./staff-dashboard/StaffDashboard";
+import { SuperadminDashboard } from "./superadmin-dashboard/SuperadminDashboard";
 import {
   AlertCircle,
   ArrowRight,
@@ -40,7 +43,7 @@ import {
   X,
 } from "lucide-react";
 
-type Page = "home" | "login" | "staff-dashboard" | "admin-dashboard" | "dts" | "attendance" | "achievements";
+type Page = "home" | "login" | "staff-dashboard" | "admin-dashboard" | "superadmin-dashboard" | "dts" | "attendance" | "achievements";
 type UserRole = "staff" | "admin" | "superadmin" | null;
 
 type NavItem = { label: string; page: Page; icon: ReactNode };
@@ -57,6 +60,11 @@ const adminNav: NavItem[] = [
   { label: "Documents", page: "dts", icon: <FileText size={18} /> },
   { label: "Check-in", page: "attendance", icon: <Clock size={18} /> },
   { label: "Achievements", page: "achievements", icon: <Trophy size={18} /> },
+];
+
+const superadminNav: NavItem[] = [
+  ...adminNav,
+  { label: "Root Console", page: "superadmin-dashboard", icon: <Shield size={18} /> },
 ];
 
 const documents = [
@@ -122,7 +130,7 @@ const priorityDot: Record<string, string> = {
 
 // Sidebar Component
 function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: UserRole; current: Page; onNav: (page: Page) => void; onLogout: () => void; open: boolean; onClose: () => void }) {
-  const nav = role === "admin" || role === "superadmin" ? adminNav : staffNav;
+  const nav = role === "superadmin" ? superadminNav : role === "admin" ? adminNav : staffNav;
 
   return (
     <>
@@ -203,9 +211,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [activeBanner, setActiveBanner] = useState(0);
 
   const heroBanners = [
-    { src: "/banners/DOST-banner.jpg", alt: "DOST banner" },
-    { src: "/banners/SARAI-banner.jpg", alt: "SARAI banner" },
-    { src: "/banners/Sarai-canva-banner.png", alt: "SARAI Canva banner" },
+    { src: "/banners/sarai-banners%20%281%29.jpg", alt: "SARAI banner" },
+    { src: "/banners/sarai-banners%20%282%29.jpg", alt: "SARAI banner" },
+    { src: "/banners/sarai-banners%20%283%29.jpg", alt: "SARAI banner" },
   ];
 
   useEffect(() => {
@@ -794,147 +802,28 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   );
 }
 
-function StaffDashboard({ staffName }: { staffName: string }) {
-  const now = new Date();
-  const greeting = now.getHours() < 12 ? "Good morning" : now.getHours() < 17 ? "Good afternoon" : "Good evening";
-
+function StaffDashboardView({ staffName, onNavigate }: { staffName: string; onNavigate: (page: Page) => void }) {
   return (
-    <div className="space-y-6 p-6">
-      <div className="rounded-xl bg-linear-to-r from-primary to-emerald-600 p-6 text-white">
-        <p className="text-sm text-white/80">{greeting},</p>
-        <h2 className="mb-1 text-2xl font-bold">{staffName} 👋</h2>
-        <p className="text-xs text-white/70">You have 3 pending documents and your attendance is complete for today.</p>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {[
-          { label: "Documents Pending", value: "3", icon: <FileText size={18} />, color: "text-amber-600 bg-amber-50" },
-          { label: "Today's Attendance", value: "AM ✓", icon: <Clock size={18} />, color: "text-emerald-600 bg-emerald-50" },
-          { label: "My Filed Docs", value: "12", icon: <FolderOpen size={18} />, color: "text-blue-600 bg-blue-50" },
-          { label: "Announcements", value: "4", icon: <Bell size={18} />, color: "text-purple-600 bg-purple-50" },
-        ].map((item) => (
-          <div key={item.label} className="rounde d-xl border border-border bg-white p-4">
-            <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-lg ${item.color}`}>{item.icon}</div>
-            <div className="text-xl font-bold text-foreground">{item.value}</div>
-            <div className="mt-0.5 text-xs text-muted-foreground">{item.label}</div>
-          </div>
-        ))}
-      </div>
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="overflow-hidden rounded-xl border border-border bg-white lg:col-span-2">
-          <div className="flex items-center justify-between border-b border-border px-5 py-4">
-            <h3 className="text-sm font-semibold text-foreground">Recent Documents</h3>
-            <span className="text-xs font-semibold text-primary">View DTS →</span>
-          </div>
-          <div className="divide-y divide-border">
-            {documents.map((doc) => (
-              <div key={doc.id} className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-muted/30">
-                <div className={`h-1.5 w-1.5 shrink-0 rounded-full ${priorityDot[doc.priority]}`} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-semibold text-foreground">{doc.subject}</p>
-                  <p className="font-mono text-xs text-muted-foreground">{doc.id} · {doc.date}</p>
-                </div>
-                <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${statusColor[doc.status]}`}>{doc.status}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="space-y-4">
-          <div className="rounded-xl border border-border bg-white p-5">
-            <h3 className="mb-4 text-sm font-semibold text-foreground">Quick Actions</h3>
-            <div className="space-y-2">
-              {[
-                { label: "Log Attendance", icon: <Clock size={15} /> },
-                { label: "New Document", icon: <Plus size={15} /> },
-                { label: "View Announcements", icon: <Bell size={15} /> },
-                { label: "Download Reports", icon: <Download size={15} /> },
-              ].map((action) => (
-                <button key={action.label} className="flex w-full items-center gap-2.5 rounded-lg border border-border px-3 py-2.5 text-sm text-foreground transition-all hover:border-primary hover:bg-primary hover:text-white group">
-                  <span className="text-primary transition-colors group-hover:text-white">{action.icon}</span>
-                  {action.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="rounded-xl bg-primary p-5 text-white">
-            <div className="mb-3 flex items-center gap-2"><Calendar size={16} /> <span className="text-sm font-semibold">Upcoming</span></div>
-            <div className="space-y-2 text-xs text-white/80">
-              <div className="flex items-start gap-2"><span className="rounded bg-white/10 px-1.5 py-0.5 font-mono">Jul 1</span><span>National Science Month Opening</span></div>
-              <div className="flex items-start gap-2"><span className="rounded bg-white/10 px-1.5 py-0.5 font-mono">Jul 3</span><span>SARAI Q3 Progress Review</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <StaffDashboardPanel
+      staffName={staffName}
+      documents={documents}
+      statusColor={statusColor}
+      priorityDot={priorityDot}
+      onNavigate={onNavigate}
+    />
   );
 }
 
-function AdminDashboard({ staffName }: { staffName: string }) {
+function AdminDashboardView({ staffName, onNavigate, onToggleUser, onRemoveUser, users }: { staffName: string; onNavigate: (page: Page) => void; onToggleUser: (id: number, active: boolean) => Promise<void> | void; onRemoveUser: (id: number) => Promise<void> | void; users: any[] }) {
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="mb-1 flex items-center gap-2"><Shield size={18} className="text-amber-500" /><span className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">Admin Console</span></div>
-          <h2 className="text-xl font-bold text-foreground">System Overview</h2>
-          <p className="text-sm text-muted-foreground">Welcome back, {staffName}. Here&apos;s the status of the Sarai Ecosystem today.</p>
-        </div>
-        <div className="rounded-lg bg-muted px-3 py-1.5 text-right font-mono text-xs text-muted-foreground">June 30, 2025 · 08:41 AM</div>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {[
-          { label: "Total Staff", value: "120", change: "+3 this month", positive: true, icon: <Users size={18} /> },
-          { label: "Docs in Queue", value: "18", change: "6 pending action", positive: false, icon: <FileText size={18} /> },
-          { label: "Present Today", value: "98", change: "81.7% attendance", positive: true, icon: <Check size={18} /> },
-          { label: "System Alerts", value: "2", change: "Needs attention", positive: false, icon: <AlertCircle size={18} /> },
-        ].map((item) => (
-          <div key={item.label} className="rounded-xl border border-border bg-white p-4">
-            <div className="mb-3 flex items-center justify-between">
-              <div className="text-muted-foreground">{item.icon}</div>
-              <span className={`text-[10px] font-mono ${item.positive ? "text-emerald-600" : "text-amber-600"}`}>{item.change}</span>
-            </div>
-            <div className="text-2xl font-bold text-foreground">{item.value}</div>
-            <div className="mt-0.5 text-xs text-muted-foreground">{item.label}</div>
-          </div>
-        ))}
-      </div>
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="overflow-hidden rounded-xl border border-border bg-white">
-          <div className="border-b border-border px-5 py-4"><h3 className="text-sm font-semibold text-foreground">Today&apos;s Attendance Summary</h3></div>
-          <div className="divide-y divide-border">
-            {attendanceLogs.map((log, index) => (
-              <div key={index} className="flex items-center gap-3 px-5 py-3">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{log.name[0]}</div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold text-foreground">{log.name}</p>
-                  <p className="font-mono text-[10px] text-muted-foreground">{log.amIn ? `AM: ${log.amIn}` : "—"} · {log.pmIn ? `PM: ${log.pmIn}` : "—"}</p>
-                </div>
-                <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${log.status === "Complete" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : log.status === "Pending" ? "border-amber-200 bg-amber-50 text-amber-700" : "border-red-200 bg-red-50 text-red-700"}`}>{log.status}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="overflow-hidden rounded-xl border border-border bg-white">
-          <div className="border-b border-border px-5 py-4"><h3 className="text-sm font-semibold text-foreground">Document Pipeline</h3></div>
-          <div className="space-y-3 p-5">
-            {[
-              { label: "In Transit", count: 6, total: 18, color: "bg-blue-500" },
-              { label: "For Signature", count: 4, total: 18, color: "bg-amber-500" },
-              { label: "Approved", count: 5, total: 18, color: "bg-emerald-500" },
-              { label: "Delivered", count: 3, total: 18, color: "bg-gray-400" },
-            ].map((item) => (
-              <div key={item.label}>
-                <div className="mb-1 flex justify-between text-xs">
-                  <span className="text-muted-foreground">{item.label}</span>
-                  <span className="font-mono font-semibold text-foreground">{item.count}</span>
-                </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                  <div className={`h-full rounded-full ${item.color}`} style={{ width: `${(item.count / item.total) * 100}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    <AdminDashboardPanel
+      staffName={staffName}
+      attendanceLogs={attendanceLogs}
+      users={users}
+      onNavigate={onNavigate}
+      onToggleUser={onToggleUser}
+      onRemoveUser={onRemoveUser}
+    />
   );
 }
 
@@ -957,6 +846,8 @@ export default function SaraiPortal() {
   const [role, setRole] = useState<UserRole>(null);
   const [staffName, setStaffName] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
+  const [superadminUnlocked, setSuperadminUnlocked] = useState(false);
 
   const clearUrlHash = useCallback(() => {
     if (typeof window !== "undefined" && window.location.hash) {
@@ -979,6 +870,63 @@ export default function SaraiPortal() {
     setPage("admin-dashboard");
   };
 
+  const loadUsers = useCallback(async () => {
+    try {
+      const response = await fetch("/api/admin/users", { credentials: "same-origin" });
+      if (!response.ok) return;
+      const payload = await response.json();
+      setUsers(payload.users || []);
+    } catch (error) {
+      console.error("Unable to load users", error);
+    }
+  }, []);
+
+  const handleCreateUser = useCallback(async (payload: { name: string; email: string; password: string; isAdmin: boolean; isSuperadmin: boolean }) => {
+    try {
+      const response = await fetch("/api/admin/users", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.error || "Unable to create user");
+      }
+      await loadUsers();
+    } catch (error) {
+      console.error("Create user failed", error);
+    }
+  }, [loadUsers]);
+
+  const handleToggleUser = useCallback(async (id: number, active: boolean) => {
+    try {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: "PATCH",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active }),
+      });
+      if (!response.ok) throw new Error("Unable to update user");
+      await loadUsers();
+    } catch (error) {
+      console.error("Toggle user failed", error);
+    }
+  }, [loadUsers]);
+
+  const handleRemoveUser = useCallback(async (id: number) => {
+    try {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: "DELETE",
+        credentials: "same-origin",
+      });
+      if (!response.ok) throw new Error("Unable to remove user");
+      await loadUsers();
+    } catch (error) {
+      console.error("Remove user failed", error);
+    }
+  }, [loadUsers]);
+
   const handleLogout = async () => {
     clearUrlHash();
 
@@ -992,6 +940,7 @@ export default function SaraiPortal() {
     setStaffName("");
     setPage("home");
     setSidebarOpen(false);
+    setSuperadminUnlocked(false);
     router.replace("/?view=landing");
   };
 
@@ -1022,11 +971,44 @@ export default function SaraiPortal() {
       const resolvedRole = payload.user.is_superadmin ? "superadmin" : payload.user.is_admin ? "admin" : "staff";
       setRole(resolvedRole);
       setStaffName(payload.user.name);
-      setPage(resolvedRole === "staff" ? "staff-dashboard" : "admin-dashboard");
+      setPage(resolvedRole === "staff" ? "staff-dashboard" : resolvedRole === "superadmin" ? "superadmin-dashboard" : "admin-dashboard");
+      if (resolvedRole === "superadmin") {
+        setSuperadminUnlocked(true);
+      }
     };
 
     loadSession();
   }, []);
+
+  useEffect(() => {
+    if (role === "admin" || role === "superadmin") {
+      loadUsers();
+    }
+  }, [role, loadUsers]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "s") {
+        event.preventDefault();
+        if (role === "superadmin") {
+          setSuperadminUnlocked(true);
+          setPage("superadmin-dashboard");
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [role]);
+
+  const isSuperadminArea = page === "superadmin-dashboard";
+  const canAccessSuperadmin = role === "superadmin" && superadminUnlocked;
+
+  useEffect(() => {
+    if (isSuperadminArea && !canAccessSuperadmin) {
+      setPage(role === "superadmin" ? "admin-dashboard" : role === "admin" ? "admin-dashboard" : "staff-dashboard");
+    }
+  }, [canAccessSuperadmin, isSuperadminArea, role]);
 
   const navigateToLogin = useCallback(() => {
     clearUrlHash();
@@ -1035,7 +1017,9 @@ export default function SaraiPortal() {
 
   if (page === "home") return <LandingPage onLogin={navigateToLogin} />;
 
-
+  if (isSuperadminArea && !canAccessSuperadmin) {
+    return null;
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-background" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
@@ -1043,8 +1027,25 @@ export default function SaraiPortal() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <TopBar onMenuToggle={() => setSidebarOpen((value) => !value)} staffName={staffName} role={role} />
         <main className="flex-1 overflow-y-auto">
-          {page === "staff-dashboard" && <StaffDashboard staffName={staffName} />}
-          {page === "admin-dashboard" && <AdminDashboard staffName={staffName} />}
+          {page === "staff-dashboard" && <StaffDashboardView staffName={staffName} onNavigate={(targetPage) => setPage(targetPage)} />}
+          {page === "admin-dashboard" && (
+            <AdminDashboardView
+              staffName={staffName}
+              users={users}
+              onNavigate={(targetPage) => setPage(targetPage)}
+              onToggleUser={handleToggleUser}
+              onRemoveUser={handleRemoveUser}
+            />
+          )}
+          {page === "superadmin-dashboard" && (
+            <SuperadminDashboard
+              staffName={staffName}
+              users={users}
+              onCreateUser={handleCreateUser}
+              onToggleUser={handleToggleUser}
+              onRemoveUser={handleRemoveUser}
+            />
+          )}
           {page === "dts" && <DTSPage role={role} />}
           {page === "attendance" && <AttendancePage staffName={staffName} />}
           {page === "achievements" && <AchievementsView />}
