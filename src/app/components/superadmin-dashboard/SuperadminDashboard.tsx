@@ -37,7 +37,7 @@ export function SuperadminDashboard({ staffName, users, onCreateUser, onToggleUs
 
   return (
     <div className="space-y-6 p-6">
-      <div className="rounded-2xl border border-red-200 bg-gradient-to-r from-red-950 to-emerald-950 p-6 text-white">
+      <div className="rounded-2xl border border-red-200 bg-linear-to-r from-red-950 to-emerald-950 p-6 text-white">
         <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.25em] text-red-200">
           <ShieldAlert size={16} /> Superadmin Console
         </div>

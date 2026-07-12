@@ -225,7 +225,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   }, [heroBanners.length]);
 
     const featureHighlights = [
-      { title: "WHO WE ARE", description: "A Government Organization, We are a forward-thinking, tech-driven initiative funded by the Department of Science and Technology (DOST) dedicated to empowering Philippine agriculture. By bridging modern technology with local farming needs, we aim to build a more resilient, sustainable, and productive agricultural sector across the regions." },
+      { title: "WHO WE ARE", description: (
+      <>A Government Organization, <b>Smarter Approaches to Reinvigorate Agriculture as an Industry in the Philippines</b>. We are a forward-thinking, tech-driven initiative funded by the Department of Science and Technology (DOST) dedicated to empowering Philippine agriculture. By bridging modern technology with local farming needs, we aim to build a more resilient, sustainable, and productive agricultural sector across the regions.</>
+      ) },
       { title: "WHERE WE ARE", content: <img src="/Location-map.png" alt="Location Map" className="w-full h-auto" /> },
       { title: "WHAT WE DO", description: "We integrate modern data analytics, smart farming solutions, and proactive agronomic systems into agricultural practices. Project SARAI provides smarter approaches to rejuvenate agriculture as an industry in the Philippines by delivering actionable insights and tech-driven tools to support decision-making for a more sustainable farming future." },
     ];

@@ -48,27 +48,62 @@ export default function ModulesPage() {
                         </div>
                     )}
 
-                    {active === "personnel" && (
-                        <div id="personnel" className="space-y-4">
-                            <h2 className="text-lg font-bold text-foreground">Sarai Personnel</h2>
-                            <p className="text-sm text-muted-foreground">Directory and records for all SARAI staff. Search, filter, and export personnel lists.</p>
+                    {/* SARAI CeNTRO Personnel Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 w-full">
+              <span className="bg-emerald-600 text-[10px] font-bold text-white px-2 py-0.5 rounded-full shrink-0">7 Members</span>
+              <h3 className="text-xs font-bold text-emerald-950 tracking-wide uppercase shrink-0">SARAI CeNTRO Personnel</h3>
+              <div className="h-px bg-emerald-200/60 grow ml-2" />
+            </div>
 
-                            <div className="grid gap-4 md:grid-cols-3 mt-4">
-                                {[1, 2, 3, 4, 5, 6].map((i) => (
-                                    <div key={i} className="rounded-lg border border-border bg-white p-4">
-                                        <div className="mb-2 flex items-center gap-3">
-                                            <div className="h-10 w-10 rounded-full bg-emerald-50 flex items-center justify-center text-foreground font-semibold">R</div>
-                                            <div>
-                                                <div className="font-semibold">Reina Santos</div>
-                                                <div className="text-xs text-muted-foreground">Agronomy Specialist</div>
-                                            </div>
-                                        </div>
-                                        <div className="text-xs text-muted-foreground">Email: reina.santos@dost.gov.ph</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { name: "Decth-1180 P. Libunao", role: "Supervising SRS, Focal Person", type: "leader", img: "/people/Decht.png" },
+                { name: "Dana Bliezelle V. Hernaez", role: "SRS I, Alternate Focal Person", type: "leader", img: "/people/Dana.png" },
+                { name: "Novilyne O. Obfan", role: "Project Technical Specialist III", type: "staff", img: "/people/Novi.jpg" },
+                { name: "Miriam A. Oliva", role: "Project Technical Assistant III", type: "staff", img: "/people/Miriam.png" },
+                { name: "Daisy Rose S. Sidayen", role: "Project Technical Assistant III", type: "staff", img: "/people/Daisy.jpg" },
+                { name: "Jeisel O. Labatete", role: "Project Technical Assistant III", type: "staff", img: "/people/Jeisel.jpg" }      ,
+                { name: "Lilian Rose S. Abuan", role: "Project Administrative Aide V", type: "staff", img: "/people/Lilian.jpg" }
+              ].map((person, idx) => (
+                <div 
+                  key={idx} 
+                  className={`flex gap-4 items-center p-4 rounded-xl border transition-all cursor-pointer hover:shadow-md ${
+                    person.type === 'leader' 
+                      ? 'border-sky-100 bg-sky-50/40 hover:border-sky-400' 
+                      : 'border-amber-100 bg-amber-50/20 hover:border-amber-400'
+                  }`}
+                >
+                  {/* Profile Avatar Container */}
+                  <div className="w-12 h-12 rounded-full border border-slate-200 shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+                    {person.img === "placeholder" ? (
+                      <span className="text-xs font-bold text-slate-400">
+                        {person.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                      </span>
+                    ) : (
+                      <img 
+                        src={person.img} 
+                        alt={person.name} 
+                        className="w-full h-full object-cover" 
+                      />
                     )}
+                  </div>
+
+                  {/* Text Details */}
+                  <div>
+                    <div className="text-xs font-bold text-slate-800 leading-tight mb-0.5">
+                      {person.name}
+                    </div>
+                    <div className={`text-[10px] font-medium mb-0.5 ${
+                      person.type === 'leader' ? 'text-sky-700' : 'text-amber-700'
+                    }`}>
+                      {person.role}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
                     {active === "projects" && (
                         <div id="projects" className="space-y-8">
