@@ -631,11 +631,6 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         <div className="h-px bg-emerald-200/60 grow ml-2" />
       </div>
       
-      {/* 
-        Adjusted grid: 
-        - Spans 1 col on mobile, 2 cols on tablet/desktop.
-        - Cards are larger, using a structured row layout (p-6) to feel like "anchor" blocks.
-      */}
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
         {[
           { name: "DOST - PCAARRD", role: "Main Funding Agency", loc: "Los Baños, Laguna", img: "mainlogos/Pccard.png" },
@@ -677,7 +672,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
           { name: "PSU", fullName: "Pangasinan State University", img: "sidelogos/PSU.png" },
           { name: "ISPSC", fullName: "Ilocos Sur Polytechnic State College", img: "sidelogos/ISPSC.png" }
         ].map((hei, idx) => (
-          <div key={idx} className="flex flex-col items-center text-center justify-center p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer min-h-[130px]">
+          <div key={idx} className="flex flex-col items-center text-center justify-center p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer min-h-32.5">
             <div className="w-12 h-12 rounded-xl border border-slate-100 p-1 mb-3 flex items-center justify-center bg-slate-50/50">
               <img 
                 src={hei.img} 
@@ -727,7 +722,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             
             <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
               {lgus.map((lgu, idx) => (
-                <div key={idx} className="flex flex-col items-center text-center justify-center p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer min-h-[130px]">
+                <div key={idx} className="flex flex-col items-center text-center justify-center p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer min-h-32.5">
                   <div className="w-12 h-12 rounded-xl border border-slate-100 p-1 mb-3 flex items-center justify-center bg-slate-50/50">
                     <img 
                       src={lgu.img} 
