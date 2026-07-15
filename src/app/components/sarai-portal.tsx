@@ -233,9 +233,9 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
     ];
 
     const moduleCards = [
-      { title: "Sarai Personnel", description: "Collection of Sarai personnel information and records.", href: "/modules#personnel", icon: <FileText size={18} /> },
-      { title: "Mission & Vision", description: "Privacy Policy, Terms of Service, and Code of Conduct", href: "/modules#projects", icon: <Clock size={18} /> },
-      { title: "Accomplishment Report", description: "Achievement summaries and performance metrics.", href: "/modules#reports", icon: <Trophy size={18} /> },
+      { title: "Mission & Vision", description: "Privacy Policy, Terms of Service, and Code of Conduct.", href: "/modules#projects", icon: <FileText size={18} /> },
+      { title: "Crop Suitability Maps", description: "Interactive agro-ecological maps matching land classifications with optimal priority crop choices.", href: "/modules#maps", icon: <Clock size={18} /> },
+      { title: "Seasonal Planting Calendars", description: "Dynamic, weather-driven schedules showing exactly when to plant and when to hold back based on real-time El Niño shifts.", href: "/modules#calendars", icon: <Trophy size={18} /> },
     ];
 
     return (
@@ -322,7 +322,6 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
                   <div>
                     <h2 className="mt-1 text-lg font-semibold text-foreground">Welcome to SARAI Ilocos Portal</h2>
                   </div>
-                  <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Live</span>
                 </div>
 
                 <div className="rounded-2xl border border-emerald-100 bg-emerald-50/20 p-4">
@@ -1143,8 +1142,8 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
       
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
         {[
-          { name: "DOST - PCAARRD", role: "Main Funding Agency", loc: "Los Baños, Laguna", img: "mainlogos/Pccard.png" },
-          { name: "DOST Ilocos Region", role: "Regional Partner Office", loc: "San Fernando City, La Union", img: "mainlogos/DOST LOGO GLOBAL.png" }
+          { name: "DOST - PCAARRD", role: "Funding Agency", loc: "Los Baños, Laguna", img: "mainlogos/Pccard.png" },
+          { name: "DOST Ilocos Region", role: "Regional Office", loc: "San Fernando City, La Union", img: "mainlogos/DOST LOGO GLOBAL.png" }
         ].map((agency, idx) => (
           <div 
             key={idx} 

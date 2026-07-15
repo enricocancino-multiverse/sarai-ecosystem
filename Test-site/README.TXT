@@ -1,0 +1,1 @@
+This folder is scraps, used for materials and creativity, feel free to compile.

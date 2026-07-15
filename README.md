@@ -2,6 +2,8 @@
 
 > Digitalize the DOST team through a full-fledged workplace portal for file transactions, DTS, attendance tracking, and announcements.
 
+- start at components/Sarai-portal.tsx is the landing page
+
 **Status:** 🟢 Production Live | **URL:** https://sarai-ecosystem.vercel.app
 
 **Commission:** DOST Region 1  

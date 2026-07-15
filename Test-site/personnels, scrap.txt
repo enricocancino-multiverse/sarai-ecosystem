@@ -1,0 +1,41 @@
+ {/* SARAI CeNTRO Personnel Section */}
+                    {active === 'personnel' && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 w-full">
+              <span className="bg-emerald-600 text-[10px] font-bold text-white px-2 py-0.5 rounded-full shrink-0">7 Members</span>
+                            <h3 className="text-xs font-bold text-emerald-950 tracking-wide uppercase shrink-0">SARAI CeNTRO Personnel</h3>
+                            <div className="h-px bg-emerald-200/60 grow ml-2" />
+                                </div>
+
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { name: "Decth-1180 P. Libunao", role: "Supervising SRS, Focal Person", type: "leader", img: "/people/Decht.png" },
+                { name: "Dana Bliezelle V. Hernaez", role: "SRS I, Alternate Focal Person", type: "leader", img: "/people/Dana.png" },
+                { name: "Novilyne O. Obfan", role: "Project Technical Specialist III", type: "staff", img: "/people/Novi.jpg" },
+                { name: "Miriam A. Oliva", role: "Project Technical Assistant III", type: "staff", img: "/people/Miriam.png" },
+                { name: "Daisy Rose S. Sidayen", role: "Project Technical Assistant III", type: "staff", img: "/people/Daisy.jpg" },
+                { name: "Jeisel O. Labatete", role: "Project Technical Assistant III", type: "staff", img: "/people/Jeisel.jpg" }      ,
+                { name: "Lilian Rose S. Abuan", role: "Project Administrative Aide V", type: "staff", img: "/people/Lilian.jpg" }
+              ].map((person, idx) => (
+                <div 
+                  key={idx} 
+                  className={`flex gap-4 items-center p-4 rounded-xl border transition-all cursor-pointer hover:shadow-md ${
+                    person.type === 'leader' 
+                      ? 'border-sky-100 bg-sky-50/40 hover:border-sky-400' 
+                      : 'border-amber-100 bg-amber-50/20 hover:border-amber-400'
+                  }`}
+                >
+                  {/* Profile Avatar Container */}
+                  <div className="w-12 h-12 rounded-full border border-slate-200 shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+                    {person.img === "placeholder" ? (
+                      <span className="text-xs font-bold text-slate-400">
+                        {person.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                      </span>
+                    ) : (
+                      <img 
+                        src={person.img} 
+                        alt={person.name} 
+                        className="w-full h-full object-cover" 
+                      />
+                    )}
+                  </div>
