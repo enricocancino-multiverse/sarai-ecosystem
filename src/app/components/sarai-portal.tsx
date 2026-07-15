@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AttendancePageContent } from "../sarai-attendance/page";
@@ -256,11 +257,11 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={onLogin} className="rounded-md border border-primary px-4 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-white">Sign In</button>
-              <button onClick={() => setMenuOpen((v) => !v)} className="rounded-md p-1.5 md:hidden">
-                {menuOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
+  {/* Public "Sign In" button removed per IT instructions */}
+  <button onClick={() => setMenuOpen((v) => !v)} className="rounded-md p-1.5 md:hidden">
+    {menuOpen ? <X size={20} /> : <Menu size={20} />}
+  </button>
+</div>
           </div>
           {menuOpen && (
             <div className="border-t border-border bg-white px-4 pb-4 pt-2 md:hidden">
@@ -501,11 +502,8 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         </div>
       </section>
           
-      {/* Mobile Applications Section */}
-      <section 
-  id="apps" 
-  className="relative overflow-hidden py-24 px-4 sm:px-6 md:px-8 bg-linear-to-br from-[#022c22] via-[#042f2e] to-[#011c18] border-t border-emerald-800/40"
->
+  {/* Mobile Applications Section */}
+<section id="apps" className="relative overflow-hidden py-24 px-4 sm:px-6 md:px-8 bg-linear-to-br from-[#02182b] via-[#052237] to-[#01111e] border-t border-blue-900/40">
   {/* Injecting data and logic directly inside the section scope so it's self-contained */}
   {(() => {
     const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -524,26 +522,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         badgeColor: "bg-amber-500 text-amber-950",
         actionText: "Download Here",
         actionUrl: "https://play.google.com/store/apps/details?id=ph.sarai.ipdas.spidtech",
-        preview: (
-          <div className="w-28 h-44 bg-zinc-950 rounded-xl p-1.5 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-            <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-zinc-800 rounded-full z-20" />
-            <div className="w-full h-full bg-[#0d2116] rounded-lg p-2 flex flex-col justify-between text-left text-[8px] text-white/90 relative">
-              <div className="font-bold border-b border-emerald-800/40 pb-1 text-center text-emerald-400 tracking-wide uppercase">🔍 SPIDTECH</div>
-              <div className="flex-1 my-2 bg-black/40 rounded border border-emerald-900/30 p-1 flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute inset-0 border border-emerald-500/20 animate-pulse pointer-events-none" />
-                <div className="flex justify-between items-center text-[6px] text-emerald-300">
-                  <span>Scanner Online</span>
-                  <span className="w-1 h-1 rounded-full bg-emerald-400 animate-ping" />
-                </div>
-                <div className="my-auto flex flex-col items-center justify-center py-1 opacity-80">
-                  <span className="text-sm">🐛</span>
-                  <span className="text-[5px] text-zinc-400 mt-1">Detecting Pests...</span>
-                </div>
-              </div>
-              <div className="bg-emerald-500 text-white text-[6px] text-center font-bold py-1 rounded">START SCAN</div>
-            </div>
-          </div>
-        )
+        imageSrc: "/systemtech/Spidtech.png"
       },
       {
         id: "banatech",
@@ -554,148 +533,56 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         badge: "Web Demo",
         badgeColor: "bg-emerald-400 text-emerald-950",
         actionText: "Access Demo",
+        actionUrl: "https://banana-b7ab6.web.app/",
+        imageSrc: "/systemtech/Banatech.png"
+      },
+      {
+        id: "waiss",
+        type: "Web Platform",
+        title: "WAISS",
+        tagline: "Weather-Driven Agricultural Intelligence & Surveillance System",
+        description: "Real-time weather data collection and analysis for precision irrigation, crop health monitoring, and water resource management.",
+        badge: "Automation System",
+        badgeColor: "bg-blue-400 text-blue-950",
+        actionText: "View WAISS Models",
         actionUrl: "https://sarai.ph/",
-        preview: (
-          <div className="w-28 h-44 bg-zinc-950 rounded-xl p-1.5 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-            <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-zinc-800 rounded-full z-20" />
-            <div className="w-full h-full bg-[#182312] rounded-lg p-2 flex flex-col justify-between text-left text-[8px] text-white/90 relative">
-              <div className="font-bold border-b border-amber-800/40 pb-1 text-center text-amber-400 tracking-wide uppercase">🍌 BANATECH</div>
-              <div className="flex-1 my-2 bg-black/40 rounded border border-amber-900/30 p-1 flex flex-col justify-between">
-                <div className="flex justify-between text-[6px] text-amber-300">
-                  <span>Yield Tracker</span>
-                  <span>Active</span>
-                </div>
-                <div className="my-auto flex flex-col items-center justify-center py-1">
-                  <span className="text-sm">📉</span>
-                  <span className="text-[5px] text-amber-200 mt-1 font-semibold">94% Maturity reached</span>
-                </div>
-              </div>
-              <div className="bg-amber-500 text-amber-950 text-[6px] text-center font-bold py-1 rounded">CALCULATE HARVEST</div>
-            </div>
-          </div>
-        )
+        imageSrc: "/systemtech/Waiss.jpeg"
+      },
+      {
+        id: "aws",
+        type: "automation",
+        title: "AWS",
+        tagline: "Automated Weather Station",
+        description: "Collects and analyzes real-time weather data for precision irrigation, crop health monitoring, and water resource management.",
+        badge: "Automation System",
+        badgeColor: "bg-indigo-400 text-indigo-950",
+        actionText: "View AWS Models",
+        actionUrl: "https://sarai.ph/",
+        imageSrc: "/systemtech/Aws.jpg"
       },
       {
         id: "portal",
         type: "Web Platform",
-        title: "SARAI Main Portal",
+        title: "SARAI Knowledge Portal",
         tagline: "Centralized Agrometeorological hub",
         description: "The primary operational portal offering regional crop monitoring, real-time weather-to-crop forecasts, and interactive advisory newsletters.",
         badge: "Main Hub",
         badgeColor: "bg-teal-400 text-teal-950",
         actionText: "Visit Portal",
         actionUrl: "https://sarai.ph/",
-        preview: (
-          <div className="w-52 h-32 bg-zinc-950 rounded-lg p-1 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-            <div className="flex gap-1 mb-1 border-b border-emerald-900/40 pb-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-red-500/80" />
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
-              <div className="w-1.5 h-1.5 rounded-full bg-green-500/80" />
-            </div>
-            <div className="w-full h-[calc(100%-12px)] bg-[#07130f] rounded p-1.5 flex flex-col gap-1 text-[6px] text-zinc-300">
-              <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
-                <span className="font-bold text-emerald-400">sarai.ph</span>
-                <span className="text-zinc-500 text-[4px]">Live Dashboard</span>
-              </div>
-              <div className="grid grid-cols-3 gap-1 mt-1">
-                <div className="bg-emerald-950/40 border border-emerald-900/30 rounded p-1 flex flex-col items-center">
-                  <span className="text-emerald-400 font-bold">Rainfall</span>
-                  <span className="text-[5px]">Normal</span>
-                </div>
-                <div className="bg-emerald-950/40 border border-emerald-900/30 rounded p-1 flex flex-col items-center">
-                  <span className="text-emerald-400 font-bold">Crop Adv.</span>
-                  <span className="text-[5px]">Updated</span>
-                </div>
-                <div className="bg-emerald-950/40 border border-emerald-900/30 rounded p-1 flex flex-col items-center">
-                  <span className="text-emerald-400 font-bold">Advisory</span>
-                  <span className="text-[5px]">Ready</span>
-                </div>
-              </div>
-              <div className="bg-emerald-900/20 border border-emerald-800/20 rounded p-1 mt-1 text-[5px] text-zinc-400 leading-tight">
-                📍 regional forecast model predicts normal dry-season start.
-              </div>
-            </div>
-          </div>
-        )
+        imageSrc: "/systemtech/Sarai.ph.png"
       },
       {
         id: "seams",
         type: "Web System",
-        title: "SEAMS",
-        tagline: "Soil Moisture Monitoring & Advisory",
-        description: "Real-time updates on regional soil moisture status. Plan precise crop irrigation, evaluate soil quality, and counter dry-spell impacts.",
+        title: "CL-SEAMS",
+        tagline: "Community-Level SARAI Enhanced Agricultural Monitoring System",
+        description: "Real-time soil moisture data collection and analysis for precision irrigation, crop health monitoring, and water resource management.",
         badge: "Real-time Web",
         badgeColor: "bg-blue-400 text-blue-950",
         actionText: "Monitor Soil",
         actionUrl: "https://sarai.ph/",
-        preview: (
-          <div className="w-52 h-32 bg-zinc-950 rounded-lg p-1 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-            <div className="flex gap-1 mb-1 border-b border-emerald-900/40 pb-1">
-               <div className="w-1.5 h-1.5 rounded-full bg-red-500/80" />
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
-              <div className="w-1.5 h-1.5 rounded-full bg-green-500/80" />
-            </div>
-            <div className="w-full h-[calc(100%-12px)] bg-[#0c1a1f] rounded p-1.5 flex flex-col gap-1 text-[6px] text-zinc-300">
-              <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
-                <span className="font-bold text-blue-400">SEAMS Platform</span>
-                <span className="text-blue-500 text-[4px]">Status: Active</span>
-              </div>
-              <div className="flex-1 flex gap-1 items-center mt-1">
-                <div className="flex-1 bg-black/40 rounded p-1 flex flex-col gap-1 justify-center">
-                  <span className="text-blue-300">Moisture Profile:</span>
-                  <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-blue-500 h-full w-[68%]" />
-                  </div>
-                  <span className="text-[5px] text-zinc-400">68% - Optimal Level</span>
-                </div>
-                <div className="w-1/3 bg-blue-950/30 border border-blue-900/30 rounded p-1 text-center flex flex-col justify-center">
-                  <span className="text-[10px]">💧</span>
-                  <span className="text-[4px] text-blue-300 mt-0.5">Dry-Spell Guard</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      },
-      {
-        id: "climo",
-        type: "Web System",
-        title: "CLIMO",
-        tagline: "Climate-Crop Forecasting Model",
-        description: "View localized historical climate patterns mapped directly against regional crop suitability datasets to formulate long-term seasonal planting cycles.",
-        badge: "Historical Data",
-        badgeColor: "bg-indigo-400 text-indigo-950",
-        actionText: "View Climate Models",
-        actionUrl: "https://sarai.ph/",
-        preview: (
-          <div className="w-52 h-32 bg-zinc-950 rounded-lg p-1 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-            <div className="flex gap-1 mb-1 border-b border-emerald-900/40 pb-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-red-500/80" />
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
-              <div className="w-1.5 h-1.5 rounded-full bg-green-500/80" />
-            </div>
-            <div className="w-full h-[calc(100%-12px)] bg-[#11111d] rounded p-1.5 flex flex-col gap-1 text-[6px] text-zinc-300">
-              <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
-                <span className="font-bold text-indigo-400">CLIMO Forecast</span>
-                <span className="text-indigo-400 text-[4px]">Suitability Matrix</span>
-              </div>
-              <div className="flex-1 flex flex-col justify-between mt-1">
-                <div className="flex justify-between text-[5px]">
-                  <span>Precipitation Trend</span>
-                  <span className="text-indigo-300 font-bold">+12% vs Mean</span>
-                </div>
-                <div className="h-6 bg-indigo-950/20 rounded border border-indigo-900/20 p-1 flex items-end gap-1">
-                  <div className="bg-indigo-500 w-3 h-1" />
-                  <div className="bg-indigo-500 w-3 h-2" />
-                  <div className="bg-indigo-500 w-3 h-3" />
-                  <div className="bg-indigo-500 w-3 h-4" />
-                  <div className="bg-indigo-300 w-3 h-3.5" />
-                  <div className="bg-indigo-300 w-3 h-2.5" />
-                </div>
-              </div>
-            </div>
-          </div>
-        )
+        imageSrc: "/systemtech/Seams.png"
       }
     ];
 
@@ -735,10 +622,10 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
 
     return (
       <>
-        {/* Background Decorative organic visual blobs to increase green immersion */}
-        <div className="absolute top-0 right-0 w-125 h-125 rounded-full bg-emerald-500/10 blur-[120px] pointer-events-none -z-10" />
-        <div className="absolute bottom-0 left-0 w-100 h-100 rounded-full bg-teal-500/5 blur-[100px] pointer-events-none -z-10" />
-        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-87.5 h-87.5 rounded-full bg-emerald-600/5 blur-[90px] pointer-events-none -z-10" />
+        {/* Background Decorative organic visual blobs */}
+        <div className="absolute top-0 right-0 w-125 h-125 rounded-full bg-blue-600/10 blur-[120px] pointer-events-none -z-10" />
+        <div className="absolute bottom-0 left-0 w-100 h-100 rounded-full bg-teal-600/5 blur-[100px] pointer-events-none -z-10" />
+        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-87.5 h-87.5 rounded-full bg-sky-600/5 blur-[90px] pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           
@@ -764,7 +651,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
               <button
                 type="button"
                 onClick={slideLeft}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-700/50 hover:bg-emerald-800 hover:text-white hover:scale-105 shadow-xl transition-all duration-200"
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-slate-950/80 text-emerald-400 border border-slate-700/50 hover:bg-emerald-800 hover:text-white hover:scale-105 shadow-xl transition-all duration-200"
                 aria-label="Slide Left"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -777,7 +664,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
               <button
                 type="button"
                 onClick={slideRight}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-700/50 hover:bg-emerald-800 hover:text-white hover:scale-105 shadow-xl transition-all duration-200"
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-slate-950/80 text-emerald-400 border border-slate-700/50 hover:bg-emerald-800 hover:text-white hover:scale-105 shadow-xl transition-all duration-200"
                 aria-label="Slide Right"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -798,7 +685,8 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
               {systems.map((sys) => (
                 <div
                   key={sys.id}
-                  className="group shrink-0 w-77.5 sm:w-87.5 snap-start flex flex-col justify-between p-6 rounded-2xl border border-emerald-800/40 bg-linear-to-b from-[#033c2e]/65 to-[#022119]/80 backdrop-blur-md shadow-lg hover:border-emerald-500/50 hover:shadow-emerald-950/30 hover:shadow-2xl transition-all duration-300"
+           
+                  className="group shrink-0 w-77.5 sm:w-87.5 snap-start flex flex-col justify-between p-6 rounded-2xl border border-emerald-900/40 bg-linear-to-b from-[#022c22]/75 to-[#011a14]/90 backdrop-blur-md shadow-lg hover:border-emerald-500/50 hover:shadow-emerald-950/50 hover:shadow-2xl transition-all duration-300"
                 >
                   <div>
                     {/* Card Header */}
@@ -811,10 +699,16 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
                       </span>
                     </div>
 
-                    {/* Device Simulation Showcase Box */}
-                    <div className="h-48 flex items-center justify-center mb-6 bg-[#011410]/55 border border-emerald-900/30 rounded-xl relative overflow-hidden shadow-inner">
-                      <div className="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] bg-size-[16px_16px] opacity-[0.03]" />
-                      {sys.preview}
+                    {/* Simplified Image Showcase Container */}
+                    <div className="h-48 flex items-center justify-center mb-6 bg-slate-950/40 border border-emerald-950/30 rounded-xl overflow-hidden relative group">
+                      <Image
+                        src={sys.imageSrc}
+                        alt={`${sys.title} asset`}
+                        width={180}
+                        height={260}
+                        className="max-h-[85%] max-w-[85%] object-contain transition-transform duration-300 group-hover:scale-105"
+                        unoptimized
+                      />
                     </div>
 
                     {/* Tech Content Information */}
@@ -828,12 +722,12 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
                   </div>
 
                   {/* External Action Button */}
-                  <div className="mt-8 pt-4 border-t border-emerald-900/40">
+                  <div className="mt-8 pt-4 border-t border-emerald-900/20">
                     <a
                       href={sys.actionUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-emerald-950/40 transition-all duration-200 hover:bg-emerald-500 hover:scale-[1.02] active:scale-[0.98]"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-slate-950/40 transition-all duration-200 hover:bg-emerald-500 hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <span>{sys.actionText}</span>
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -861,7 +755,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
                     className={`w-2.5 h-2.5 rounded-full border transition-all duration-300 ${
                       isActive 
                         ? 'bg-emerald-400 border-emerald-300' 
-                        : 'bg-emerald-900/60 border-emerald-800/40 hover:bg-emerald-600'
+                        : 'bg-slate-800 border-slate-700 hover:bg-emerald-600'
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />
@@ -883,13 +777,6 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
     .no-scrollbar {
       -ms-overflow-style: none;
       scrollbar-width: none;
-    }
-    @keyframes ledGlow {
-      0% { transform: translateX(0); opacity: 0.7; }
-      20% { opacity: 1; }
-      50% { transform: translateX(300%); opacity: 0.9; }
-      80% { opacity: 1; }
-      100% { transform: translateX(600%); opacity: 0.7; }
     }
   `}} />
 </section>
@@ -1252,6 +1139,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
       </section>
     
      {/* Footer Section */}
+      {/* Footer Section */}
       <section id="contact" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-emerald-200/40">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
@@ -1334,7 +1222,18 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
 
         {/* Sub-footer metadata bottom bar */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-white/40">
-          <div>Sarai CENTRO © 2026 · DOST Region 1 · Republic of the Philippines</div>
+          <div>
+            Sarai CENTRO © 2026 ·{' '}
+            {/* Subtle Admin Action Button executing onLogin */}
+            <button 
+              onClick={onLogin}
+              className="bg-transparent border-none p-0 cursor-pointer text-[11px] text-white/40 hover:text-white transition-colors underline decoration-white/20 underline-offset-2"
+              title="Internal Access"
+            >
+              Staff/Admin login
+            </button>{' '}
+            · DOST Region 1 · Republic of the Philippines
+          </div>
           <div className="flex gap-6">
             <a href="/modules#projects" className="transition-colors hover:text-white">Privacy Policy</a>
             <a href="/modules#projects" className="transition-colors hover:text-white">Terms of Use</a>

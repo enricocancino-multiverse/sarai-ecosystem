@@ -180,7 +180,7 @@ export default function ModulesPage() {
                                             Leverage wet seasons starting June-September for raw rainfed areas, or early dry phases (October-December) if municipal irrigation systems are robust.
                                         </p>
                                     </div>
-                                    <div className="p-4 border border-slate-200 rounded-lg bg-amber-50/20 border-amber-200/60">
+                                    <div className="p-4 border border-slate-200 rounded-lg bg-amber-50/20">
                                         <span className="text-xs font-bold text-amber-700 uppercase tracking-wide block mb-1">Hazard Block Windows</span>
                                         <p className="text-xs text-slate-600 leading-relaxed">
                                             Avoid peak solar trends from March-May if independent localized water retention frameworks are offline to protect seed sets from early heat shock mortality.
