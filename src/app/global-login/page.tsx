@@ -7,7 +7,7 @@ import { AlertCircle, Eye, EyeOff, RefreshCw, Shield, User } from "lucide-react"
 
 export default function LoginPage() {
   const router = useRouter();
-  const [mode, setMode] = useState<"user" | "admin" | "superadmin">("user");
+  const [mode, setMode] = useState<"user" | "superadmin">("user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -15,9 +15,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Superadmin gateway is intentionally hidden from the main layout.
-    // Fail-safe Manual Database Override: if root credentials are lost, update the password hash directly in PostgreSQL
-    // or rely on an emergency root environment variable workflow outside the public app.
     const handleShortcut = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.shiftKey && event.code === "KeyS") {
         setMode("superadmin");
@@ -85,47 +82,14 @@ export default function LoginPage() {
 
             <div className="mt-10 sm:mt-12">
               <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                {mode === "superadmin" ? "Superadmin portal sign in" : mode === "admin" ? "Admin portal sign in" : "Staff portal sign in"}
+                SARAI portal sign in
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600">
-                {mode === "superadmin"
-                  ? "Use your designated superadmin account to reach the highest-privilege operational controls."
-                  : mode === "admin"
-                    ? "Authorized DOST admins only. Enter your credentials to manage documents, attendance, and announcements."
-                    : "Use your DOST account to sign in and access SARAI workflow, tracking, and announcements."}
+                Use your DOST credentials to sign in and access the SARAI portal. Authorized personnel may proceed.
               </p>
             </div>
-
-            <div className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-1">
-              <div className="grid grid-cols-2 gap-1 rounded-3xl bg-white p-1 shadow-sm">
-                <button
-                  type="button"
-                  onClick={() => setMode("user")}
-                  className={`rounded-3xl px-4 py-3 text-sm font-semibold transition ${mode === "user" ? "bg-emerald-600 text-white" : "text-slate-700 hover:text-slate-900"}`}
-                >
-                  Staff
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMode("admin")}
-                  className={`rounded-3xl px-4 py-3 text-sm font-semibold transition ${mode === "admin" ? "bg-emerald-600 text-white" : "text-slate-700 hover:text-slate-900"}`}
-                >
-                  Admin
-                </button>
-              </div>
-            </div>
-
+            
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-              {mode === "admin" && (
-                <div className="rounded-3xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-                  <AlertCircle size={18} className="inline align-text-bottom" /> Authorized DOST admins only.
-                </div>
-              )}
-              {mode === "superadmin" && (
-                <div className="rounded-3xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                  <AlertCircle size={18} className="inline align-text-bottom" /> Root access is restricted to designated super administrators.
-                </div>
-              )}
 
               <label className="block text-sm font-semibold text-slate-700">
                 Email
@@ -172,14 +136,6 @@ export default function LoginPage() {
                 {loading ? (
                   <>
                     <RefreshCw size={18} className="animate-spin" /> Signing in...
-                  </>
-                ) : mode === "superadmin" ? (
-                  <>
-                    <Shield size={18} /> Continue as superadmin
-                  </>
-                ) : mode === "admin" ? (
-                  <>
-                    <Shield size={18} /> Continue as admin
                   </>
                 ) : (
                   <>

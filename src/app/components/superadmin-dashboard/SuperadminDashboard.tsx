@@ -53,7 +53,7 @@ export function SuperadminDashboard({ staffName, users, onCreateUser, onToggleUs
           <div className="space-y-3 text-sm text-muted-foreground">
             <div className="rounded-lg bg-muted/50 p-3 font-mono text-xs text-foreground">
               <div>1. Open PowerShell or Command Prompt</div>
-              <div>cd C:\Users\105ca\OneDrive\Desktop\sarai-ecosystem</div>
+              <div>cd C:\Users\username\OneDrive\Desktop\sarai-ecosystem</div>
               <div>& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -d sarai</div>
             </div>
             <div className="rounded-lg bg-muted/50 p-3 font-mono text-xs text-foreground">

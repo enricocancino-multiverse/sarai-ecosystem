@@ -246,8 +246,8 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
               <div className="flex items-center gap-2">
                 <img src="/mainlogos/DOST%20LOGO%20GLOBAL.png" alt="DOST Logo" className="h-8 w-auto shrink-0" />
                 <img src="/mainlogos/BagongPilipinas.png" alt="Bagong Pilipinas Logo" className="h-10 w-auto shrink-0" />
-                <img src="/mainlogos/Sarai-IlocosRegion.png" alt="Sarai Ilocos Region Logo" className="h-11 w-auto shrink-0" />
-                <img src="/mainlogos/Sarai-Header.png" alt="Sarai Ilocos Region Logo" className="h-8 w-auto shrink-0" />
+                <img src="/mainlogos/Sarai-IlocosRegion.png" alt="Sarai Ilocos Region Logo" className="h-13 w-auto shrink-0" />
+                <img src="/mainlogos/Sarai-Header.png" alt="Sarai Ilocos Region Logo" className="h-11 w-auto shrink-0" />
               </div>
             </div>
             <div className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
@@ -895,9 +895,235 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
   `}} />
 </section>
 
-      {/* Logos and Stakeholders section | in here gemini! */}
-      {/* Logos and Stakeholders section */}
-      <section id="partners" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-emerald-200/40">
+{/* Sarai Output/maps/advisories/weather forecast */}
+<section id="modules" className="border-t border-emerald-200/40 bg-muted/40 py-20">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    {/* Module Internal State Controls */}
+    {(() => {
+      const [activeTab, setActiveTab] = useState<'weather' | 'maps' | 'advisories'>('weather');
+      const [province, setProvince] = useState('Laguna');
+      const [municipality, setMunicipality] = useState('Los Baños');
+      const [metric, setMetric] = useState<'mm' | 'percent'>('mm');
+      const [outlookMonth, setOutlookMonth] = useState('Apr 2026');
+
+      const rainfallData = [
+        { month: "Apr 2026", icon: "☀️", value: 22, percentage: 15, bg: "bg-zinc-100 border-zinc-200 text-zinc-900" },
+        { month: "May 2026", icon: "💧", value: 179, percentage: 88, bg: "bg-cyan-400 border-cyan-500 text-slate-950" },
+        { month: "Jun 2026", icon: "💧", value: 243, percentage: 104, bg: "bg-blue-500 border-blue-600 text-white" },
+        { month: "Jul 2026", icon: "☔", value: 431, percentage: 142, bg: "bg-blue-950 border-blue-900 text-white" },
+        { month: "Aug 2026", icon: "💧", value: 331, percentage: 118, bg: "bg-blue-700 border-blue-800 text-white" },
+        { month: "Sep 2026", icon: "💧", value: 303, percentage: 110, bg: "bg-blue-600 border-blue-700 text-white" },
+        { month: "Oct 2026", icon: "💧", value: 339, percentage: 125, bg: "bg-blue-850 border-blue-900 text-white" },
+        { month: "Nov 2026", icon: "💧", value: 220, percentage: 98, bg: "bg-blue-500 border-blue-600 text-white" },
+        { month: "Dec 2026", icon: "💧", value: 171, percentage: 82, bg: "bg-cyan-400 border-cyan-500 text-slate-950" },
+        { month: "Jan 2027", icon: "☁️", value: 60, percentage: 45, bg: "bg-sky-200 border-sky-300 text-slate-950" },
+        { month: "Feb 2027", icon: "☀️", value: 21, percentage: 18, bg: "bg-zinc-100 border-zinc-200 text-zinc-900" },
+        { month: "Mar 2027", icon: "☀️", value: 16, percentage: 12, bg: "bg-zinc-100 border-zinc-200 text-zinc-900" },
+      ];
+
+      return (
+        <>
+          {/* Sub-navigation Switcher */}
+          <div className="flex flex-wrap justify-center gap-3 mb-12 border-b border-emerald-200/20 pb-6">
+            <button
+              onClick={() => setActiveTab('weather')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 ${
+                activeTab === 'weather' 
+                  ? 'bg-emerald-700 text-white shadow-md' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              <TrendingUp className="w-4 h-4" /> Weather & Rainfall Outlook
+            </button>
+            <button
+              onClick={() => setActiveTab('maps')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 ${
+                activeTab === 'maps' 
+                  ? 'bg-emerald-700 text-white shadow-md' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              <Globe className="w-4 h-4" /> Maps & Remote Sensing
+            </button>
+            <button
+              onClick={() => setActiveTab('advisories')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 ${
+                activeTab === 'advisories' 
+                  ? 'bg-emerald-700 text-white shadow-md' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              <Bell className="w-4 h-4" /> Real-time Advisories
+            </button>
+          </div>
+
+          {/* Tab Content Panels */}
+          {activeTab === 'weather' && (
+            <div className="bg-card text-card-foreground rounded-2xl p-6 md:p-10 border border-emerald-200/20 shadow-sm animate-in fade-in-50 duration-200">
+              <div className="text-center mb-8">
+                <h3 className="text-3xl font-bold tracking-tight text-foreground">Rainfall Outlook</h3>
+                <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mt-1">El Niño season (Apr 2026 – Mar 2027)</p>
+                <p className="text-xs text-muted-foreground mt-2 max-w-2xl mx-auto">
+                  A 12-month municipal rainfall outlook framework. Switch between raw forecast calculations (mm) or long-term dynamic percentages.
+                </p>
+                <span className="text-[10px] text-muted-foreground opacity-60 block mt-1">Source: CHIRPS (Climate Hazards Group InfraRed Precipitation with Station data)</span>
+              </div>
+
+              {/* Input Selectors */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto mb-6">
+                <div>
+                  <label className="block text-[11px] font-bold text-muted-foreground uppercase tracking-wider text-center mb-1.5">Province</label>
+                  <select 
+                    value={province} 
+                    onChange={(e) => setProvince(e.target.value)}
+                    className="w-full text-sm border border-emerald-200/20 rounded-xl p-2.5 bg-background text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
+                  >
+                    <option value="Laguna">Laguna</option>
+                    <option value="Batangas">Batangas</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-muted-foreground uppercase tracking-wider text-center mb-1.5">Municipality</label>
+                  <select 
+                    value={municipality} 
+                    onChange={(e) => setMunicipality(e.target.value)}
+                    className="w-full text-sm border border-emerald-200/20 rounded-xl p-2.5 bg-background text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
+                  >
+                    <option value="Los Baños">Los Baños</option>
+                    <option value="Bay">Bay</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Metric Toggle */}
+              <div className="flex justify-center mb-8">
+                <div className="inline-flex rounded-xl p-1 bg-muted border border-emerald-200/10">
+                  <button
+                    onClick={() => setMetric('mm')}
+                    className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                      metric === 'mm' ? 'bg-blue-600 text-white shadow-sm' : 'text-muted-foreground'
+                    }`}
+                  >
+                    Rainfall (mm)
+                  </button>
+                  <button
+                    onClick={() => setMetric('percent')}
+                    className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                      metric === 'percent' ? 'bg-blue-600 text-white shadow-sm' : 'text-muted-foreground'
+                    }`}
+                  >
+                    % of normal
+                  </button>
+                </div>
+              </div>
+
+              {/* 12-Month Matrix Layout */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-10">
+                {rainfallData.map((item) => (
+                  <div 
+                    key={item.month} 
+                    className={`flex flex-col items-center justify-center p-4 rounded-xl border shadow-sm transition-all hover:scale-[1.02] ${item.bg}`}
+                  >
+                    <span className="text-[11px] font-bold uppercase tracking-wider opacity-80">{item.month}</span>
+                    <span className="text-2xl my-1.5">{item.icon}</span>
+                    <span className="text-xl font-black tracking-tight">
+                      {metric === 'mm' ? `${item.value}` : `${item.percentage}%`}
+                    </span>
+                    <span className="text-[9px] uppercase font-extrabold tracking-widest opacity-70 mt-0.5">
+                      {metric === 'mm' ? 'mm' : 'normal'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* GIS National Map Deck */}
+              <div className="border-t border-emerald-200/10 pt-8 bg-muted/30 rounded-xl p-6 text-center">
+                <h4 className="text-md font-bold text-foreground flex items-center justify-center gap-2">
+                  <MapPin className="w-4 h-4 text-emerald-600" /> National Outlook Map
+                </h4>
+                <p className="text-xs text-muted-foreground mt-1 mb-4 max-w-xl mx-auto">
+                  Municipal classification parameters mapped across geographical coordinates for the target target temporal filter window.
+                </p>
+                <div className="max-w-xs mx-auto mb-6">
+                  <select
+                    value={outlookMonth}
+                    onChange={(e) => setOutlookMonth(e.target.value)}
+                    className="w-full text-sm border border-emerald-200/20 rounded-xl p-2 bg-background text-foreground shadow-sm"
+                  >
+                    {rainfallData.map(d => (
+                      <option key={d.month} value={d.month}>{d.month}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="aspect-21/8 w-full bg-background border border-dashed border-emerald-200/30 rounded-xl flex flex-col items-center justify-center text-muted-foreground text-xs gap-1 p-4">
+                  <Globe className="w-8 h-8 text-emerald-600/40 animate-pulse mb-1" />
+                  <span className="font-medium text-foreground">Active Spatial Map Grid Loaded</span>
+                  <span>Centred Coordinate Focus Layer: {outlookMonth} ({province})</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'maps' && (
+            <div className="grid md:grid-cols-2 gap-6 animate-in fade-in-50 duration-200">
+              <div className="p-6 bg-card text-card-foreground border border-emerald-200/20 rounded-2xl shadow-sm">
+                <div className="p-2.5 bg-emerald-500/10 rounded-xl w-fit mb-4">
+                  <RefreshCw className="w-6 h-6 text-emerald-600" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">Vegetation Water Stress (SEVTR)</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Real-time algorithmic calculations processing terrestrial data matrices to isolate regional drought risks early.
+                </p>
+              </div>
+              <div className="p-6 bg-card text-card-foreground border border-emerald-200/20 rounded-2xl shadow-sm">
+                <div className="p-2.5 bg-blue-500/10 rounded-xl w-fit mb-4">
+                  <FolderOpen className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">Near Real-Time Flood Assessment</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Post-typhoon saturation modeling vectors detailing impact tracking dimensions straight to local analytics monitors.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'advisories' && (
+            <div className="space-y-4 bg-card text-card-foreground p-6 rounded-2xl border border-emerald-200/20 shadow-sm animate-in fade-in-50 duration-200">
+              <div className="p-4 border-l-4 border-emerald-600 bg-emerald-500/5 rounded-r-xl flex gap-3 items-start">
+                <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-sm text-foreground">Rice Crop System Advisory</span>
+                    <span className="text-[10px] font-bold bg-emerald-600/10 text-emerald-600 px-2 py-0.5 rounded-md">Active</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    Elevated rainfall configurations expected across regional monitoring units. Deploy proper Alternate Wetting and Drying (AWD) matrices to manage yield margins.
+                  </p>
+                </div>
+              </div>
+              <div className="p-4 border-l-4 border-amber-500 bg-amber-500/5 rounded-r-xl flex gap-3 items-start">
+                <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-sm text-foreground">Corn Stalk Rot Warning</span>
+                    <span className="text-[10px] font-bold bg-amber-500/10 text-amber-600 px-2 py-0.5 rounded-md">Alert</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    Monitored localized microclimate indices track a rise in relative boundary layer humidity. Initiate targeted crop updates and IPM schedules immediately.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</section>
+
+{/* Logos and Stakeholders section */}
+<section id="partners" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-emerald-200/40">
   <div className="mb-12 text-center">
     <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Institutional Network</div>
     <h2 className="text-3xl font-bold text-foreground">Program Partners & Stakeholders</h2>
@@ -985,7 +1211,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
           { name: "Municipality of Santa Maria, Ilocos Sur", leader: "Hon. Brigido C. Camarillo Jr.", img: "sidelogos/SantaMariaSeal.jpg" },
           { name: "Municipality of Santa Catalina, Ilocos Sur", leader: "Hon. Edgar R. Rapanut", img: "sidelogos/SantaCatalinaSeal.jpg" },
           { name: "Municipality of Banayoyo, Ilocos Sur", leader: "Hon. Virgilio G. Galimba", img: "sidelogos/BanayoyoSeal.jpg" },
-          { name: "City of Batac, Ilocos Norte", leader: "Hon. Albert D. Chua", img: "sidelogos/BatacSeal.png" },
+          { name: "City of Batac, Ilocos Norte", leader: "Hon. Mark Christian R. Chua", img: "sidelogos/BatacSeal.png" },
           { name: "City of Laoag, Ilocos Norte", leader: "Hon. Michael Marcos Keon", img: "sidelogos/LaoagSeal.png" },
           { name: "Municipality of Pinili, Ilocos Norte", leader: "Hon. Rommel T. Labasan", img: "sidelogos/PiniliSeal.png" },
           { name: "Municipality of Vintar, Ilocos Norte", leader: "Hon. Richard A. Degala", img: "sidelogos/VintarSeal.png" },
@@ -1109,7 +1335,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
 
         {/* Sub-footer metadata bottom bar */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-white/40">
-          <div>Sarai Ecosystem © 2026 · DOST Region 1 · Republic of the Philippines</div>
+          <div>Sarai CENTRO © 2026 · DOST Region 1 · Republic of the Philippines</div>
           <div className="flex gap-6">
             <a href="/modules#projects" className="transition-colors hover:text-white">Privacy Policy</a>
             <a href="/modules#projects" className="transition-colors hover:text-white">Terms of Use</a>
