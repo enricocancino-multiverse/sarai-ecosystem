@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AttendancePageContent } from "../sarai-attendance/page";
@@ -232,12 +232,6 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
       { title: "WHAT WE DO", description: "We integrate modern data analytics, smart farming solutions, and proactive agronomic systems into agricultural practices. Project SARAI provides smarter approaches to rejuvenate agriculture as an industry in the Philippines by delivering actionable insights and tech-driven tools to support decision-making for a more sustainable farming future." },
     ];
 
-    const workflowSteps = [
-      { title: "Explore the portal", detail: "Browse the public landing experience and see what SARAI offers." },
-      { title: "Sign in securely", detail: "Choose staff or admin access and move into your personalized workspace." },
-      { title: "Track and report", detail: "Monitor documents, attendance, and updates without switching tools." },
-    ];
-
     const moduleCards = [
       { title: "Sarai Personnel", description: "Collection of Sarai personnel information and records.", href: "/modules#personnel", icon: <FileText size={18} /> },
       { title: "Mission & Vision", description: "Privacy Policy, Terms of Service, and Code of Conduct", href: "/modules#projects", icon: <Clock size={18} /> },
@@ -311,7 +305,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
                   <a href="#about" className="flex items-center gap-2 rounded-lg border border-white/30 bg-white/15 px-6 py-3 font-semibold text-white transition-all hover:bg-white/25">Learn More</a>
                 </div>
                 <div className="mt-6 flex items-center gap-2">
-                  {heroBanners.map((banner, index) => (
+                  {heroBanners.slice(0, 3).map((banner, index) => (
                     <button
                       key={banner.src}
                       type="button"
@@ -326,86 +320,60 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
               <div className="rounded-[1.75rem] border border-emerald-100 bg-white/80 p-5 shadow-[0_20px_60px_-20px_rgba(30,107,60,0.25)] backdrop-blur">
                 <div className="mb-4 flex items-center justify-between">
                   <div>
-                    <h2 className="mt-1 text-lg font-semibold text-foreground">Today at SARAI</h2>
+                    <h2 className="mt-1 text-lg font-semibold text-foreground">Welcome to SARAI Ilocos Portal</h2>
                   </div>
                   <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Live</span>
                 </div>
 
                 <div className="rounded-2xl border border-emerald-100 bg-emerald-50/20 p-4">
-  <div className="mb-3 flex items-center justify-between">
-    <div className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
-      🌾 Priority Crops Focus
-    </div>
-    <span className="text-[10px] bg-emerald-100 font-bold text-emerald-800 px-2 py-0.5 rounded-full">
-      9 Crops
-    </span>
-  </div>
-  
-  <div className="grid grid-cols-3 gap-2">
-    {[
-      { name: "Rice", icon: "🌾" },
-      { name: "Corn", icon: "🌽" },
-      { name: "Banana", icon: "🍌" },
-      { name: "Coconut", icon: "🥥" },
-      { name: "Coffee", icon: "☕" },
-      { name: "Cacao", icon: "🍫" },
-      { name: "Sugarcane", icon: "🌱" },
-      { name: "Tomato", icon: "🍅" },
-      { name: "Soybean", icon: "🫛" }
-    ].map((crop) => (
-      <div 
-        key={crop.name} 
-        className="flex flex-col items-center justify-center rounded-xl bg-white border border-slate-100 p-2.5 shadow-sm hover:border-emerald-400 hover:shadow-sm transition-all cursor-pointer group"
-      >
-        <span className="text-xl mb-1 group-hover:scale-110 transition-transform">
-          {crop.icon}
-        </span>
-        <span className="text-[11px] font-bold text-slate-700 group-hover:text-emerald-900">
-          {crop.name}
-        </span>
-      </div>
-    ))}
-  </div>
-</div>
-
-                <div className="mt-4 rounded-2xl border border-border bg-white p-4">
-                  <div className="mb-3 flex items-center justify-between">
-                    <p className="text-sm font-semibold text-foreground">What to do?</p>
-                    <span className="text-xs text-muted-foreground">3 simple steps</span>
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
+                    🌾 Priority Crops Focus
                   </div>
-                  <div className="space-y-2">
-                    {workflowSteps.map((step, index) => (
-                      <div key={step.title} className="flex items-start gap-3 rounded-xl bg-muted/50 px-3 py-2.5">
-                        <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">{index + 1}</div>
-                        <div>
-                          <div className="text-sm font-semibold text-foreground">{step.title}</div>
-                          <div className="text-xs leading-5 text-muted-foreground">{step.detail}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <span className="text-[10px] bg-emerald-100 font-bold text-emerald-800 px-2 py-0.5 rounded-full">
+                    9 Crops
+                  </span>
                 </div>
+                
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { name: "Rice", icon: "🌾" },
+                    { name: "Corn", icon: "🌽" },
+                    { name: "Banana", icon: "🍌" },
+                    { name: "Coconut", icon: "🥥" },
+                    { name: "Coffee", icon: "☕" },
+                    { name: "Cacao", icon: "🍫" },
+                    { name: "Sugarcane", icon: "🌱" },
+                    { name: "Tomato", icon: "🍅" },
+                    { name: "Soybean", icon: "🫛" }
+                  ].map((crop) => (
+                    <Link
+                      key={crop.name}
+                      href={`/sarai-crops?crop=${encodeURIComponent(crop.name)}`}
+                      className="flex flex-col items-center justify-center rounded-xl bg-white border border-slate-100 p-2.5 shadow-sm hover:border-emerald-400 hover:shadow-sm transition-all cursor-pointer group"
+                    >
+                      <span className="text-xl mb-1 group-hover:scale-110 transition-transform">
+                        {crop.icon}
+                      </span>
+                      <span className="text-[11px] font-bold text-slate-700 group-hover:text-emerald-900">
+                        {crop.name}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
               </div>
             </div>
           </div>
         </section>
 
       <section className="bg-primary border-t border-emerald-200/40">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-8 sm:px-6 lg:grid-cols-4">
-          {[
-            { label: "Active Staff", value: "120+", icon: <Users size={20} /> },
-            { label: "Municipalities Served", value: "148", icon: <MapPin size={20} /> },
-            { label: "Documents Processed", value: "3,400+", icon: <FileText size={20} /> },
-            { label: "Projects Running", value: "24", icon: <TrendingUp size={20} /> },
-          ].map((stat) => (
-            <div key={stat.label} className="flex items-center gap-3">
-              <div className="text-white/70">{stat.icon}</div>
-              <div>
-                <div className="text-2xl font-extrabold text-white">{stat.value}</div>
-                <div className="text-xs text-white/70">{stat.label}</div>
-              </div>
-            </div>
-          ))}
+        <div className="mx-auto max-w-7xl px-4 py-2 sm:px-6">
+          <div className="mx-auto relative h-1.5 w-full max-w-4xl overflow-hidden rounded-full bg-emerald-500/70 shadow-[0_0_30px_rgba(16,185,129,0.25)]">
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(56,189,127,0.08)_0%,rgba(167,243,208,0.9)_15%,rgba(34,197,94,0.25)_45%,rgba(167,243,208,0.65)_70%,rgba(56,189,127,0.12)_100%)] opacity-90" />
+            <div className="absolute inset-y-0 left-[-30%] h-full w-1/4 rounded-full bg-linear-to-r from-emerald-200/90 via-emerald-300/70 to-transparent blur-[6px] opacity-90 animate-[ledGlow_4.5s_linear_infinite]" />
+          </div>
         </div>
       </section>
 
@@ -535,81 +503,397 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
       </section>
           
       {/* Mobile Applications Section */}
-      <section id="apps" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 border-t border-emerald-200/40">
-        <div className="mb-12 text-center">
-          <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Digital Tools</div>
-          <h2 className="text-3xl font-bold text-foreground">SARAI Mobile Applications</h2>
-        </div>
+      <section 
+  id="apps" 
+  className="relative overflow-hidden py-24 px-4 sm:px-6 md:px-8 bg-linear-to-br from-[#022c22] via-[#042f2e] to-[#011c18] border-t border-emerald-800/40"
+>
+  {/* Injecting data and logic directly inside the section scope so it's self-contained */}
+  {(() => {
+    const scrollRef = useRef<HTMLDivElement | null>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+    const [scrollPosition, setScrollPosition] = useState(0);
 
-        <div className="grid gap-12 md:grid-cols-2 max-w-4xl mx-auto">
-          {/* BANATECH */}
-          <div className="flex flex-col items-center text-center p-6 rounded-[1.25rem] border border-border bg-white shadow-sm hover:shadow-md transition-shadow">
-            <div className="relative w-48 h-48 flex items-center justify-center mb-6">
-              {/* Background decorative circles mimicking the live site screenshot */}
-              <div className="absolute top-2 left-6 w-36 h-36 rounded-full bg-emerald-500 -z-10 opacity-90" />
-              <div className="absolute bottom-4 right-8 w-12 h-12 rounded-full bg-amber-400 -z-10" />
-              {/* Fallback structural layout mirroring image mockup */}
-              <div className="w-28 h-44 bg-zinc-800 rounded-xl p-1.5 shadow-xl border border-zinc-700">
-                <div className="w-full h-full bg-[#1e2d24] rounded-lg p-2 flex flex-col justify-between text-left text-[8px] text-white/90">
-                  <div className="font-bold border-b border-white/20 pb-0.5">BANATECH</div>
-                  <div className="bg-white/10 rounded p-1 my-1 flex-1 flex flex-col items-center justify-center">
-                    <span className="text-base">🍌</span>
-                    <span className="text-[6px] text-center mt-1">Harvest Calculator</span>
+    const systems = [
+      {
+        id: "spidtech",
+        type: "Mobile App",
+        title: "SPIDTECH",
+        tagline: "Smart Pest & Disease Identification",
+        description: "Identify pests and crop diseases instantly using smart image recognition. Access an extensive digital library offline to safeguard your farm.",
+        badge: "Google Play",
+        badgeColor: "bg-amber-500 text-amber-950",
+        actionText: "Download Here",
+        actionUrl: "https://play.google.com/store/apps/details?id=ph.sarai.ipdas.spidtech",
+        preview: (
+          <div className="w-28 h-44 bg-zinc-950 rounded-xl p-1.5 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
+            <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-zinc-800 rounded-full z-20" />
+            <div className="w-full h-full bg-[#0d2116] rounded-lg p-2 flex flex-col justify-between text-left text-[8px] text-white/90 relative">
+              <div className="font-bold border-b border-emerald-800/40 pb-1 text-center text-emerald-400 tracking-wide uppercase">🔍 SPIDTECH</div>
+              <div className="flex-1 my-2 bg-black/40 rounded border border-emerald-900/30 p-1 flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute inset-0 border border-emerald-500/20 animate-pulse pointer-events-none" />
+                <div className="flex justify-between items-center text-[6px] text-emerald-300">
+                  <span>Scanner Online</span>
+                  <span className="w-1 h-1 rounded-full bg-emerald-400 animate-ping" />
+                </div>
+                <div className="my-auto flex flex-col items-center justify-center py-1 opacity-80">
+                  <span className="text-sm">🐛</span>
+                  <span className="text-[5px] text-zinc-400 mt-1">Detecting Pests...</span>
+                </div>
+              </div>
+              <div className="bg-emerald-500 text-white text-[6px] text-center font-bold py-1 rounded">START SCAN</div>
+            </div>
+          </div>
+        )
+      },
+      {
+        id: "banatech",
+        type: "Mobile App",
+        title: "BANATECH",
+        tagline: "Banana Harvest Estimator",
+        description: "Predict the perfect banana harvest date and estimate potential yields. Log farm coordinates, track crop stages, and forecast supply schedules.",
+        badge: "Web Demo",
+        badgeColor: "bg-emerald-400 text-emerald-950",
+        actionText: "Access Demo",
+        actionUrl: "https://sarai.ph/",
+        preview: (
+          <div className="w-28 h-44 bg-zinc-950 rounded-xl p-1.5 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
+            <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-zinc-800 rounded-full z-20" />
+            <div className="w-full h-full bg-[#182312] rounded-lg p-2 flex flex-col justify-between text-left text-[8px] text-white/90 relative">
+              <div className="font-bold border-b border-amber-800/40 pb-1 text-center text-amber-400 tracking-wide uppercase">🍌 BANATECH</div>
+              <div className="flex-1 my-2 bg-black/40 rounded border border-amber-900/30 p-1 flex flex-col justify-between">
+                <div className="flex justify-between text-[6px] text-amber-300">
+                  <span>Yield Tracker</span>
+                  <span>Active</span>
+                </div>
+                <div className="my-auto flex flex-col items-center justify-center py-1">
+                  <span className="text-sm">📉</span>
+                  <span className="text-[5px] text-amber-200 mt-1 font-semibold">94% Maturity reached</span>
+                </div>
+              </div>
+              <div className="bg-amber-500 text-amber-950 text-[6px] text-center font-bold py-1 rounded">CALCULATE HARVEST</div>
+            </div>
+          </div>
+        )
+      },
+      {
+        id: "portal",
+        type: "Web Platform",
+        title: "SARAI Main Portal",
+        tagline: "Centralized Agrometeorological hub",
+        description: "The primary operational portal offering regional crop monitoring, real-time weather-to-crop forecasts, and interactive advisory newsletters.",
+        badge: "Main Hub",
+        badgeColor: "bg-teal-400 text-teal-950",
+        actionText: "Visit Portal",
+        actionUrl: "https://sarai.ph/",
+        preview: (
+          <div className="w-52 h-32 bg-zinc-950 rounded-lg p-1 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
+            <div className="flex gap-1 mb-1 border-b border-emerald-900/40 pb-1">
+              <div className="w-1.5 h-1.5 rounded-full bg-red-500/80" />
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500/80" />
+            </div>
+            <div className="w-full h-[calc(100%-12px)] bg-[#07130f] rounded p-1.5 flex flex-col gap-1 text-[6px] text-zinc-300">
+              <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
+                <span className="font-bold text-emerald-400">sarai.ph</span>
+                <span className="text-zinc-500 text-[4px]">Live Dashboard</span>
+              </div>
+              <div className="grid grid-cols-3 gap-1 mt-1">
+                <div className="bg-emerald-950/40 border border-emerald-900/30 rounded p-1 flex flex-col items-center">
+                  <span className="text-emerald-400 font-bold">Rainfall</span>
+                  <span className="text-[5px]">Normal</span>
+                </div>
+                <div className="bg-emerald-950/40 border border-emerald-900/30 rounded p-1 flex flex-col items-center">
+                  <span className="text-emerald-400 font-bold">Crop Adv.</span>
+                  <span className="text-[5px]">Updated</span>
+                </div>
+                <div className="bg-emerald-950/40 border border-emerald-900/30 rounded p-1 flex flex-col items-center">
+                  <span className="text-emerald-400 font-bold">Advisory</span>
+                  <span className="text-[5px]">Ready</span>
+                </div>
+              </div>
+              <div className="bg-emerald-900/20 border border-emerald-800/20 rounded p-1 mt-1 text-[5px] text-zinc-400 leading-tight">
+                📍 regional forecast model predicts normal dry-season start.
+              </div>
+            </div>
+          </div>
+        )
+      },
+      {
+        id: "seams",
+        type: "Web System",
+        title: "SEAMS",
+        tagline: "Soil Moisture Monitoring & Advisory",
+        description: "Real-time updates on regional soil moisture status. Plan precise crop irrigation, evaluate soil quality, and counter dry-spell impacts.",
+        badge: "Real-time Web",
+        badgeColor: "bg-blue-400 text-blue-950",
+        actionText: "Monitor Soil",
+        actionUrl: "https://sarai.ph/",
+        preview: (
+          <div className="w-52 h-32 bg-zinc-950 rounded-lg p-1 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
+            <div className="flex gap-1 mb-1 border-b border-emerald-900/40 pb-1">
+               <div className="w-1.5 h-1.5 rounded-full bg-red-500/80" />
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500/80" />
+            </div>
+            <div className="w-full h-[calc(100%-12px)] bg-[#0c1a1f] rounded p-1.5 flex flex-col gap-1 text-[6px] text-zinc-300">
+              <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
+                <span className="font-bold text-blue-400">SEAMS Platform</span>
+                <span className="text-blue-500 text-[4px]">Status: Active</span>
+              </div>
+              <div className="flex-1 flex gap-1 items-center mt-1">
+                <div className="flex-1 bg-black/40 rounded p-1 flex flex-col gap-1 justify-center">
+                  <span className="text-blue-300">Moisture Profile:</span>
+                  <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-blue-500 h-full w-[68%]" />
                   </div>
+                  <span className="text-[5px] text-zinc-400">68% - Optimal Level</span>
+                </div>
+                <div className="w-1/3 bg-blue-950/30 border border-blue-900/30 rounded p-1 text-center flex flex-col justify-center">
+                  <span className="text-[10px]">💧</span>
+                  <span className="text-[4px] text-blue-300 mt-0.5">Dry-Spell Guard</span>
                 </div>
               </div>
             </div>
-            <p className="mb-6 text-sm text-muted-foreground leading-relaxed max-w-sm grow">
-              Want to access <span className="font-bold text-foreground">BANATECH</span> firsthand? You can try the features of the mobile application through this link!
-            </p>
-            <a 
-              href="https://sarai.ph/" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white transition-all hover:bg-emerald-700"
-            >
-              Access Here
-            </a>
           </div>
-
-          {/* SPIDTECH */}
-          <div className="flex flex-col items-center text-center p-6 rounded-[1.25rem] border border-border bg-white shadow-sm hover:shadow-md transition-shadow">
-            <div className="relative w-48 h-48 flex items-center justify-center mb-6">
-              {/* Background decorative elements */}
-              <div className="absolute top-8 left-2 w-4 h-4 rounded-full bg-amber-400 -z-10" />
-              <div className="absolute top-16 right-4 w-3 h-3 rounded-full bg-amber-400 -z-10" />
-              <div className="absolute bottom-2 right-6 w-12 h-12 rounded-full bg-amber-400 -z-10" />
-              
-              {/* Google Play Store Badge Mockup */}
-              <div className="absolute top-14 -right-2.5 bg-amber-100 text-[9px] font-medium text-amber-800 px-2 py-1 rounded-lg border border-amber-200 max-w-25 shadow-sm leading-tight">
-                Available for download on the Google Play Store!
+        )
+      },
+      {
+        id: "climo",
+        type: "Web System",
+        title: "CLIMO",
+        tagline: "Climate-Crop Forecasting Model",
+        description: "View localized historical climate patterns mapped directly against regional crop suitability datasets to formulate long-term seasonal planting cycles.",
+        badge: "Historical Data",
+        badgeColor: "bg-indigo-400 text-indigo-950",
+        actionText: "View Climate Models",
+        actionUrl: "https://sarai.ph/",
+        preview: (
+          <div className="w-52 h-32 bg-zinc-950 rounded-lg p-1 shadow-xl border border-emerald-800/30 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
+            <div className="flex gap-1 mb-1 border-b border-emerald-900/40 pb-1">
+              <div className="w-1.5 h-1.5 rounded-full bg-red-500/80" />
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500/80" />
+            </div>
+            <div className="w-full h-[calc(100%-12px)] bg-[#11111d] rounded p-1.5 flex flex-col gap-1 text-[6px] text-zinc-300">
+              <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
+                <span className="font-bold text-indigo-400">CLIMO Forecast</span>
+                <span className="text-indigo-400 text-[4px]">Suitability Matrix</span>
               </div>
-
-              {/* Structural app preview container */}
-              <div className="w-28 h-44 bg-zinc-800 rounded-xl p-1.5 shadow-xl border border-zinc-700">
-                <div className="w-full h-full bg-[#112415] rounded-lg p-2 flex flex-col justify-between text-left text-[8px] text-white/90">
-                  <div className="font-bold border-b border-white/20 pb-0.5 text-center text-emerald-400">🔍 SPIDTECH</div>
-                  <div className="bg-emerald-950/40 border border-emerald-800/30 rounded p-1 mt-1 flex-1 text-[5px] space-y-1">
-                    <div className="bg-white/10 p-0.5 rounded">📱 Pest Scanner</div>
-                    <div className="bg-white/10 p-0.5 rounded">📚 Image Library</div>
-                  </div>
+              <div className="flex-1 flex flex-col justify-between mt-1">
+                <div className="flex justify-between text-[5px]">
+                  <span>Precipitation Trend</span>
+                  <span className="text-indigo-300 font-bold">+12% vs Mean</span>
+                </div>
+                <div className="h-6 bg-indigo-950/20 rounded border border-indigo-900/20 p-1 flex items-end gap-1">
+                  <div className="bg-indigo-500 w-3 h-1" />
+                  <div className="bg-indigo-500 w-3 h-2" />
+                  <div className="bg-indigo-500 w-3 h-3" />
+                  <div className="bg-indigo-500 w-3 h-4" />
+                  <div className="bg-indigo-300 w-3 h-3.5" />
+                  <div className="bg-indigo-300 w-3 h-2.5" />
                 </div>
               </div>
             </div>
-            <p className="mb-6 text-sm text-muted-foreground leading-relaxed max-w-sm grow">
-              In need of assistance during pest season? Download <span className="font-bold text-foreground">SPIDTECH</span> now!
-            </p>
-            <a 
-              href="https://play.google.com/store/apps/details?id=ph.sarai.ipdas.spidtech" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white transition-all hover:bg-emerald-700"
-            >
-              Download Here
-            </a>
           </div>
+        )
+      }
+    ];
+
+    const checkScrollPosition = () => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        setCanScrollLeft(scrollLeft > 5);
+        setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 5);
+        setScrollPosition(scrollLeft);
+      }
+    };
+
+    useEffect(() => {
+      const el = scrollRef.current;
+      if (el) {
+        el.addEventListener('scroll', checkScrollPosition);
+        checkScrollPosition();
+        window.addEventListener('resize', checkScrollPosition);
+      }
+      return () => {
+        if (el) el.removeEventListener('scroll', checkScrollPosition);
+        window.removeEventListener('resize', checkScrollPosition);
+      };
+    }, []);
+
+    const slideLeft = () => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollBy({ left: -340, behavior: 'smooth' });
+      }
+    };
+
+    const slideRight = () => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollBy({ left: 340, behavior: 'smooth' });
+      }
+    };
+
+    return (
+      <>
+        {/* Background Decorative organic visual blobs to increase green immersion */}
+        <div className="absolute top-0 right-0 w-125 h-125 rounded-full bg-emerald-500/10 blur-[120px] pointer-events-none -z-10" />
+        <div className="absolute bottom-0 left-0 w-100 h-100 rounded-full bg-teal-500/5 blur-[100px] pointer-events-none -z-10" />
+        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-87.5 h-87.5 rounded-full bg-emerald-600/5 blur-[90px] pointer-events-none -z-10" />
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          
+          {/* Title Block */}
+          <div className="mb-14 text-center max-w-3xl mx-auto">
+            <div className="mb-3 text-xs font-bold uppercase tracking-[0.35em] text-emerald-400">
+              Digital Tools & Platforms
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+              SARAI Systems & Technologies
+            </h2>
+            <div className="h-1 w-20 bg-emerald-500 mx-auto rounded-full mb-6" />
+            <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
+              Empowering agricultural forecasting, dynamic pest surveillance, and field advisory metrics through a unified technological portfolio developed for local communities.
+            </p>
+          </div>
+
+          {/* Carousel Outer Wrapper with Custom Slide Buttons */}
+          <div className="relative group/carousel">
+            
+            {/* Scroll Buttons - Absolute overlay */}
+            {canScrollLeft && (
+              <button
+                type="button"
+                onClick={slideLeft}
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-700/50 hover:bg-emerald-800 hover:text-white hover:scale-105 shadow-xl transition-all duration-200"
+                aria-label="Slide Left"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
+
+            {canScrollRight && (
+              <button
+                type="button"
+                onClick={slideRight}
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-700/50 hover:bg-emerald-800 hover:text-white hover:scale-105 shadow-xl transition-all duration-200"
+                aria-label="Slide Right"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
+
+            {/* Scrolling Container */}
+            <div
+              ref={scrollRef}
+              className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-8 pt-4 px-2 no-scrollbar scrollbar-none"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+            >
+              {systems.map((sys) => (
+                <div
+                  key={sys.id}
+                  className="group shrink-0 w-77.5 sm:w-87.5 snap-start flex flex-col justify-between p-6 rounded-2xl border border-emerald-800/40 bg-linear-to-b from-[#033c2e]/65 to-[#022119]/80 backdrop-blur-md shadow-lg hover:border-emerald-500/50 hover:shadow-emerald-950/30 hover:shadow-2xl transition-all duration-300"
+                >
+                  <div>
+                    {/* Card Header */}
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                        {sys.type}
+                      </span>
+                      <span className={`text-[9px] font-bold uppercase px-2.5 py-1 rounded-full shadow-sm ${sys.badgeColor}`}>
+                        {sys.badge}
+                      </span>
+                    </div>
+
+                    {/* Device Simulation Showcase Box */}
+                    <div className="h-48 flex items-center justify-center mb-6 bg-[#011410]/55 border border-emerald-900/30 rounded-xl relative overflow-hidden shadow-inner">
+                      <div className="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] bg-size-[16px_16px] opacity-[0.03]" />
+                      {sys.preview}
+                    </div>
+
+                    {/* Tech Content Information */}
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-bold text-white tracking-tight">{sys.title}</h3>
+                      <p className="text-xs font-semibold text-emerald-300/90 leading-snug">{sys.tagline}</p>
+                      <p className="text-[13px] text-zinc-300 leading-relaxed pt-2">
+                        {sys.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* External Action Button */}
+                  <div className="mt-8 pt-4 border-t border-emerald-900/40">
+                    <a
+                      href={sys.actionUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-emerald-950/40 transition-all duration-200 hover:bg-emerald-500 hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      <span>{sys.actionText}</span>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Carousel Progress Navigation Indicators */}
+            <div className="flex justify-center items-center gap-2.5 mt-2">
+              {systems.slice(0, 3).map((sys, index) => {
+                const isActive = (Math.round(scrollPosition / 340) % 3 + 3) % 3 === index;
+                return (
+                  <button
+                    key={sys.id}
+                    type="button"
+                    onClick={() => {
+                      if (scrollRef.current) {
+                        scrollRef.current.scrollTo({ left: index * 340, behavior: 'smooth' });
+                      }
+                    }}
+                    className={`w-2.5 h-2.5 rounded-full border transition-all duration-300 ${
+                      isActive 
+                        ? 'bg-emerald-400 border-emerald-300' 
+                        : 'bg-emerald-900/60 border-emerald-800/40 hover:bg-emerald-600'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
         </div>
-      </section>
+      </>
+    );
+  })()}
+
+  {/* Styled Inline hiding of scrollbar support */}
+  <style dangerouslySetInnerHTML={{__html: `
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes ledGlow {
+      0% { transform: translateX(0); opacity: 0.7; }
+      20% { opacity: 1; }
+      50% { transform: translateX(300%); opacity: 0.9; }
+      80% { opacity: 1; }
+      100% { transform: translateX(600%); opacity: 0.7; }
+    }
+  `}} />
+</section>
 
       {/* Logos and Stakeholders section | in here gemini! */}
       {/* Logos and Stakeholders section */}

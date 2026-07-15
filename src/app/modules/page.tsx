@@ -49,12 +49,13 @@ export default function ModulesPage() {
                     )}
 
                     {/* SARAI CeNTRO Personnel Section */}
+                    {active === 'personnel' && (
           <div className="space-y-4">
             <div className="flex items-center gap-3 w-full">
               <span className="bg-emerald-600 text-[10px] font-bold text-white px-2 py-0.5 rounded-full shrink-0">7 Members</span>
-              <h3 className="text-xs font-bold text-emerald-950 tracking-wide uppercase shrink-0">SARAI CeNTRO Personnel</h3>
-              <div className="h-px bg-emerald-200/60 grow ml-2" />
-            </div>
+                            <h3 className="text-xs font-bold text-emerald-950 tracking-wide uppercase shrink-0">SARAI CeNTRO Personnel</h3>
+                            <div className="h-px bg-emerald-200/60 grow ml-2" />
+                                </div>
 
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {[
@@ -104,6 +105,7 @@ export default function ModulesPage() {
               ))}
             </div>
           </div>
+                    )}
 
                     {active === "projects" && (
                         <div id="projects" className="space-y-8">
