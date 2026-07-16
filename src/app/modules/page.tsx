@@ -33,7 +33,7 @@ export default function ModulesPage() {
                 <div className="mb-6 flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-foreground">Sarai Modules</h1>
-                        <p className="text-sm text-muted-foreground">Access tactical agriculture frameworks, ecological models, and crop tools.</p>
+                        <p className="text-sm text-muted-foreground">Manage personnel, projects, and accomplishment reports.</p>
                     </div>
                     <div className="flex items-center gap-3">
                         <Link href="/?view=landing" className="text-sm text-foreground/80 hover:text-foreground">← Back to home</Link>
@@ -51,7 +51,7 @@ export default function ModulesPage() {
                             </div>
                         </div>
                     )}
-
+     
                     {/* MODULE 1: MISSION & STRATEGIC FRAMEWORKS (Kept per your layout) */}
                     {active === "projects" && (
                         <div id="projects" className="space-y-8">
@@ -66,15 +66,61 @@ export default function ModulesPage() {
                                     <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
                                         <h4 className="text-sm font-bold uppercase tracking-wider text-emerald-600">SARAI Mission</h4>
                                         <p className="text-sm text-foreground leading-relaxed">
-                                            To deploy science-based crop technologies, forecasting systems, and protocols to farming communities. It aims to strengthen climate-informed decision-making by delivering timely data, improving local resource planning, and enhancing farmers' abilities to adapt to changing environmental conditions.
+                                         To equip farming communities with science-based tools that help them fight climate change and improve crop planning.
                                         </p>
                                     </div>
                                     <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
                                         <h4 className="text-sm font-bold uppercase tracking-wider text-emerald-600">SARAI Vision</h4>
                                         <p className="text-sm text-foreground leading-relaxed">
-                                            A smart, resilient, and highly sustainable agricultural sector in the Philippines where farmers and local governments are empowered by modern, data-driven technologies. It envisions a future where localized agricultural monitoring safeguards food security despite erratic weather.
+                                          To build smart, climate-resilient farming communities that use real-time data to protect their crops and increase food production.
                                         </p>
                                     </div>
+                                </div>
+
+                                <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
+                                    <h4 className="text-sm font-bold uppercase tracking-wider text-emerald-600">Core Framework &amp; Technologies</h4>
+                                    <p className="text-sm text-foreground leading-relaxed">
+                                        Project SARAI achieves its mission through an integrated network of scientists, researchers, and local government units (LGUs). The program utilizes tools such as satellite data, crop models, and localized weather monitoring system channels.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border pb-1">DOST Region I</h3>
+                                <div className="grid gap-6 md:grid-cols-3">
+                                    <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
+                                        <h4 className="text-sm font-bold uppercase tracking-wider text-sky-700">DOST I Mission</h4>
+                                        <p className="text-sm text-foreground leading-relaxed">
+                                           To direct, lead and coordinate the country’s scientific, technological, and innovative efforts geared towards maximum economic and social benefits for the people.
+                                        </p>
+                                    </div>
+                                    <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
+                                        <h4 className="text-sm font-bold uppercase tracking-wider text-sky-700">DOST I Vision</h4>
+                                        <p className="text-sm text-foreground leading-relaxed">
+                                           DOST I as the Champion of Science, Technology and Innovation towards an inclusive, smart, resilient and sustainable Region I.
+                                        </p>
+                                    </div>
+                                    <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
+                                        <h4 className="text-sm font-bold uppercase tracking-wider text-sky-700">DOST I Mandate</h4>
+                                        <p className="text-sm text-foreground leading-relaxed">
+                                            Executive Order No. 128 mandates the Department to “provide central direction, leadership and coordination of scientific and technological efforts and ensure that the results therefrom are geared and utilized in areas of maximum economic and social benefits for the people”.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="grid gap-6 md:grid-cols-2">
+                                <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
+                                    <h4 className="text-sm font-bold uppercase tracking-wider text-emerald-600">Privacy Policy</h4>
+                                    <p className="text-sm text-foreground leading-relaxed">
+                                        SARAI uses this portal to manage personnel records, project coordination, and accomplishment reporting. Personal information is collected only when needed for authorized access and administrative workflows, and it is protected through role-based permissions and secure system practices.
+                                    </p>
+                                </div>
+                                <div className="rounded-lg border border-border bg-white p-5 space-y-2 shadow-sm">
+                                    <h4 className="text-sm font-bold uppercase tracking-wider text-emerald-600">Terms of Use</h4>
+                                    <p className="text-sm text-foreground leading-relaxed">
+                                        Access to the SARAI portal is intended for authorized staff, partners, and approved stakeholders. Users are expected to keep their credentials confidential, use information responsibly, and avoid sharing sensitive records outside approved project channels.
+                                    </p>
                                 </div>
                             </div>
                         </div>

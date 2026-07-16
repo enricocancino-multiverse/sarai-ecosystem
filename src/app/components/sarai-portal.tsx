@@ -16,6 +16,7 @@ import {
   AlertCircle,
   ArrowRight,
   Bell,
+  BookOpen,
   Calendar,
   Camera,
   Check,
@@ -45,7 +46,7 @@ import {
   X,
 } from "lucide-react";
 
-type Page = "home" | "login" | "staff-dashboard" | "admin-dashboard" | "superadmin-dashboard" | "dts" | "attendance" | "achievements" | "announcements";
+type Page = "home" | "login" | "staff-dashboard" | "admin-dashboard" | "superadmin-dashboard" | "dts" | "attendance" | "achievements" | "personnel" | "announcements";
 type UserRole = "staff" | "admin" | "superadmin" | null;
 
 type NewsItem = {
@@ -71,6 +72,7 @@ const staffNav: NavItem[] = [
   { label: "Documents", page: "dts", icon: <FileText size={18} /> },
   { label: "Check-in", page: "attendance", icon: <Clock size={18} /> },
   { label: "Achievements", page: "achievements", icon: <Trophy size={18} /> },
+  { label: "Personnel", page: "personnel", icon: <Users size={18} /> },
 ];
 
 const adminNav: NavItem[] = [
@@ -79,6 +81,7 @@ const adminNav: NavItem[] = [
   { label: "Documents", page: "dts", icon: <FileText size={18} /> },
   { label: "Check-in", page: "attendance", icon: <Clock size={18} /> },
   { label: "Achievements", page: "achievements", icon: <Trophy size={18} /> },
+  { label: "Personnel", page: "personnel", icon: <Users size={18} /> },
 ];
 
 const superadminNav: NavItem[] = [
@@ -154,7 +157,7 @@ const priorityDot: Record<string, string> = {
 };
 
 // Sidebar Component
-function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: UserRole; current: Page; onNav: (page: Page) => void; onLogout: () => void; open: boolean; onClose: () => void }) {
+function Sidebar({ role, current, onNav, onLogout, open, onClose, onSecretToggle }: { role: UserRole; current: Page; onNav: (page: Page) => void; onLogout: () => void; open: boolean; onClose: () => void; onSecretToggle: () => void }) {
   const nav = role === "superadmin" ? superadminNav : role === "admin" ? adminNav : staffNav;
 
   return (
@@ -162,8 +165,10 @@ function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: User
       {open && <div className="fixed inset-0 z-30 bg-black/40 lg:hidden" onClick={onClose} />}
       <aside className={`fixed left-0 top-0 z-40 flex h-full w-64 flex-col border-r border-border bg-[#0f1f14] text-[#e8f5ed] transition-transform duration-300 lg:static lg:z-auto ${open ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
         <div className="border-b border-white/10 px-6 py-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20 text-sm font-bold text-emerald-300">S</div>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={onSecretToggle}>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20">
+              <img src="/mainlogos/DOST%20LOGO%20GLOBAL.png" alt="DOST Logo" className="h-6 w-auto" />
+            </div>
             <div>
               <div className="text-sm font-semibold">Sarai Ecosystem</div>
               <div className="text-xs text-white/60">DOST Region 1</div>
@@ -199,7 +204,7 @@ function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: User
                 shown.add("TOOLS");
               }
 
-              if (item.page === "achievements" && !shown.has("MISC")) {
+              if (["achievements", "personnel"].includes(item.page) && !shown.has("MISC")) {
                 items.push(
                   <div key="title-misc" className="px-3 pt-3 text-xs font-semibold text-white/60">
                     MISC
@@ -1328,6 +1333,7 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
             · DOST Region 1 · Republic of the Philippines
           </div>
           <div className="flex gap-6">
+            <Link href="/lords-prayer" className="transition-colors hover:text-white">The Lord's Prayer</Link>
             <a href="/modules#projects" className="transition-colors hover:text-white">Privacy Policy</a>
             <a href="/modules#projects" className="transition-colors hover:text-white">Terms of Use</a>
           </div>
@@ -1376,6 +1382,57 @@ function AchievementsView() {
   return <AchievementsRoutePage />;
 }
 
+function PersonnelView() {
+  const personnel = [
+    { name: "Decth-1180 P. Libunao", role: "Supervising SRS, Focal Person", type: "leader", img: "/people/Decht.png" },
+    { name: "Dana Bliezelle V. Hernaez", role: "SRS I, Alternate Focal Person", type: "leader", img: "/people/Dana.png" },
+    { name: "Novilyne O. Obfan", role: "Project Technical Specialist III", type: "staff", img: "/people/Novi.jpg" },
+    { name: "Miriam A. Oliva", role: "Project Technical Assistant III", type: "staff", img: "/people/Miriam.png" },
+    { name: "Daisy Rose S. Sidayen", role: "Project Technical Assistant III", type: "staff", img: "/people/Daisy.jpg" },
+    { name: "Jeisel O. Labatete", role: "Project Technical Assistant III", type: "staff", img: "/people/Jeisel.jpg" },
+    { name: "Lilian Rose S. Abuan", role: "Project Administrative Aide V", type: "staff", img: "/people/Lilian.jpg" },
+  ];
+
+  return (
+    <div className="space-y-6 p-6">
+      <div className="space-y-4">
+        <div className="flex items-center gap-3 w-full">
+          <span className="bg-emerald-600 text-[10px] font-bold text-white px-2 py-0.5 rounded-full shrink-0">7 Members</span>
+          <h3 className="text-xs font-bold text-emerald-950 tracking-wide uppercase shrink-0">SARAI CeNTRO Personnel</h3>
+          <div className="h-px bg-emerald-200/60 grow ml-2" />
+        </div>
+
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {personnel.map((person, idx) => (
+            <div
+              key={idx}
+              className={`flex gap-4 items-center p-4 rounded-xl border transition-all cursor-pointer hover:shadow-md ${
+                person.type === 'leader'
+                  ? 'border-sky-100 bg-sky-50/40 hover:border-sky-400'
+                  : 'border-amber-100 bg-amber-50/20 hover:border-amber-400'
+              }`}
+            >
+              <div className="w-12 h-12 rounded-full border border-slate-200 shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+                {person.img === "placeholder" ? (
+                  <span className="text-xs font-bold text-slate-400">
+                    {person.name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase()}
+                  </span>
+                ) : (
+                  <img src={person.img} alt={person.name} className="w-full h-full object-cover" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-slate-900">{person.name}</p>
+                <p className="text-xs text-slate-600">{person.role}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function SaraiPortal() {
   const router = useRouter();
   const [page, setPage] = useState<Page>("home");
@@ -1386,6 +1443,8 @@ export default function SaraiPortal() {
   const [superadminUnlocked, setSuperadminUnlocked] = useState(false);
   const [newsItems, setNewsItems] = useState<NewsItem[]>(initialNews);
   const [eventItems, setEventItems] = useState<EventItem[]>(initialEvents);
+  const [secretTapCount, setSecretTapCount] = useState(0);
+  const secretTimerRef = useRef<number | null>(null);
 
   const clearUrlHash = useCallback(() => {
     if (typeof window !== "undefined" && window.location.hash) {
@@ -1573,6 +1632,44 @@ export default function SaraiPortal() {
     router.push("/global-login");
   }, [clearUrlHash, router]);
 
+  const handleSecretToggle = useCallback(() => {
+    setSecretTapCount((count) => {
+      const next = count + 1;
+      if (secretTimerRef.current) {
+        window.clearTimeout(secretTimerRef.current);
+      }
+      secretTimerRef.current = window.setTimeout(() => {
+        setSecretTapCount(0);
+      }, 5000);
+
+      if (next >= 5) {
+        setSecretTapCount(0);
+        if (typeof window !== "undefined") {
+          try {
+            const pushFn = (router as any)?.push;
+            if (typeof pushFn === "function") {
+              pushFn("/developerprofile");
+            } else {
+              window.location.href = "/developerprofile";
+            }
+          } catch {
+            window.location.href = "/developerprofile";
+          }
+        }
+      }
+
+      return next >= 5 ? 0 : next;
+    });
+  }, [router]);
+
+  useEffect(() => {
+    return () => {
+      if (secretTimerRef.current) {
+        window.clearTimeout(secretTimerRef.current);
+      }
+    };
+  }, []);
+
   if (page === "home" && !role) return <LandingPage onLogin={navigateToLogin} />;
 
   if (isSuperadminArea && !canAccessSuperadmin) {
@@ -1581,7 +1678,7 @@ export default function SaraiPortal() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-      <Sidebar role={role} current={page} onNav={setPage} onLogout={handleLogout} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar role={role} current={page} onNav={setPage} onLogout={handleLogout} open={sidebarOpen} onClose={() => setSidebarOpen(false)} onSecretToggle={handleSecretToggle} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <TopBar onMenuToggle={() => setSidebarOpen((value) => !value)} staffName={staffName} role={role} currentPage={page} onNavigate={(p) => setPage(p)} />
         <main className="flex-1 overflow-y-auto">
@@ -1609,6 +1706,7 @@ export default function SaraiPortal() {
           {page === "dts" && <DTSPage role={role} />}
           {page === "attendance" && <AttendancePage staffName={staffName} />}
           {page === "achievements" && <AchievementsView />}
+          {page === "personnel" && <PersonnelView />}
           {page === "announcements" && (
             <AnnouncementsPage
               news={newsItems}
