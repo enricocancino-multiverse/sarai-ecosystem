@@ -176,19 +176,64 @@ function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: User
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-          {nav.map((item) => (
-            <button
-              key={item.page}
-              onClick={() => {
-                onNav(item.page);
-                onClose();
-              }}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${current === item.page ? "bg-white/10 text-white" : "text-white/70 hover:bg-white/10 hover:text-white"}`}
-            >
-              {item.icon}
-              {item.label}
-            </button>
-          ))}
+          {(() => {
+            const items: React.ReactNode[] = [];
+            const shown = new Set<string>();
+
+            nav.forEach((item) => {
+              if (["staff-dashboard", "admin-dashboard", "announcements"].includes(item.page) && !shown.has("MAIN")) {
+                items.push(
+                  <div key="title-main" className="px-3 pt-3 text-xs font-semibold text-white/60">
+                    MAIN
+                  </div>
+                );
+                shown.add("MAIN");
+              }
+
+              if (item.page === "dts" && !shown.has("TOOLS")) {
+                items.push(
+                  <div key="title-tools" className="px-3 pt-3 text-xs font-semibold text-white/60">
+                    TOOLS
+                  </div>
+                );
+                shown.add("TOOLS");
+              }
+
+              if (item.page === "achievements" && !shown.has("MISC")) {
+                items.push(
+                  <div key="title-misc" className="px-3 pt-3 text-xs font-semibold text-white/60">
+                    MISC
+                  </div>
+                );
+                shown.add("MISC");
+              }
+
+              if (item.page === "superadmin-dashboard" && !shown.has("SPECIAL")) {
+                items.push(
+                  <div key="title-special" className="px-3 pt-3 text-xs font-semibold text-white/60">
+                    SPECIAL
+                  </div>
+                );
+                shown.add("SPECIAL");
+              }
+
+              items.push(
+                <button
+                  key={item.page}
+                  onClick={() => {
+                    onNav(item.page);
+                    onClose();
+                  }}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${current === item.page ? "bg-white/10 text-white" : "text-white/70 hover:bg-white/10 hover:text-white"}`}
+                >
+                  {item.icon}
+                  {item.label}
+                </button>
+              );
+            });
+
+            return items;
+          })()}
         </nav>
 
         <div className="border-t border-white/10 px-3 py-4">
@@ -202,7 +247,7 @@ function Sidebar({ role, current, onNav, onLogout, open, onClose }: { role: User
   );
 }
 
-function TopBar({ onMenuToggle, staffName, role }: { onMenuToggle: () => void; staffName: string; role: UserRole }) {
+function TopBar({ onMenuToggle, staffName, role, currentPage, onNavigate }: { onMenuToggle: () => void; staffName: string; role: UserRole; currentPage: Page; onNavigate: (p: Page) => void }) {
   const now = new Date();
   const dateStr = now.toLocaleDateString("en-PH", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
@@ -214,6 +259,30 @@ function TopBar({ onMenuToggle, staffName, role }: { onMenuToggle: () => void; s
       <div className="flex-1">
         <p className="text-xs font-mono text-muted-foreground">{dateStr}</p>
       </div>
+      {role && (() => {
+        const dashboardPage = role === "superadmin" ? "superadmin-dashboard" : role === "admin" ? "admin-dashboard" : "staff-dashboard";
+        return (
+          <div className="flex items-center gap-2">
+            {currentPage !== "home" && (
+              <button
+                onClick={() => onNavigate("home")}
+                className="rounded-md px-3 py-1 text-sm font-medium text-foreground hover:bg-muted"
+              >
+                Go to landing page
+              </button>
+            )}
+
+            {currentPage !== dashboardPage && (
+              <button
+                onClick={() => onNavigate(dashboardPage)}
+                className="rounded-md px-3 py-1 text-sm font-medium text-foreground hover:bg-muted"
+              >
+                Go back to dashboard
+              </button>
+            )}
+          </div>
+        );
+      })()}
       <div className="flex items-center gap-3">
         <button className="relative rounded-md p-1.5 hover:bg-muted">
           <Bell size={18} className="text-muted-foreground" />
@@ -1504,7 +1573,7 @@ export default function SaraiPortal() {
     router.push("/global-login");
   }, [clearUrlHash, router]);
 
-  if (page === "home") return <LandingPage onLogin={navigateToLogin} />;
+  if (page === "home" && !role) return <LandingPage onLogin={navigateToLogin} />;
 
   if (isSuperadminArea && !canAccessSuperadmin) {
     return null;
@@ -1514,8 +1583,9 @@ export default function SaraiPortal() {
     <div className="flex h-screen overflow-hidden bg-background" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <Sidebar role={role} current={page} onNav={setPage} onLogout={handleLogout} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex flex-1 flex-col overflow-hidden">
-        <TopBar onMenuToggle={() => setSidebarOpen((value) => !value)} staffName={staffName} role={role} />
+        <TopBar onMenuToggle={() => setSidebarOpen((value) => !value)} staffName={staffName} role={role} currentPage={page} onNavigate={(p) => setPage(p)} />
         <main className="flex-1 overflow-y-auto">
+          {page === "home" && role && <LandingPage onLogin={navigateToLogin} />}
           {page === "staff-dashboard" && <StaffDashboardView staffName={staffName} onNavigate={(targetPage) => setPage(targetPage)} />}
           {page === "admin-dashboard" && (
             <AdminDashboardView
