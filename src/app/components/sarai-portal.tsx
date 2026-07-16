@@ -8,6 +8,7 @@ import { AttendancePageContent } from "../sarai-attendance/page";
 import AchievementsRoutePage from "../sarai-achievements/page";
 import DocumentsPage from "../sarai-documents/page";
 import GlobalLoginPage from "../global-login/page";
+import AnnouncementsPage from "../announcements/page";
 import { AdminDashboard as AdminDashboardPanel } from "./admin-dashboard/AdminDashboard";
 import { StaffDashboard as StaffDashboardPanel } from "./staff-dashboard/StaffDashboard";
 import { SuperadminDashboard } from "./superadmin-dashboard/SuperadminDashboard";
@@ -44,8 +45,24 @@ import {
   X,
 } from "lucide-react";
 
-type Page = "home" | "login" | "staff-dashboard" | "admin-dashboard" | "superadmin-dashboard" | "dts" | "attendance" | "achievements";
+type Page = "home" | "login" | "staff-dashboard" | "admin-dashboard" | "superadmin-dashboard" | "dts" | "attendance" | "achievements" | "announcements";
 type UserRole = "staff" | "admin" | "superadmin" | null;
+
+type NewsItem = {
+  id: number;
+  title: string;
+  excerpt: string;
+  tag: string;
+  date: string;
+  image: string;
+};
+
+type EventItem = {
+  id: number;
+  title: string;
+  date: string;
+  location: string;
+};
 
 type NavItem = { label: string; page: Page; icon: ReactNode };
 
@@ -58,6 +75,7 @@ const staffNav: NavItem[] = [
 
 const adminNav: NavItem[] = [
   { label: "Dashboard", page: "admin-dashboard", icon: <Home size={18} /> },
+  { label: "Announcements", page: "announcements", icon: <Bell size={18} /> },
   { label: "Documents", page: "dts", icon: <FileText size={18} /> },
   { label: "Check-in", page: "attendance", icon: <Clock size={18} /> },
   { label: "Achievements", page: "achievements", icon: <Trophy size={18} /> },
@@ -75,7 +93,7 @@ const documents = [
   { id: "DTS-2025-004", subject: "Livelihood Technology Vouchers", from: "CEST", to: "Finance", date: "2025-06-25", status: "For Signature", priority: "Normal" },
 ];
 
-const news = [
+const initialNews: NewsItem[] = [
   {
     id: 1,
     title: "SARAI Launches AI-Powered Crop Monitoring",
@@ -100,6 +118,12 @@ const news = [
     date: "June 18, 2025",
     image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&h=500&fit=crop&auto=format",
   },
+];
+
+const initialEvents: EventItem[] = [
+  { id: 1, title: "National Science Month Opening", date: "Jul 1, 2025", location: "Regional Center" },
+  { id: 2, title: "SARAI Q3 Progress Review", date: "Jul 3, 2025", location: "DOST Region 1 HQ" },
+  { id: 3, title: "Farmer Advisory Workshop", date: "Jul 12, 2025", location: "Municipal Hall" },
 ];
 
 const achievements = [
@@ -479,12 +503,12 @@ function LandingPage({ onLogin }: { onLogin: () => void }) {
         <div className="mb-10 flex items-end justify-between">
           <div>
             <div className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">Latest updates</div>
-            <h2 className="text-3xl font-bold text-foreground">Announcements</h2>
+            <h2 className="text-3xl font-bold text-foreground">Announcements & News</h2>
           </div>
           <Link href="/announcements" className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:flex">See more <ArrowRight size={14} /></Link>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {news.map((item) => (
+          {initialNews.slice(0, 3).map((item) => (
             <article key={item.id} className="overflow-hidden rounded-[1.25rem] border border-border bg-white transition-shadow hover:shadow-md">
               <div className="h-44 overflow-hidden bg-muted">
                 <img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
@@ -1256,13 +1280,14 @@ function StaffDashboardView({ staffName, onNavigate }: { staffName: string; onNa
   );
 }
 
-function AdminDashboardView({ staffName, onNavigate, onToggleUser, onRemoveUser, users }: { staffName: string; onNavigate: (page: Page) => void; onToggleUser: (id: number, active: boolean) => Promise<void> | void; onRemoveUser: (id: number) => Promise<void> | void; users: any[] }) {
+function AdminDashboardView({ staffName, onNavigate, onToggleUser, onRemoveUser, users, announcements }: { staffName: string; onNavigate: (page: Page) => void; onToggleUser: (id: number, active: boolean) => Promise<void> | void; onRemoveUser: (id: number) => Promise<void> | void; users: any[]; announcements: { id: number; title: string; date: string; tag: string }[] }) {
   return (
     <AdminDashboardPanel
       staffName={staffName}
       attendanceLogs={attendanceLogs}
       users={users}
-      onNavigate={onNavigate}
+      announcements={announcements}
+      onNavigate={(page) => onNavigate(page)}
       onToggleUser={onToggleUser}
       onRemoveUser={onRemoveUser}
     />
@@ -1290,6 +1315,8 @@ export default function SaraiPortal() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [superadminUnlocked, setSuperadminUnlocked] = useState(false);
+  const [newsItems, setNewsItems] = useState<NewsItem[]>(initialNews);
+  const [eventItems, setEventItems] = useState<EventItem[]>(initialEvents);
 
   const clearUrlHash = useCallback(() => {
     if (typeof window !== "undefined" && window.location.hash) {
@@ -1452,6 +1479,26 @@ export default function SaraiPortal() {
     }
   }, [canAccessSuperadmin, isSuperadminArea, role]);
 
+  const handleAddNews = useCallback((item: Omit<NewsItem, "id" | "date">) => {
+    setNewsItems((current) => [{
+      ...item,
+      id: Date.now(),
+      date: new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
+    }, ...current]);
+  }, []);
+
+  const handleRemoveNews = useCallback((id: number) => {
+    setNewsItems((current) => current.filter((item) => item.id !== id));
+  }, []);
+
+  const handleAddEvent = useCallback((event: Omit<EventItem, "id">) => {
+    setEventItems((current) => [...current, { ...event, id: Date.now() }]);
+  }, []);
+
+  const handleRemoveEvent = useCallback((id: number) => {
+    setEventItems((current) => current.filter((event) => event.id !== id));
+  }, []);
+
   const navigateToLogin = useCallback(() => {
     clearUrlHash();
     router.push("/global-login");
@@ -1474,6 +1521,7 @@ export default function SaraiPortal() {
             <AdminDashboardView
               staffName={staffName}
               users={users}
+              announcements={newsItems.map((item) => ({ id: item.id, title: item.title, date: item.date, tag: item.tag }))}
               onNavigate={(targetPage) => setPage(targetPage)}
               onToggleUser={handleToggleUser}
               onRemoveUser={handleRemoveUser}
@@ -1491,6 +1539,18 @@ export default function SaraiPortal() {
           {page === "dts" && <DTSPage role={role} />}
           {page === "attendance" && <AttendancePage staffName={staffName} />}
           {page === "achievements" && <AchievementsView />}
+          {page === "announcements" && (
+            <AnnouncementsPage
+              news={newsItems}
+              events={eventItems}
+              isSuperadmin={role === "superadmin"}
+              onAddNews={handleAddNews}
+              onRemoveNews={handleRemoveNews}
+              onAddEvent={handleAddEvent}
+              onRemoveEvent={handleRemoveEvent}
+              onBack={() => setPage(role === "superadmin" ? "superadmin-dashboard" : role === "admin" ? "admin-dashboard" : "staff-dashboard")}
+            />
+          )}
         </main>
       </div>
     </div>

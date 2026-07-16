@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertCircle, ArrowRight, Check, FileText, MapPin, Settings, Shield, UserX, Users } from "lucide-react";
+import { AlertCircle, ArrowRight, Check, FileText, MapPin, Settings, Shield, UserX, Users, Megaphone } from "lucide-react";
 
 type AttendanceLog = {
   name: string;
@@ -20,26 +20,52 @@ type AdminUser = {
   is_active: boolean;
 };
 
+// Simple shape for showing dynamic metrics or list overviews
+type AnnouncementOverview = {
+  id: number;
+  title: string;
+  date: string;
+  tag: string;
+};
+
+type AdminNavigationPage = "attendance" | "dts" | "announcements";
+
 type AdminDashboardProps = {
   staffName: string;
   attendanceLogs: AttendanceLog[];
   users: AdminUser[];
-  onNavigate: (page: any) => void;
+  onNavigate: (page: AdminNavigationPage) => void;
   onToggleUser: (id: number, active: boolean) => Promise<void> | void;
   onRemoveUser: (id: number) => Promise<void> | void;
+  announcements?: AnnouncementOverview[]; // Optional prop to feed live updates
 };
 
-export function AdminDashboard({ staffName, attendanceLogs, users, onNavigate, onToggleUser, onRemoveUser }: AdminDashboardProps) {
+export function AdminDashboard({ 
+  staffName, 
+  attendanceLogs, 
+  users, 
+  onNavigate, 
+  onToggleUser, 
+  onRemoveUser,
+  announcements = [
+    { id: 1, title: "SARAI Launches AI-Powered Crop Monitoring", date: "June 28, 2025", tag: "Technology" },
+    { id: 2, title: "DOST Region 1 Wins Best Regional Office Award", date: "June 24, 2025", tag: "Award" }
+  ]
+}: AdminDashboardProps) {
   return (
     <div className="space-y-6 p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <div className="mb-1 flex items-center gap-2"><Shield size={18} className="text-amber-500" /><span className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">Admin Console</span></div>
+          <div className="mb-1 flex items-center gap-2">
+            <Shield size={18} className="text-amber-500" />
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">Admin Console</span>
+          </div>
           <h2 className="text-xl font-bold text-foreground">System Overview</h2>
           <p className="text-sm text-muted-foreground">Welcome back, {staffName}. Here&apos;s the status of the Sarai Ecosystem today.</p>
         </div>
         <div className="rounded-lg bg-muted px-3 py-1.5 text-right font-mono text-xs text-muted-foreground">June 30, 2025 · 08:41 AM</div>
       </div>
+
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {[
           { label: "Total Staff", value: "120", change: "+3 this month", positive: true, icon: <Users size={18} /> },
@@ -57,14 +83,16 @@ export function AdminDashboard({ staffName, attendanceLogs, users, onNavigate, o
           </div>
         ))}
       </div>
+
       <div className="grid gap-6 lg:grid-cols-2">
+        {/* Quick Actions Panel */}
         <div className="overflow-hidden rounded-xl border border-border bg-white">
           <div className="border-b border-border px-5 py-4"><h3 className="text-sm font-semibold text-foreground">Quick Actions</h3></div>
           <div className="space-y-3 p-5">
             {[
               { label: "Clock In / Out", action: () => onNavigate("attendance"), icon: <Check size={15} /> },
               { label: "Open Document Tracking", action: () => onNavigate("dts"), icon: <FileText size={15} /> },
-              { label: "View Announcements", action: () => window.open("/announcements", "_blank"), icon: <AlertCircle size={15} /> },
+              { label: "Manage Announcements", action: () => onNavigate("announcements"), icon: <Megaphone size={15} /> },
               { label: "Open SARAI Map", action: () => window.open("https://maps.sarai.ph/", "_blank", "noopener,noreferrer"), icon: <MapPin size={15} /> },
             ].map((action) => (
               <button key={action.label} onClick={action.action} className="flex w-full items-center gap-2.5 rounded-lg border border-border px-3 py-3 text-sm text-foreground transition-all hover:border-primary hover:bg-primary hover:text-white group">
@@ -74,6 +102,34 @@ export function AdminDashboard({ staffName, attendanceLogs, users, onNavigate, o
             ))}
           </div>
         </div>
+
+        {/* Dashboard Addition: Announcements Dashboard Functionality Widget */}
+        <div className="overflow-hidden rounded-xl border border-border bg-white">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4">
+            <h3 className="text-sm font-semibold text-foreground">Ecosystem Announcements</h3>
+            <button 
+              onClick={() => onNavigate("announcements")} 
+              className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            >
+              Manage all <ArrowRight size={12} />
+            </button>
+          </div>
+          <div className="divide-y divide-border">
+            {announcements.map((announcement) => (
+              <div key={announcement.id} className="p-4 hover:bg-muted/30 transition-colors">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                    {announcement.tag}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground font-mono">{announcement.date}</span>
+                </div>
+                <h4 className="text-xs font-semibold text-foreground line-clamp-1">{announcement.title}</h4>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Attendance Summary */}
         <div className="overflow-hidden rounded-xl border border-border bg-white">
           <div className="border-b border-border px-5 py-4"><h3 className="text-sm font-semibold text-foreground">Today&apos;s Attendance Summary</h3></div>
           <div className="divide-y divide-border">
@@ -89,6 +145,8 @@ export function AdminDashboard({ staffName, attendanceLogs, users, onNavigate, o
             ))}
           </div>
         </div>
+
+        {/* Staff Access Controls */}
         <div className="overflow-hidden rounded-xl border border-border bg-white">
           <div className="border-b border-border px-5 py-4"><h3 className="text-sm font-semibold text-foreground">Staff access controls</h3></div>
           <div className="space-y-3 p-5">
@@ -111,6 +169,8 @@ export function AdminDashboard({ staffName, attendanceLogs, users, onNavigate, o
           </div>
         </div>
       </div>
+
+      {/* Document Pipeline */}
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="overflow-hidden rounded-xl border border-border bg-white">
           <div className="border-b border-border px-5 py-4"><h3 className="text-sm font-semibold text-foreground">Document Pipeline</h3></div>
