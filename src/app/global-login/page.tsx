@@ -76,13 +76,13 @@ export default function LoginPage() {
                 </Link>
               </div>
               <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">
-                Secure access
+                CAUTION: Authorized Personnel Only
               </span>
             </div>
 
             <div className="mt-10 sm:mt-12">
               <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                SARAI portal sign in
+                SARAI sign in
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600">
                 Use your DOST credentials to sign in and access the SARAI portal. Authorized personnel may proceed.

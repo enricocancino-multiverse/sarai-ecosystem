@@ -303,8 +303,8 @@ export default function DocumentsPage({ role = "admin" }: { role?: UserRole }) {
     <div className="space-y-6 p-6 max-w-7xl mx-auto">
       {/* Header Block */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-900">Document Tracking System</h2>
-        <p className="text-sm text-slate-500">Monitor and trace all official documents across divisions.</p>
+        <h2 className="text-2xl font-bold text-slate-900">Digital Logbook</h2>
+        <p className="text-sm text-slate-500">Monitor and trace all SARAI exclusive official documents across divisions.</p>
       </div>
 
       {/* Control Panel: Filters, Combined Search Bar & New Document Button inside same element */}
